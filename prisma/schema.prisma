@@ -187,7 +187,7 @@ enum EmailStatus {
 // ---------------------------------------------------------------
 
 model Organization {
-  id        String         @id @default(cuid())
+  id        String             @id @default(cuid())
   name      String
   county    String
   phone     String
@@ -251,6 +251,7 @@ model User {
   notifications        Notification[]
   uploadedDocuments    Document[]
   auditLogs            AuditLog[]
+  passwordResetTokens  PasswordResetToken[]
 
   @@index([orgId])
   @@index([role])
@@ -580,6 +581,19 @@ model Invitation {
   @@index([orgId])
   @@index([email])
   @@map("invitations")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
 
 model Notification {

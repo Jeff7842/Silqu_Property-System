@@ -25,7 +25,7 @@ export function Select({
       )}
       <select
         id={selectId}
-        className={`rounded-[--radius-control] border border-line bg-surface px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent ${className}`}
+        className={`h-11 rounded-[--radius-control] border border-line bg-surface px-3 text-sm text-ink focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors ${className}`}
         aria-invalid={!!error}
         {...props}
       >

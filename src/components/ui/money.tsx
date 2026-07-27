@@ -24,11 +24,11 @@ export function Money({
 
   return (
     <span
-      className={`font-mono tabular-nums text-right whitespace-nowrap ${TONE_CLASS[tone]} ${
+      className={`font-semibold tabular-nums text-right whitespace-nowrap ${TONE_CLASS[tone]} ${
         size === "metric" ? "text-2xl" : size === "small" ? "text-sm" : "text-base"
       }`}
     >
-      {showCurrency && <span className="text-ink-muted mr-1">KES</span>}
+      {showCurrency && <span className="text-ink-muted font-normal mr-1">KES</span>}
       {amount}
     </span>
   );

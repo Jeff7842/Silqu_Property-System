@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -18,8 +17,6 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Money } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 
-type Portal = "business" | "tenant" | "platform";
-
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
@@ -30,28 +27,18 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function DesignSystemPage() {
-  const [portal, setPortal] = useState<Portal>("business");
   const { push } = useToast();
 
   return (
-    <div data-portal={portal} className="min-h-screen bg-page px-6 py-10">
+    <div className="min-h-screen bg-page px-6 py-10">
       <div className="mx-auto flex max-w-4xl flex-col gap-10">
         <header className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold text-ink font-[--font-display]">
             SILQU design system
           </h1>
-          <div className="flex gap-2">
-            {(["business", "tenant", "platform"] as const).map((p) => (
-              <Button
-                key={p}
-                variant={portal === p ? "primary" : "secondary"}
-                size="sm"
-                onClick={() => setPortal(p)}
-              >
-                {p}
-              </Button>
-            ))}
-          </div>
+          <p className="text-sm text-ink-muted">
+            One unified navy/blue brand, sourced from the project&apos;s Stitch design.
+          </p>
         </header>
 
         <Section title="Buttons">

@@ -1,0 +1,66 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Icon } from "@/components/ui/icon";
+import { BusinessLoginForm } from "@/components/auth/business-login-form";
+
+export const metadata: Metadata = { title: "Sign in – SILQU" };
+
+export default function LoginPage() {
+  return (
+    <div className="flex min-h-screen flex-col md:flex-row">
+      {/* Left panel — marketing */}
+      <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(15,45,82,0.9),rgba(15,45,82,0.95))]" />
+        <div className="relative z-10 flex flex-col">
+          <span className="text-3xl font-black tracking-tight">SILQU</span>
+        </div>
+        <div className="relative z-10 mt-auto flex flex-col gap-6">
+          <h2 className="text-4xl font-black leading-tight">Manage smarter.</h2>
+          <p className="max-w-md text-base text-white/80">
+            The modern, authoritative platform for high-performance property management.
+          </p>
+          <ul className="mt-2 flex flex-col gap-2">
+            {[
+              "Automated invoicing & reconciliation",
+              "Real-time M-Pesa transaction tracking",
+              "Comprehensive arrears reporting",
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2">
+                <Icon name="success" size={18} className="text-accent" />
+                <span className="text-white/90">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="relative z-10 border-t border-white/10 pt-8">
+          <p className="text-sm text-white/60">
+            New to SILQU?{" "}
+            <Link href="/signup" className="font-semibold text-accent hover:underline">
+              Create an account
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex w-full flex-col items-center justify-center bg-canvas p-4 md:w-[55%]">
+        <div className="mb-6 md:hidden">
+          <span className="text-2xl font-black text-navy">SILQU</span>
+        </div>
+        <div className="w-full max-w-md rounded-[--radius-card] border border-line bg-surface p-6 shadow-[--shadow-card] lg:p-8">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-ink">Welcome back</h1>
+            <p className="mt-1 text-sm text-ink-muted">Log in to your manager dashboard</p>
+          </div>
+          <BusinessLoginForm />
+          <p className="mt-6 text-center text-sm text-ink-muted">
+            Are you a tenant?{" "}
+            <Link href="/my/login" className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">
+              Tenant Login <Icon name="arrowForward" size={16} />
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

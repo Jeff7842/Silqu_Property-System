@@ -9,72 +9,44 @@
 
 /* ---------------------------------------------------------------
    SILQU DESIGN TOKENS
-   Declared with @theme (NOT @theme inline) so the generated
-   utilities compile to var(--color-x). That is what lets a portal
-   override a token at runtime and re-skin every component at once.
+   Sourced from the project's Stitch design (designMd), not invented —
+   see stitch.withgoogle.com project 5527835115590543141. One unified
+   navy/blue brand across every portal; no per-portal color themes.
+   Declared with @theme (NOT @theme inline) so utilities compile to
+   var(--color-x) rather than baking in literal hex.
    --------------------------------------------------------------- */
 @theme {
-  /* Brand — navy */
-  --color-navy-900: #0B2942;
-  --color-navy-700: #14527A;
-  --color-navy-500: #2E7BAE;
-  --color-navy-100: #E6F0F7;
-
-  /* Brand — gold */
-  --color-gold-700: #A6701A;
-  --color-gold-500: #E9A227;
-  --color-gold-300: #F7C96B;
+  /* Brand */
+  --color-navy:           #0F2D52;  /* Primary Navy — nav/sidebar/headings */
+  --color-primary:        #1D5FA6;  /* Action Blue — buttons, links, active states */
+  --color-primary-hover:  #0F2D52;
+  --color-accent:         #F5A623;  /* Brand Gold — value accents, focus ring */
 
   /* Neutrals */
-  --color-ink:        #0F1E2B;
-  --color-ink-muted:  #5A6B7C;
-  --color-line:       #E3E8EE;
+  --color-ink:        #111827;
+  --color-ink-muted:  #6B7280;
+  --color-line:       #E2E8F0;
   --color-surface:    #FFFFFF;
-  --color-canvas:     #F6F8FA;
+  --color-canvas:     #F8FAFC;
+  --color-page:        var(--color-canvas);
 
   /* Semantic */
-  --color-success: #1E874B;
-  --color-warning: #C77700;
-  --color-danger:  #C0392B;
-  --color-info:    #2E75B6;
+  --color-success: #059669;
+  --color-warning: #D97706;
+  --color-danger:  #DC2626;
+  --color-info:    #2563EB;
 
-  /* Semantic aliases — these are what portals re-point */
-  --color-primary:       var(--color-navy-700);
-  --color-primary-hover: var(--color-navy-900);
-  --color-accent:        var(--color-gold-500);
-  --color-page:          var(--color-canvas);
-
-  /* Type */
-  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  /* Type — Inter only, named scale from the Stitch design system */
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-body:    "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Radius */
+  /* Radius — matches actual Stitch screens: rounded-lg (controls), rounded-xl (cards) */
   --radius-control: 8px;
   --radius-card:    12px;
 
   /* Elevation — exactly three levels, never invent a fourth */
-  --shadow-card:  0 1px 2px rgba(15,30,43,.06);
-  --shadow-float: 0 8px 24px rgba(15,30,43,.10);
-}
-
-/* ---- Portal themes: re-point the aliases, nothing else ---- */
-[data-portal="tenant"] {
-  --color-primary:       #14532D;   /* forest green */
-  --color-primary-hover: #1F7A4C;
-  --color-accent:        #C98A2B;
-  --color-page:          #FBF7EE;   /* warm cream */
-}
-
-[data-portal="platform"] {
-  --color-primary:       #0B2942;
-  --color-primary-hover: #14527A;
-  --color-accent:        #E9A227;
-  --color-page:          #0F1E2B;   /* dark ops shell */
-  --color-surface:       #16293A;
-  --color-ink:           #E8EEF4;
-  --color-ink-muted:     #8FA3B5;
-  --color-line:          #24394D;
+  --shadow-card:  0 1px 3px rgba(15,27,46,.06);
+  --shadow-float: 0 8px 24px rgba(15,27,46,.10);
 }
 
 body {
@@ -98,8 +70,7 @@ body {
   }
 }
 
-/* Money and metric figures never wobble */
-.font-mono,
+/* Money and metric figures never wobble, even without a monospace face */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }

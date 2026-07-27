@@ -1,25 +1,15 @@
 import type { Metadata } from "next";
-import { Sora, Inter, IBM_Plex_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import PrelineClient from "@/components/ui/preline-client";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["600", "700"],
-});
-
+// Stitch design uses Inter exclusively — see docs/SILQU_BUILD_PLAN_V2.md's
+// design-system section, now superseded by the Stitch project's designMd.
 const inter = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -33,10 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${sora.variable} ${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
-    >
+    <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ToastProvider>{children}</ToastProvider>
         <PrelineClient />

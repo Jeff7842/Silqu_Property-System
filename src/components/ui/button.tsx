@@ -28,7 +28,7 @@ export function Button({
 }) {
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-[--radius-control] font-medium transition-colors ${VARIANT_CLASS[variant]} ${SIZE_CLASS[size]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-[--radius-control] font-semibold transition-colors active:scale-[0.98] ${VARIANT_CLASS[variant]} ${SIZE_CLASS[size]} ${className}`}
       disabled={disabled || loading}
       {...props}
     >

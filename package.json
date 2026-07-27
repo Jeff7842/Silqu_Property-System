@@ -6,10 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "verify:icons": "node scripts/verify-icons.mjs"
   },
   "dependencies": {
+    "@iconify/react": "^6.0.2",
+    "@tailwindcss/forms": "^0.5.11",
     "next": "16.2.9",
+    "preline": "^4.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },

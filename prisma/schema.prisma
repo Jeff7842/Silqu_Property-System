@@ -1,0 +1,656 @@
+// SILQU data model — see docs/SILQU_BUILD_PLAN_V2.md section 5.
+//
+// Money: every *Cents column is Int (never Float/Decimal/BigInt on a row —
+// section 5.3). Cap is 2,147,483,647 cents = KES 21,474,836 per row; a
+// CHECK enforcing that cap lives in a hand-written migration, not here
+// (Prisma's schema DSL can't express CHECK constraints).
+//
+// Multi-tenancy: every org-owned model carries orgId and is indexed on it.
+// Financial relations use onDelete: Restrict — archive, never delete.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------
+
+enum Role {
+  PLATFORM_ADMIN
+  PLATFORM_SUPPORT
+  MANAGER
+  EMPLOYEE
+  CARETAKER
+  TENANT
+}
+
+enum EmployeeSubRole {
+  FINANCE
+  CUSTOMER_CARE
+  OWNER_MANAGER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum SubscriptionPlan {
+  MONTHLY
+  ANNUAL
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum PropertyType {
+  APARTMENT
+  BUNGALOW
+  MAISONETTE
+  COMMERCIAL
+  OTHER
+}
+
+enum PropertyStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum UnitStatus {
+  VACANT
+  OCCUPIED
+  MAINTENANCE
+  RESERVED
+}
+
+enum TenantStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum LeaseStatus {
+  PENDING
+  ACTIVE
+  ENDED
+  TERMINATED
+}
+
+enum InvoiceStatus {
+  OPEN
+  PARTIALLY_PAID
+  PAID
+  VOID
+}
+
+enum InvoiceLineCategory {
+  RENT
+  WATER
+  GARBAGE
+  PENALTY
+  OTHER
+}
+
+enum PaymentMethod {
+  MPESA
+  BANK
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+enum MpesaPurpose {
+  SUBSCRIPTION
+  RENT
+}
+
+enum MpesaStatus {
+  INITIATED
+  COMPLETED
+  FAILED
+  TIMEOUT
+}
+
+enum MaintenanceCategory {
+  PLUMBING
+  ELECTRICAL
+  STRUCTURAL
+  SECURITY
+  OTHER
+}
+
+enum MaintenancePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MaintenanceStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum AnnouncementAudience {
+  ALL
+  PROPERTY
+  UNIT
+}
+
+enum DocumentEntityType {
+  PROPERTY
+  TENANT
+  LEASE
+  MAINTENANCE_REQUEST
+  PAYMENT
+}
+
+enum DocumentKind {
+  PHOTO
+  ID_SCAN
+  SIGNED_LEASE
+  RECEIPT
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+// ---------------------------------------------------------------
+// Organizations, users, auth
+// ---------------------------------------------------------------
+
+model Organization {
+  id        String         @id @default(cuid())
+  name      String
+  county    String
+  phone     String
+  email     String
+  logoUrl   String?
+  status    OrganizationStatus @default(ACTIVE)
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  subscription      Subscription?
+  users             User[]
+  properties        Property[]
+  tenants           Tenant[]
+  invitations       Invitation[]
+  auditLogs         AuditLog[]
+  emailLogs         EmailLog[]
+  mpesaTransactions MpesaTransaction[]
+
+  @@map("organizations")
+}
+
+model Subscription {
+  id               String             @id @default(cuid())
+  orgId            String             @unique
+  organization     Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  plan             SubscriptionPlan
+  status           SubscriptionStatus @default(PENDING)
+  unitLimit        Int
+  currentPeriodEnd DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model User {
+  id                 String        @id @default(cuid())
+  orgId              String?
+  organization       Organization? @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  email              String        @unique
+  fullName           String
+  phone              String?
+  passwordHash       String
+  role               Role
+  status             UserStatus    @default(ACTIVE)
+  mustChangePassword Boolean       @default(false)
+  totpSecret         String?
+  lastLoginAt        DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  employeeProfile      EmployeeProfile?
+  caretakerAssignments CaretakerAssignment[]
+  tenant               Tenant?
+  recordedPayments     Payment[]             @relation("PaymentRecordedBy")
+  assignedMaintenance  MaintenanceRequest[]  @relation("MaintenanceAssignedTo")
+  maintenanceComments  MaintenanceComment[]
+  createdAnnouncements Announcement[]
+  createdInvitations   Invitation[]
+  notifications        Notification[]
+  uploadedDocuments    Document[]
+  auditLogs            AuditLog[]
+
+  @@index([orgId])
+  @@index([role])
+  @@map("users")
+}
+
+model EmployeeProfile {
+  userId  String          @id
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subRole EmployeeSubRole
+
+  @@map("employee_profiles")
+}
+
+model CaretakerAssignment {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  unitId     String?
+  unit       Unit?    @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId, unitId])
+  @@index([propertyId])
+  @@index([unitId])
+  @@map("caretaker_assignments")
+}
+
+// ---------------------------------------------------------------
+// Properties, units
+// ---------------------------------------------------------------
+
+model Property {
+  id           String         @id @default(cuid())
+  orgId        String
+  organization Organization   @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  county       String
+  town         String
+  address      String
+  type         PropertyType
+  photoUrl     String?
+  status       PropertyStatus @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  units                Unit[]
+  caretakerAssignments CaretakerAssignment[]
+  maintenanceRequests  MaintenanceRequest[]
+  announcements        Announcement[]
+
+  @@index([orgId])
+  @@index([status])
+  @@map("properties")
+}
+
+model Unit {
+  id           String     @id @default(cuid())
+  orgId        String
+  propertyId   String
+  property     Property   @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  label        String
+  unitType     String
+  bedrooms     Int
+  // Money: Int cents. Cap 2,147,483,647 cents (KES 21,474,836) per row.
+  rentCents    Int
+  depositCents Int
+  status       UnitStatus @default(VACANT)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  leases               Lease[]
+  caretakerAssignments CaretakerAssignment[]
+  maintenanceRequests  MaintenanceRequest[]
+  announcements        Announcement[]
+
+  @@unique([propertyId, label])
+  @@index([orgId])
+  @@index([status])
+  @@map("units")
+}
+
+// ---------------------------------------------------------------
+// Tenants, leases
+// ---------------------------------------------------------------
+
+model Tenant {
+  id             String       @id @default(cuid())
+  orgId          String
+  organization   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  userId         String?      @unique
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  fullName       String
+  nationalId     String
+  phone          String
+  email          String?
+  nextOfKinName  String?
+  nextOfKinPhone String?
+  status         TenantStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  leases              Lease[]
+  payments            Payment[]
+  maintenanceRequests MaintenanceRequest[]
+  invitations         Invitation[]
+
+  @@index([orgId])
+  @@index([status])
+  @@map("tenants")
+}
+
+model Lease {
+  id           String      @id @default(cuid())
+  orgId        String
+  unitId       String
+  unit         Unit        @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  tenantId     String
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  startDate    DateTime
+  endDate      DateTime
+  rentCents    Int
+  depositCents Int
+  billingDay   Int         @default(1)
+  status       LeaseStatus @default(PENDING)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  invoices Invoice[]
+  payments Payment[]
+
+  @@index([orgId])
+  @@index([unitId])
+  @@index([tenantId])
+  @@index([status])
+  @@map("leases")
+}
+
+// ---------------------------------------------------------------
+// Billing: invoices, payments, allocations
+// ---------------------------------------------------------------
+
+model Invoice {
+  id           String        @id @default(cuid())
+  orgId        String
+  leaseId      String
+  lease        Lease         @relation(fields: [leaseId], references: [id], onDelete: Restrict)
+  invoiceNo    String        @unique
+  periodYear   Int
+  periodMonth  Int
+  issueDate    DateTime
+  dueDate      DateTime
+  totalCents   Int
+  paidCents    Int           @default(0)
+  balanceCents Int
+  status       InvoiceStatus @default(OPEN)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  lines       InvoiceLine[]
+  allocations PaymentAllocation[]
+
+  @@unique([leaseId, periodYear, periodMonth])
+  @@index([orgId])
+  @@index([status])
+  @@map("invoices")
+}
+
+model InvoiceLine {
+  id          String              @id @default(cuid())
+  invoiceId   String
+  invoice     Invoice             @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  category    InvoiceLineCategory
+  description String
+  amountCents Int
+
+  @@index([invoiceId])
+  @@map("invoice_lines")
+}
+
+model Payment {
+  id           String        @id @default(cuid())
+  orgId        String
+  tenantId     String
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  leaseId      String
+  lease        Lease         @relation(fields: [leaseId], references: [id], onDelete: Restrict)
+  amountCents  Int
+  method       PaymentMethod
+  mpesaReceipt String?
+  reference    String?
+  paidAt       DateTime
+  recordedById String?
+  recordedBy   User?         @relation("PaymentRecordedBy", fields: [recordedById], references: [id], onDelete: SetNull)
+  status       PaymentStatus @default(COMPLETED)
+  createdAt    DateTime      @default(now())
+
+  allocations PaymentAllocation[]
+
+  @@index([orgId])
+  @@index([tenantId])
+  @@index([leaseId])
+  @@index([paidAt])
+  @@map("payments")
+}
+
+model PaymentAllocation {
+  id          String  @id @default(cuid())
+  paymentId   String
+  payment     Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  amountCents Int
+
+  @@index([paymentId])
+  @@index([invoiceId])
+  @@map("payment_allocations")
+}
+
+model MpesaTransaction {
+  id                String        @id @default(cuid())
+  orgId             String?
+  organization      Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  purpose           MpesaPurpose
+  checkoutRequestId String        @unique
+  merchantRequestId String?
+  phone             String
+  amountCents       Int
+  accountRef        String
+  resultCode        String?
+  resultDesc        String?
+  mpesaReceipt      String?
+  rawCallback       Json?
+  status            MpesaStatus   @default(INITIATED)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([orgId])
+  @@index([status])
+  @@map("mpesa_transactions")
+}
+
+// ---------------------------------------------------------------
+// Maintenance
+// ---------------------------------------------------------------
+
+model MaintenanceRequest {
+  id           String              @id @default(cuid())
+  orgId        String
+  unitId       String
+  unit         Unit                @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  tenantId     String?
+  tenant       Tenant?             @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  propertyId   String?
+  property     Property?           @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  category     MaintenanceCategory
+  description  String
+  priority     MaintenancePriority @default(MEDIUM)
+  status       MaintenanceStatus   @default(OPEN)
+  assignedToId String?
+  assignedTo   User?               @relation("MaintenanceAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolvedAt   DateTime?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  comments MaintenanceComment[]
+
+  @@index([orgId])
+  @@index([unitId])
+  @@index([status])
+  @@map("maintenance_requests")
+}
+
+model MaintenanceComment {
+  id        String             @id @default(cuid())
+  requestId String
+  request   MaintenanceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User               @relation(fields: [userId], references: [id], onDelete: Restrict)
+  body      String
+  createdAt DateTime           @default(now())
+
+  @@index([requestId])
+  @@map("maintenance_comments")
+}
+
+// ---------------------------------------------------------------
+// Comms: announcements, invitations, notifications, documents
+// ---------------------------------------------------------------
+
+model Announcement {
+  id          String               @id @default(cuid())
+  orgId       String
+  title       String
+  body        String
+  audience    AnnouncementAudience @default(ALL)
+  propertyId  String?
+  property    Property?            @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  unitId      String?
+  unit        Unit?                @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  createdById String
+  createdBy   User                 @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  publishedAt DateTime?
+  createdAt   DateTime             @default(now())
+
+  @@index([orgId])
+  @@map("announcements")
+}
+
+model Invitation {
+  id           String       @id @default(cuid())
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  email        String
+  role         Role
+  tenantId     String?
+  tenant       Tenant?      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tokenHash    String       @unique
+  expiresAt    DateTime
+  acceptedAt   DateTime?
+  createdById  String
+  createdBy    User         @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  createdAt    DateTime     @default(now())
+
+  @@index([orgId])
+  @@index([email])
+  @@map("invitations")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([readAt])
+  @@map("notifications")
+}
+
+model Document {
+  id           String             @id @default(cuid())
+  orgId        String
+  entityType   DocumentEntityType
+  entityId     String
+  kind         DocumentKind
+  fileKey      String
+  isPrivate    Boolean            @default(true)
+  uploadedById String
+  uploadedBy   User               @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  createdAt    DateTime           @default(now())
+
+  @@index([orgId])
+  @@index([entityType, entityId])
+  @@map("documents")
+}
+
+// ---------------------------------------------------------------
+// System: audit log, email log
+// ---------------------------------------------------------------
+
+model AuditLog {
+  id           String        @id @default(cuid())
+  orgId        String?
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  actorUserId  String?
+  actorUser    User?         @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  action       String
+  entityType   String
+  entityId     String?
+  before       Json?
+  after        Json?
+  ipAddress    String?
+  createdAt    DateTime      @default(now())
+
+  @@index([orgId, createdAt])
+  @@index([actorUserId])
+  @@map("audit_logs")
+}
+
+model EmailLog {
+  id           String        @id @default(cuid())
+  orgId        String?
+  organization Organization? @relation(fields: [orgId], references: [id], onDelete: SetNull)
+  to           String
+  template     String
+  providerId   String?
+  status       EmailStatus   @default(PENDING)
+  error        String?
+  sentAt       DateTime?
+  createdAt    DateTime      @default(now())
+
+  @@index([orgId])
+  @@index([status])
+  @@map("email_logs")
+}

@@ -1,24 +1,26 @@
-import { auth, signOut } from "@/server/auth/business";
-import { requireUser } from "@/server/auth/session";
-import { SignOutButton } from "@/components/auth/sign-out-button";
+import { auth } from "@/server/auth/business";
+import { requireOrg, requireRole } from "@/server/auth/session";
+import { ManagerDashboard } from "@/app/app/_dashboards/manager-dashboard";
+import { FinanceDashboard } from "@/app/app/_dashboards/finance-dashboard";
+import { CareDashboard } from "@/app/app/_dashboards/care-dashboard";
+import { CaretakerDashboard } from "@/app/app/_dashboards/caretaker-dashboard";
 
-// ponytail: placeholder landing — the real dashboard is Phase 4. This just
-// proves the auth round-trip (login -> session -> protected route) works.
 export default async function BusinessHome() {
   const session = await auth();
-  const user = requireUser(session);
+  const user = requireRole(session, ["MANAGER", "EMPLOYEE", "CARETAKER"]);
+  const orgId = requireOrg(session);
 
-  async function doSignOut() {
-    "use server";
-    await signOut({ redirectTo: "/login" });
+  if (user.role === "CARETAKER") {
+    return <CaretakerDashboard orgId={orgId} userId={user.id} fullName={user.fullName} />;
   }
 
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-page">
-      <p className="text-lg text-ink">
-        Signed in as <span className="font-semibold">{user.fullName}</span> ({user.role})
-      </p>
-      <SignOutButton action={doSignOut} />
-    </div>
-  );
+  if (user.role === "EMPLOYEE" && user.subRole === "FINANCE") {
+    return <FinanceDashboard orgId={orgId} fullName={user.fullName} />;
+  }
+
+  if (user.role === "EMPLOYEE" && user.subRole === "CUSTOMER_CARE") {
+    return <CareDashboard orgId={orgId} fullName={user.fullName} />;
+  }
+
+  return <ManagerDashboard orgId={orgId} fullName={user.fullName} />;
 }

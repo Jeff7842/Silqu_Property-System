@@ -3,6 +3,7 @@
 import { AuthError } from "next-auth";
 import { signIn as signInBusiness } from "@/server/auth/business";
 import { signIn as signInTenant } from "@/server/auth/tenant";
+import { signIn as signInPlatform } from "@/server/auth/platform";
 import { loginSchema } from "@/server/validators/auth.schema";
 
 export type LoginState = { error?: string } | undefined;
@@ -35,4 +36,8 @@ export async function signInBusinessAction(_prevState: LoginState, formData: For
 
 export async function signInTenantAction(_prevState: LoginState, formData: FormData) {
   return login(signInTenant, "/my", formData);
+}
+
+export async function signInPlatformAction(_prevState: LoginState, formData: FormData) {
+  return login(signInPlatform, "/platform", formData);
 }

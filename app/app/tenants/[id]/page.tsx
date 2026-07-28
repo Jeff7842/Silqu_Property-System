@@ -18,6 +18,7 @@ import { LeaseForm } from "@/components/tenants/lease-form";
 import { LeaseActions } from "@/components/tenants/lease-actions";
 import { SendInviteButton, ArchiveTenantButton } from "@/components/tenants/tenant-actions";
 import { DocumentUpload } from "@/components/tenants/document-upload";
+import { RecordPaymentForm } from "@/components/tenants/record-payment-form";
 
 const LEASE_TONE = { PENDING: "warning", ACTIVE: "success", ENDED: "neutral", TERMINATED: "danger" } as const;
 
@@ -31,6 +32,7 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
   if (!tenant) notFound();
 
   const canManage = hasAccess(user, "onboardTenant");
+  const canRecordPayment = hasAccess(user, "recordPayment");
   const currentLease = tenant.leases.find((l) => l.status === "ACTIVE" || l.status === "PENDING");
   const pendingInvite = tenant.invitations[0] && !tenant.invitations[0].acceptedAt ? tenant.invitations[0] : null;
 
@@ -93,6 +95,12 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
             )}
           </Card>
 
+          {canRecordPayment && currentLease?.status === "ACTIVE" && (
+            <Card header={<h3 className="font-semibold text-ink">Record payment</h3>}>
+              <RecordPaymentForm tenantId={id} leaseId={currentLease.id} />
+            </Card>
+          )}
+
           <Card header={<h3 className="font-semibold text-ink">Ledger</h3>} padded={false}>
             {ledger.length === 0 ? (
               <div className="p-5"><EmptyState icon="emptyMoney" title="No transactions yet" /></div>
@@ -137,6 +145,9 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
               <div className="flex justify-between"><dt className="text-ink-muted">Email</dt><dd className="text-ink">{tenant.email ?? "—"}</dd></div>
               <div className="flex justify-between"><dt className="text-ink-muted">Next of kin</dt><dd className="text-ink">{tenant.nextOfKinName ?? "—"}</dd></div>
               <div className="flex justify-between"><dt className="text-ink-muted">Status</dt><dd><Badge tone={tenant.status === "ACTIVE" ? "success" : "neutral"}>{tenant.status}</Badge></dd></div>
+              {tenant.creditCents > 0 && (
+                <div className="flex justify-between"><dt className="text-ink-muted">Credit balance</dt><dd><Money cents={tenant.creditCents} tone="positive" size="small" /></dd></div>
+              )}
             </dl>
           </Card>
 

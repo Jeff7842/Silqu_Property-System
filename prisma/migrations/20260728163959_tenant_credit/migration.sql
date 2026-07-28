@@ -1,0 +1,1 @@
+ALTER TABLE "tenants" ADD COLUMN "creditCents" INTEGER NOT NULL DEFAULT 0;

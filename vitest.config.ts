@@ -4,6 +4,7 @@ import path from "node:path";
 export default defineConfig({
   test: {
     exclude: ["**/node_modules/**", "tests/e2e/**"],
+    setupFiles: ["./vitest.setup.ts"],
   },
   resolve: {
     alias: {

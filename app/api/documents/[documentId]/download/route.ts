@@ -27,6 +27,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ document
     }
   }
 
+  if (doc.entityType === "PAYMENT" && can(user, "recordPayment") === "none") {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403 });
+  }
+
   if (!r2) return NextResponse.json({ error: "File storage isn't configured yet." }, { status: 503 });
 
   const url = await getSignedUrl(

@@ -31,6 +31,7 @@ export const NAV_ITEMS: NavItem[] = [
   // Platform portal
   { href: "/platform", label: "Overview", icon: "dashboard", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
   { href: "/platform/organizations", label: "Organizations", icon: "organizations", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
+  { href: "/platform/mpesa", label: "M-Pesa Webhooks", icon: "mpesa", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
   { href: "/platform/audit-logs", label: "Audit Logs", icon: "auditLog", portal: "platform", roles: ["PLATFORM_ADMIN"] },
 ];
 

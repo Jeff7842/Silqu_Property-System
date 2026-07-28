@@ -7,11 +7,13 @@ import {
   activateSubscriptionStubAction,
   type SignUpState,
 } from "@/server/actions/signup.actions";
+import { initiateSignupSubscriptionPaymentAction } from "@/server/actions/mpesa.actions";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
+import { StkPushPayment } from "@/components/mpesa/stk-push-payment";
 
 const STEPS = ["Account Details", "Activate Subscription", "Check Your Email"] as const;
 
@@ -48,11 +50,13 @@ function Stepper({ step }: { step: number }) {
 export function SignupWizard() {
   const [step, setStep] = useState(1);
   const [orgId, setOrgId] = useState<string | null>(null);
+  const [phone, setPhone] = useState<string | null>(null);
   const [state, formAction, pending] = useActionState<SignUpState, FormData>(
     async (prevState, formData) => {
       const result = await createManagerAccountAction(prevState, formData);
       if (result?.orgId) {
         setOrgId(result.orgId);
+        setPhone(`254${formData.get("phone")}`);
         setStep(2);
       }
       return result;
@@ -124,21 +128,29 @@ export function SignupWizard() {
         </div>
       )}
 
-      {step === 2 && orgId && (
+      {step === 2 && orgId && phone && (
         <div className="rounded-[--radius-card] border border-line bg-surface p-6 py-16 text-center shadow-[--shadow-float] lg:p-8">
           <h2 className="mb-2 text-2xl font-bold text-primary">Activate Subscription</h2>
-          <p className="mb-6 text-sm text-ink-muted">
-            KES 2,500/month · up to 50 units · M-Pesa payment integration arrives in a later phase.
-          </p>
-          <Button
-            loading={activating}
-            onClick={() => startActivating(async () => {
-              await activateSubscriptionStubAction(orgId);
-              setStep(3);
-            })}
-          >
-            Complete Payment (Demo)
-          </Button>
+          <p className="mb-6 text-sm text-ink-muted">KES 2,500/month · up to 50 units.</p>
+          <div className="mx-auto max-w-xs">
+            <StkPushPayment
+              fixedPhone={phone}
+              payLabel="Complete payment"
+              onInitiate={(p) => initiateSignupSubscriptionPaymentAction(orgId, p)}
+              onSuccess={() => setStep(3)}
+              demoFallback={
+                <Button
+                  loading={activating}
+                  onClick={() => startActivating(async () => {
+                    await activateSubscriptionStubAction(orgId);
+                    setStep(3);
+                  })}
+                >
+                  Complete Payment (Demo)
+                </Button>
+              }
+            />
+          </div>
         </div>
       )}
 

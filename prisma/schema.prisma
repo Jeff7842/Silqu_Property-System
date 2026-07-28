@@ -353,6 +353,8 @@ model Tenant {
   nextOfKinName  String?
   nextOfKinPhone String?
   status         TenantStatus @default(ACTIVE)
+  // Overpayment that hasn't been applied to an invoice yet. Int cents, never negative.
+  creditCents    Int          @default(0)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
@@ -483,6 +485,11 @@ model MpesaTransaction {
   phone             String
   amountCents       Int
   accountRef        String
+  // RENT purpose only — which lease/tenant to allocate the completed payment
+  // to. accountRef alone can't carry this: Daraja's AccountReference field is
+  // capped at 12 characters, too short for a cuid.
+  tenantId          String?
+  leaseId           String?
   resultCode        String?
   resultDesc        String?
   mpesaReceipt      String?

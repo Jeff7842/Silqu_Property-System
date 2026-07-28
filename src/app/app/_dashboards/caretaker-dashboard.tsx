@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getCaretakerDashboardStats } from "@/server/db/queries/dashboard";
 import { PageHeader } from "@/components/ui/page-header";
 import { KpiCard } from "@/components/ui/kpi-card";
@@ -28,7 +29,11 @@ export async function CaretakerDashboard({ orgId, userId, fullName }: { orgId: s
             ) : (
               <div className="flex flex-col divide-y divide-line">
                 {stats.units.map((unit) => (
-                  <div key={unit.id} className="flex items-center justify-between py-3">
+                  <Link
+                    key={unit.id}
+                    href={`/app/properties/${unit.propertyId}/units/${unit.id}`}
+                    className="flex items-center justify-between py-3 hover:bg-canvas"
+                  >
                     <div>
                       <p className="text-sm font-medium text-ink">
                         {unit.property.name} — {unit.label}
@@ -38,7 +43,7 @@ export async function CaretakerDashboard({ orgId, userId, fullName }: { orgId: s
                       </p>
                     </div>
                     <Badge tone={STATUS_TONE[unit.status]}>{unit.status}</Badge>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

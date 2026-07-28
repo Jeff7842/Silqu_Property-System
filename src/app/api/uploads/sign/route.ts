@@ -14,8 +14,8 @@ const ALLOWED_TYPES: Record<string, string> = {
   "image/webp": "webp",
 };
 
-// ponytail: property photos only (public bucket) — private-bucket docs (ID
-// scans, signed leases) are Phase 6's concern, add entityType/kind branching then.
+// Property photos only (public bucket, no Document row — see setPropertyPhotoAction).
+// Private tenant documents (ID scans) sign through /api/documents/sign instead.
 export async function POST(req: Request) {
   const session = await auth();
   const user = requireRole(session, ["MANAGER", "EMPLOYEE"]);

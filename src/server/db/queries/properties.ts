@@ -109,6 +109,14 @@ export async function getUnitDetailForCaretaker(orgId: string, unitId: string, u
   return assigned ? unit : null;
 }
 
+export function listVacantUnits(orgId: string) {
+  return db.unit.findMany({
+    where: { orgId, status: "VACANT" },
+    include: { property: true },
+    orderBy: [{ property: { name: "asc" } }, { label: "asc" }],
+  });
+}
+
 export function listCaretakers(orgId: string) {
   return db.user.findMany({
     where: { orgId, role: "CARETAKER", status: "ACTIVE" },

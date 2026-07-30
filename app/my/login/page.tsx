@@ -8,9 +8,12 @@ export const metadata: Metadata = { title: "Tenant sign in – SILQU" };
 export default function TenantLoginPage() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Left panel — marketing */}
+      {/* Left panel — marketing. Token-based glow, same treatment as the
+          business login page, forest-green here via [data-portal="tenant"]. */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(15,45,82,0.9),rgba(15,45,82,0.95))]" />
+        <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-primary/40 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
+        <div className="absolute inset-0 bg-linear-to-b from-navy/85 to-navy/95" />
         <div className="relative z-10 flex flex-col">
           <span className="text-3xl font-black tracking-tight">SILQU</span>
         </div>

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Money } from "@/components/ui/money";
 import { fromCents } from "@/lib/money";
 import { ExportCsvButton } from "@/components/billing/export-csv-button";
+import { SendReminderButton } from "@/components/billing/send-reminder-button";
 
 const BUCKET_TONE = { "0-30": "warning", "31-60": "warning", "61-90": "danger", "90+": "danger" } as const;
 
@@ -59,6 +60,7 @@ export default async function ArrearsReportPage() {
             { key: "unit", header: "Unit", render: (r) => <span className="text-ink-muted">{r.invoice.lease.unit.property.name} — {r.invoice.lease.unit.label}</span> },
             { key: "days", header: "Days overdue", render: (r) => <Badge tone={BUCKET_TONE[r.bucket]}>{r.daysOverdue} days</Badge> },
             { key: "balance", header: "Balance", align: "right", render: (r) => <Money cents={r.invoice.balanceCents} tone="negative" size="small" /> },
+            { key: "reminder", header: "", align: "right", render: (r) => <SendReminderButton invoiceId={r.invoice.id} /> },
           ]}
         />
       </Card>

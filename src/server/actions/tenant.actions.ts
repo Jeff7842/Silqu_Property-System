@@ -8,6 +8,12 @@ import { hasAccess } from "@/server/auth/permissions";
 import { logAudit } from "@/server/services/audit";
 import { generateToken } from "@/server/auth/password";
 import { tenantSchema } from "@/server/validators/tenant.schema";
+import { escapeHtml, sendEmail } from "@/server/services/email/client";
+
+/** Reuses QSTASH_TARGET_BASE_URL as "the public origin this deployment is reachable at" — same value already used to build callback URLs. */
+function inviteLink(token: string) {
+  return `${process.env.QSTASH_TARGET_BASE_URL ?? ""}/my/accept-invite?token=${token}`;
+}
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
@@ -95,9 +101,15 @@ export async function sendInvitationAction(tenantId: string): Promise<ActionStat
       createdById: user.id,
     },
   });
-  // ponytail: Resend integration is a later phase — log the link so the
-  // flow is testable end to end without an email provider wired up yet.
-  console.log(`[invitation] ${tenant.email} -> /my/accept-invite?token=${raw}`);
+  const link = inviteLink(raw);
+  console.log(`[invitation] ${tenant.email} -> ${link}`);
+  await sendEmail({
+    to: tenant.email,
+    subject: "You've been invited to SILQU",
+    template: "tenant-invitation",
+    orgId: user.orgId,
+    html: `<p>Hi ${escapeHtml(tenant.fullName)},</p><p>Your property manager has invited you to set up your SILQU tenant account.</p><p><a href="${link}">Accept your invitation</a></p><p>This link expires in 72 hours.</p>`,
+  });
   logAudit({ orgId: user.orgId, actorUserId: user.id, action: "invitation.sent", entityType: "Invitation", entityId: invitation.id });
   revalidatePath(`/app/tenants/${tenantId}`);
   revalidatePath("/app/tenants");
@@ -116,7 +128,15 @@ export async function resendInvitationAction(invitationId: string): Promise<Acti
     where: { id: invitationId },
     data: { tokenHash: hash, expiresAt: new Date(Date.now() + INVITE_TTL_MS) },
   });
-  console.log(`[invitation] ${invitation.email} -> /my/accept-invite?token=${raw}`);
+  const link = inviteLink(raw);
+  console.log(`[invitation] ${invitation.email} -> ${link}`);
+  await sendEmail({
+    to: invitation.email,
+    subject: "You've been invited to SILQU",
+    template: "tenant-invitation",
+    orgId: user.orgId,
+    html: `<p>Your property manager has invited you to set up your SILQU tenant account.</p><p><a href="${link}">Accept your invitation</a></p><p>This link expires in 72 hours.</p>`,
+  });
   logAudit({ orgId: user.orgId, actorUserId: user.id, action: "invitation.resent", entityType: "Invitation", entityId: invitationId });
   revalidatePath("/app/tenants");
   return { success: true };

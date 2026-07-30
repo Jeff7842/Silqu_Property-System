@@ -5,6 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
 import type { NavItem } from "@/lib/nav";
+import { BellMenu } from "@/components/notifications/bell-menu";
+
+type NotificationRow = { id: string; title: string; body: string; link: string | null; readAt: Date | null; createdAt: Date };
 
 export function PortalShell({
   brandTitle,
@@ -14,6 +17,8 @@ export function PortalShell({
   onSignOut,
   addAction,
   children,
+  notifications = [],
+  unreadCount = 0,
 }: {
   brandTitle: string;
   brandSubtitle: string;
@@ -22,6 +27,8 @@ export function PortalShell({
   onSignOut: () => Promise<void>;
   addAction?: { label: string; href: string };
   children: React.ReactNode;
+  notifications?: NotificationRow[];
+  unreadCount?: number;
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -105,9 +112,7 @@ export function PortalShell({
           </button>
           <span className="hidden text-sm font-semibold text-ink-muted lg:block" />
           <div className="flex items-center gap-2">
-            <button className="rounded-full p-2 text-ink-muted hover:bg-canvas" aria-label="Notifications">
-              <Icon name="notifications" size={20} />
-            </button>
+            <BellMenu notifications={notifications} unreadCount={unreadCount} />
             <div className="ml-2 flex items-center gap-2">
               <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                 {initials}

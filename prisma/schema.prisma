@@ -675,3 +675,16 @@ model EmailLog {
   @@index([status])
   @@map("email_logs")
 }
+
+// Source of truth for rollout toggles (rule 13: Redis is a cache, never the
+// store). src/server/services/redis/feature-flags.ts reads through a short-TTL
+// Redis cache in front of this table and always writes here first.
+model FeatureFlag {
+  key             String   @id
+  enabled         Boolean  @default(false)
+  rolloutPercent  Int      @default(0)
+  updatedAt       DateTime @updatedAt
+  updatedByUserId String?
+
+  @@map("feature_flags")
+}

@@ -2,6 +2,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { db } from "@/server/db/client";
 import { r2, R2_BUCKET_PRIVATE } from "@/server/services/r2/client";
 import { renderReceiptPdf } from "@/server/services/pdf/receipt";
+import { escapeHtml, sendEmail } from "@/server/services/email/client";
 
 /**
  * Called right after a payment's allocation transaction commits (never inside
@@ -42,9 +43,16 @@ export async function generateAndStoreReceipt(paymentId: string) {
     data: { orgId: payment.orgId, entityType: "PAYMENT", entityId: paymentId, kind: "RECEIPT", fileKey: key, isPrivate: true, uploadedById: payment.recordedById },
   });
 
-  // ponytail: Resend integration is a later phase — log the link instead of emailing.
   if (payment.tenant.email) {
-    console.log(`[receipt] ${payment.tenant.email} -> /api/documents/${doc.id}/download`);
+    const downloadLink = `${process.env.QSTASH_TARGET_BASE_URL ?? ""}/api/documents/${doc.id}/download`;
+    console.log(`[receipt] ${payment.tenant.email} -> ${downloadLink}`);
+    await sendEmail({
+      to: payment.tenant.email,
+      subject: `Your SILQU payment receipt — ${payment.lease.unit.label}`,
+      template: "payment-receipt",
+      orgId: payment.orgId,
+      html: `<p>Hi ${escapeHtml(payment.tenant.fullName)},</p><p>We've recorded your payment of KES ${(payment.amountCents / 100).toLocaleString("en-KE")} for ${escapeHtml(payment.lease.unit.label)}.</p><p><a href="${downloadLink}">Download your receipt</a></p>`,
+    });
   }
 
   return doc;

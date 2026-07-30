@@ -1,4 +1,5 @@
 import { db } from "@/server/db/client";
+import { notify } from "@/server/services/notifications/notify";
 
 async function leasesMissingInvoice(orgId: string, year: number, month: number) {
   const leases = await db.lease.findMany({
@@ -37,6 +38,11 @@ export async function generateInvoicesForPeriod(orgId: string, year: number, mon
   if (toCreate.length === 0) return { created: 0 };
 
   const issueDate = new Date();
+  // Tracked so we can notify tenants once the transaction has actually
+  // committed — notify() does its own DB write plus an external publishJob
+  // call, neither of which is safe to run inside a live DB transaction.
+  const createdInvoices: { invoiceId: string; tenantUserId: string | null }[] = [];
+
   await db.$transaction(
     async (tx) => {
       for (const lease of toCreate) {
@@ -61,10 +67,30 @@ export async function generateInvoicesForPeriod(orgId: string, year: number, mon
         await tx.invoiceLine.create({
           data: { invoiceId: invoice.id, category: "RENT", description: "Monthly rent", amountCents: lease.rentCents },
         });
+        createdInvoices.push({ invoiceId: invoice.id, tenantUserId: lease.tenant.userId });
       }
     },
     { maxWait: 5000, timeout: 20000 },
   );
+
+  // Fire the "invoice issued" notification per lease, isolated from the run:
+  // a tenant with no portal account yet (tenantUserId null) is skipped, and
+  // one notify() failure is logged and swallowed rather than thrown — every
+  // invoice above is already committed, so a notification hiccup for one
+  // tenant must never look like the whole generation run failed (rule 12).
+  for (const { invoiceId, tenantUserId } of createdInvoices) {
+    if (!tenantUserId) continue;
+    try {
+      await notify(tenantUserId, {
+        type: "invoice.issued",
+        title: "New invoice issued",
+        body: "A new invoice is ready for your lease. Check your balance and pay via M-Pesa.",
+        link: "/my/payments",
+      });
+    } catch (e) {
+      console.error("[notify] invoice.issued failed for invoice", invoiceId, e);
+    }
+  }
 
   return { created: toCreate.length };
 }

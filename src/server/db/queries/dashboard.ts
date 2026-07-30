@@ -158,11 +158,12 @@ export async function getTenantDashboardStats(orgId: string, userId: string) {
   if (!tenant) return null;
   const tenantId = tenant.id;
 
-  const [lease, invoices, lastPayment, openRequests, announcements] = await Promise.all([
-    db.lease.findFirst({
-      where: { orgId, tenantId, status: "ACTIVE" },
-      include: { unit: { include: { property: true } } },
-    }),
+  const lease = await db.lease.findFirst({
+    where: { orgId, tenantId, status: "ACTIVE" },
+    include: { unit: { include: { property: true } } },
+  });
+
+  const [invoices, lastPayment, openRequests, announcements] = await Promise.all([
     db.invoice.findMany({
       where: { orgId, lease: { tenantId } },
       orderBy: [{ periodYear: "desc" }, { periodMonth: "desc" }],
@@ -176,7 +177,14 @@ export async function getTenantDashboardStats(orgId: string, userId: string) {
       where: { orgId, tenantId, status: { in: ["OPEN", "ASSIGNED", "IN_PROGRESS"] } },
     }),
     db.announcement.findMany({
-      where: { orgId, publishedAt: { not: null } },
+      where: {
+        orgId,
+        publishedAt: { not: null },
+        OR: [
+          { audience: "ALL" },
+          ...(lease ? [{ audience: "PROPERTY" as const, propertyId: lease.unit.propertyId }, { audience: "UNIT" as const, unitId: lease.unitId }] : []),
+        ],
+      },
       orderBy: { publishedAt: "desc" },
       take: 3,
     }),

@@ -1,5 +1,5 @@
 import { db } from "@/server/db/client";
-import { allocatePayment } from "@/server/services/billing/allocate-payment";
+import { allocatePayment, notifyPaymentReceived } from "@/server/services/billing/allocate-payment";
 import { generateAndStoreReceipt } from "@/server/services/billing/generate-receipt";
 import type { MpesaTransaction } from "@/generated/prisma/client";
 
@@ -53,6 +53,11 @@ export async function completeMpesaTransaction(
   );
 
   if (completedPaymentId) {
+    // The transaction above has committed by this point — safe to run the
+    // external-I/O side effects (notify, receipt) now. allocatePayment was
+    // called with our own `tx`, so it deliberately skipped notifying itself
+    // (see the comment on allocatePayment) — we do it here instead.
+    await notifyPaymentReceived(txn.tenantId!, outcome.amountCents ?? txn.amountCents);
     await generateAndStoreReceipt(completedPaymentId).catch((e) => console.error("[mpesa] receipt failed", completedPaymentId, e));
   }
 }

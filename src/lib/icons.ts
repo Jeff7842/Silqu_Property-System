@@ -67,6 +67,8 @@ export const ICONS = {
   shield: "material-symbols:shield-outline",
   lock: "material-symbols:lock-outline",
   home: "material-symbols:home-outline",
+  location: "material-symbols:location-on-outline",
+  star: "material-symbols:star",
   supportAgent: "material-symbols:support-agent",
   chat: "material-symbols:chat-outline",
   listAlt: "material-symbols:list-alt-outline",

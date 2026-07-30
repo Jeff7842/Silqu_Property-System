@@ -32,6 +32,7 @@ export type Capability =
   | "createEndLease"
   | "generateInvoices"
   | "recordPayment"
+  | "sendArrearsReminder"
   | "viewOwnInvoicesPayments"
   | "payRentMpesa"
   | "viewArrearsReport"
@@ -66,6 +67,7 @@ const MATRIX: Record<Capability, Record<Actor, Access>> = {
   createEndLease:        { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: F, EMP_FINANCE: N, EMP_CARE: N, EMP_OWNER: F, CARETAKER: N, TENANT: N },
   generateInvoices:      { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: F, EMP_FINANCE: F, EMP_CARE: N, EMP_OWNER: F, CARETAKER: N, TENANT: N },
   recordPayment:         { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: F, EMP_FINANCE: F, EMP_CARE: N, EMP_OWNER: F, CARETAKER: N, TENANT: N },
+  sendArrearsReminder:   { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: F, EMP_FINANCE: F, EMP_CARE: N, EMP_OWNER: F, CARETAKER: N, TENANT: N },
   viewOwnInvoicesPayments: { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: N, EMP_FINANCE: N, EMP_CARE: N, EMP_OWNER: N, CARETAKER: N, TENANT: S },
   payRentMpesa:          { PLAT_ADMIN: N, PLAT_SUPPORT: N, MANAGER: N, EMP_FINANCE: N, EMP_CARE: N, EMP_OWNER: N, CARETAKER: N, TENANT: S },
   viewArrearsReport:     { PLAT_ADMIN: R, PLAT_SUPPORT: R, MANAGER: F, EMP_FINANCE: F, EMP_CARE: R, EMP_OWNER: F, CARETAKER: N, TENANT: N },

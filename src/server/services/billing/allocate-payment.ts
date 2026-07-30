@@ -1,4 +1,6 @@
 import { db } from "@/server/db/client";
+import { notify } from "@/server/services/notifications/notify";
+import { formatKES } from "@/lib/money";
 import type { PaymentMethod, Prisma } from "@/generated/prisma/client";
 
 type Tx = Prisma.TransactionClient;
@@ -26,7 +28,44 @@ export function computeAllocation(openInvoices: OpenInvoice[], amountCents: numb
   return { allocations, creditCents: remaining };
 }
 
-/** Runs inside `tx` if given (e.g. the M-Pesa callback, which must mark the transaction COMPLETED and allocate the payment atomically) — otherwise opens its own. */
+/**
+ * Notifies a tenant that a payment was received and applied. Isolated into
+ * its own try/catch — notify() does a DB write plus an external publishJob
+ * call, so a failure here must never undo or mask a payment that already
+ * landed. Exported so callers that pass their own `tx` into allocatePayment
+ * (the M-Pesa callback) can call this themselves once *their* transaction
+ * has actually committed, instead of allocatePayment calling it too early.
+ */
+export async function notifyPaymentReceived(tenantId: string, amountCents: number) {
+  try {
+    const tenant = await db.tenant.findUnique({ where: { id: tenantId }, select: { userId: true } });
+    if (!tenant?.userId) return;
+    await notify(tenant.userId, {
+      type: "payment.received",
+      title: "Payment received",
+      body: `We've received your payment of ${formatKES(amountCents)} and applied it to your account.`,
+      link: "/my/payments",
+    });
+  } catch (e) {
+    console.error("[notify] payment.received failed for tenant", tenantId, e);
+  }
+}
+
+/**
+ * Runs inside `tx` if given (e.g. the M-Pesa callback, which must mark the
+ * transaction COMPLETED and allocate the payment atomically) — otherwise
+ * opens its own.
+ *
+ * Notification placement: when we open our own transaction (the manual
+ * "record payment" call site), it has fully committed by the time
+ * `db.$transaction` resolves below, so we notify right there. When a `tx`
+ * is passed in, this function does not own the transaction's lifecycle —
+ * the caller's transaction is still open when `run(tx)` returns here, so
+ * notifying at this point would fire notify() (external I/O) *inside* a
+ * live DB transaction. In that case we deliberately skip notifying and
+ * leave it to the caller to call `notifyPaymentReceived` once its own
+ * transaction has committed (see completeMpesaTransaction).
+ */
 export async function allocatePayment(
   params: {
     orgId: string;
@@ -86,5 +125,8 @@ export async function allocatePayment(
   };
 
   if (tx) return run(tx);
-  return db.$transaction(run, { maxWait: 5000, timeout: 20000 });
+
+  const result = await db.$transaction(run, { maxWait: 5000, timeout: 20000 });
+  await notifyPaymentReceived(params.tenantId, params.amountCents);
+  return result;
 }

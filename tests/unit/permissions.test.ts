@@ -27,6 +27,7 @@ const EXPECTED: Record<Capability, string> = {
   createEndLease: "nnfnnfnn",
   generateInvoices: "nnffnfnn",
   recordPayment: "nnffnfnn",
+  sendArrearsReminder: "nnffnfnn",
   viewOwnInvoicesPayments: "nnnnnnns",
   payRentMpesa: "nnnnnnns",
   viewArrearsReport: "rrffrfnn",

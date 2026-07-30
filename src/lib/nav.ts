@@ -18,6 +18,8 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/app/properties", label: "Properties", icon: "properties", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/tenants", label: "Tenants", icon: "tenants", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/invoices", label: "Financials", icon: "payments", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
+  { href: "/app/maintenance", label: "Maintenance", icon: "maintenance", portal: "business", roles: ["MANAGER", "EMPLOYEE", "CARETAKER"] },
+  { href: "/app/announcements", label: "Announcements", icon: "announcements", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/reports", label: "Reports", icon: "reports", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/settings", label: "Settings", icon: "settings", portal: "business", roles: ["MANAGER", "EMPLOYEE", "CARETAKER"] },
 
@@ -32,6 +34,9 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/platform", label: "Overview", icon: "dashboard", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
   { href: "/platform/organizations", label: "Organizations", icon: "organizations", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
   { href: "/platform/mpesa", label: "M-Pesa Webhooks", icon: "mpesa", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
+  { href: "/platform/jobs", label: "Jobs & Queues", icon: "jobs", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
+  { href: "/platform/flags", label: "Feature Flags", icon: "featureFlags", portal: "platform", roles: ["PLATFORM_ADMIN"] },
+  { href: "/platform/health", label: "System Health", icon: "systemHealth", portal: "platform", roles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"] },
   { href: "/platform/audit-logs", label: "Audit Logs", icon: "auditLog", portal: "platform", roles: ["PLATFORM_ADMIN"] },
 ];
 

@@ -5,6 +5,7 @@ import { db } from "@/server/db/client";
 import { generateToken, hashPassword, hashToken } from "@/server/auth/password";
 import { isPasswordResetRateLimited } from "@/server/services/redis/ratelimit";
 import { logAudit } from "@/server/services/audit";
+import { sendEmail } from "@/server/services/email/client";
 
 const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
 
@@ -32,9 +33,18 @@ export async function requestPasswordResetAction(
     await db.passwordResetToken.create({
       data: { userId: user.id, tokenHash: hash, expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS) },
     });
-    // ponytail: Resend integration is a later phase — log the link so the
-    // flow is testable end to end without an email provider wired up yet.
-    console.log(`[password-reset] ${user.email} -> /set-password?token=${raw}`);
+    // Reuses QSTASH_TARGET_BASE_URL as "the public origin this deployment is
+    // reachable at" — the same value already used to build callback URLs.
+    // Falls back to a relative link (harmless while Resend is unconfigured too).
+    const resetLink = `${process.env.QSTASH_TARGET_BASE_URL ?? ""}/set-password?token=${raw}`;
+    console.log(`[password-reset] ${user.email} -> ${resetLink}`);
+    await sendEmail({
+      to: user.email,
+      subject: "Reset your SILQU password",
+      template: "password-reset",
+      orgId: user.orgId,
+      html: `<p>We received a request to reset your SILQU password.</p><p><a href="${resetLink}">Reset your password</a></p><p>This link expires in 1 hour. If you didn't request this, you can ignore this email.</p>`,
+    });
   }
 
   return { sent: true };

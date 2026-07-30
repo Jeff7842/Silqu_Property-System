@@ -23,7 +23,7 @@ export async function authorizeCredentials(
 
   const user = await db.user.findUnique({
     where: { email: normalizedEmail },
-    include: { employeeProfile: true },
+    include: { employeeProfile: true, organization: { select: { status: true } } },
   });
 
   const fail = () => {
@@ -39,6 +39,10 @@ export async function authorizeCredentials(
   };
 
   if (!user || user.status !== "ACTIVE") return fail();
+  // Platform staff (PLATFORM_ADMIN/PLATFORM_SUPPORT) have orgId: null and are
+  // never subject to org suspension — only org-scoped roles are gated here.
+  // Same generic fail() as wrong-password: don't leak "your org is suspended".
+  if (user.orgId && user.organization?.status !== "ACTIVE") return fail();
   if (!PORTAL_CONFIG[portal].allowedRoles.includes(user.role)) return fail();
 
   const valid = await verifyPassword(password, user.passwordHash);

@@ -10,12 +10,13 @@ import { bustKpiCache } from "@/server/services/redis/kpi-cache";
 import { runInvoiceGenerationForOrg } from "@/server/services/billing/run-generation";
 import { allocatePayment } from "@/server/services/billing/allocate-payment";
 import { generateAndStoreReceipt } from "@/server/services/billing/generate-receipt";
-import { toCents } from "@/lib/money";
+import { notify } from "@/server/services/notifications/notify";
+import { toCents, formatKES } from "@/lib/money";
 import { paymentSchema } from "@/server/validators/payment.schema";
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
-async function requireBillingStaff(capability: "generateInvoices" | "recordPayment") {
+async function requireBillingStaff(capability: "generateInvoices" | "recordPayment" | "sendArrearsReminder") {
   const session = await auth();
   const user = requireRole(session, ["MANAGER", "EMPLOYEE"]);
   if (!hasAccess(user, capability)) {
@@ -79,5 +80,35 @@ export async function recordPaymentAction(tenantId: string, _prev: ActionState, 
   revalidatePath(`/app/tenants/${tenantId}`);
   revalidatePath("/app/invoices");
   revalidatePath("/app/reports");
+  return { success: true };
+}
+
+/**
+ * Sends a one-off in-app + email reminder to a tenant with an overdue
+ * invoice, triggered manually by staff from the arrears report — not a
+ * cron job, so there's no dedup concern here beyond a double-click, which
+ * is an acceptable duplicate (the manager chose to send it twice).
+ */
+export async function sendArrearsReminderAction(invoiceId: string): Promise<ActionState> {
+  const { user, error } = await requireBillingStaff("sendArrearsReminder");
+  if (!user) return { error };
+
+  const invoice = await db.invoice.findFirst({
+    where: { id: invoiceId, orgId: user.orgId! },
+    include: { lease: { include: { tenant: true } } },
+  });
+  if (!invoice) return { error: "Invoice not found." };
+
+  const tenant = invoice.lease.tenant;
+  if (!tenant.userId) return { error: "This tenant doesn't have a portal account yet." };
+
+  await notify(tenant.userId, {
+    type: "arrears.reminder",
+    title: "Payment reminder",
+    body: `You have an outstanding balance of ${formatKES(invoice.balanceCents)} on invoice ${invoice.invoiceNo}. Please make a payment via M-Pesa.`,
+    link: "/my/payments",
+  });
+
+  logAudit({ orgId: user.orgId, actorUserId: user.id, action: "arrears.reminder_sent", entityType: "Invoice", entityId: invoiceId });
   return { success: true };
 }

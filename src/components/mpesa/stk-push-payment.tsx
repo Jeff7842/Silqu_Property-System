@@ -67,7 +67,7 @@ export function StkPushPayment({
     const activePhone = fixedPhone ?? `254${phone}`;
     const result = await onInitiate(activePhone);
     if ("error" in result) {
-      if (demoFallback && result.error.includes("not configured")) {
+      if (demoFallback && result.error.includes("configured")) {
         setPhase("not-configured");
         return;
       }

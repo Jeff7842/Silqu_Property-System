@@ -1,4 +1,6 @@
 import { db } from "@/server/db/client";
+import { getMpesaFailureRate24h } from "@/server/db/queries/mpesa";
+import { getDlqCount } from "@/server/services/queue/client";
 
 function monthRange(date = new Date()) {
   const start = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -205,10 +207,12 @@ export async function getPlatformDashboardStats() {
 
   const { start } = monthRange();
 
-  const [orgCount, subscriptions, newOrgsThisMonth] = await Promise.all([
+  const [orgCount, subscriptions, newOrgsThisMonth, mpesaFailureRate, dlqCount] = await Promise.all([
     db.organization.count(),
     db.subscription.findMany({ where: { status: "ACTIVE" } }),
     db.organization.count({ where: { createdAt: { gte: start } } }),
+    getMpesaFailureRate24h(),
+    getDlqCount(),
   ]);
 
   const mrrCents = subscriptions.reduce(
@@ -221,7 +225,7 @@ export async function getPlatformDashboardStats() {
     activeSubscriptions: subscriptions.length,
     mrrCents,
     newOrgsThisMonth,
-    failedJobs: 0, // QStash isn't wired up until Phase 7
-    mpesaFailureRate24h: 0, // no live M-Pesa traffic until Phase 8
+    failedJobs: dlqCount,
+    mpesaFailureRate24h: mpesaFailureRate.failureRatePercent,
   };
 }

@@ -68,7 +68,7 @@ export async function initiateSTKPush(params: {
       Password: password,
       Timestamp: timestamp,
       TransactionType: "CustomerPayBillOnline",
-      Amount: amount,
+      Amount: "1", //amount,
       PartyA: params.phone,
       PartyB: shortcode,
       PhoneNumber: params.phone,

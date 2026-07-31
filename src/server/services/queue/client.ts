@@ -12,3 +12,10 @@ export async function publishJob(path: string, body: unknown) {
   const res = await qstash.publishJSON({ url: `${process.env.QSTASH_TARGET_BASE_URL}${path}`, body });
   return res.messageId;
 }
+
+/** Dead-letter queue size, or 0 if QStash isn't configured — surfaced on the platform dashboard so failures can't go unwatched (build plan section 11). */
+export async function getDlqCount(): Promise<number> {
+  if (!qstash) return 0;
+  const dlq = await qstash.dlq.listMessages({ count: 100 }).catch(() => ({ messages: [] as unknown[] }));
+  return dlq.messages.length;
+}

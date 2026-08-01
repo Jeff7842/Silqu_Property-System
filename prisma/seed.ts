@@ -212,6 +212,17 @@ async function main() {
         status: "ACTIVE",
       },
     });
+    const tenantUser = await db.user.create({
+      data: {
+        orgId: org.id,
+        email: tenant.email!,
+        fullName: tenant.fullName,
+        phone: tenant.phone,
+        passwordHash,
+        role: "TENANT",
+      },
+    });
+    await db.tenant.update({ where: { id: tenant.id }, data: { userId: tenantUser.id } });
 
     const startDate = new Date(now.getFullYear(), now.getMonth() - 4, 1 + (i % 5));
     const lease = await db.lease.create({

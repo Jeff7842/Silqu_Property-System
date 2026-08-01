@@ -45,7 +45,7 @@ export function getPropertyById(orgId: string, propertyId: string) {
     where: { id: propertyId, orgId },
     include: {
       units: { orderBy: { label: "asc" } },
-      caretakerAssignments: { include: { user: true } },
+      caretakerAssignments: { where: { user: { role: "CARETAKER" } }, include: { user: true } },
     },
   });
 }

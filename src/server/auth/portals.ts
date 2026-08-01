@@ -30,12 +30,13 @@ export const PORTAL_CONFIG: Record<
 
 /** Resolves which portal a request belongs to. Path-based in dev (no subdomains on localhost); host-based in production per build plan section 3.4. */
 export function resolvePortal(pathname: string, host: string): Portal {
+  if (pathname.startsWith("/platform")) return "platform";
+  if (pathname.startsWith("/my")) return "tenant";
+
   if (process.env.NODE_ENV === "production") {
     if (host.startsWith("platform.")) return "platform";
     if (host.startsWith("my.")) return "tenant";
     return "business";
   }
-  if (pathname.startsWith("/platform")) return "platform";
-  if (pathname.startsWith("/my")) return "tenant";
   return "business";
 }

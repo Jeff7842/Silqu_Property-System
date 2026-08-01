@@ -17,6 +17,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/app", label: "My Units", icon: "myUnits", portal: "business", roles: ["CARETAKER"] },
   { href: "/app/properties", label: "Properties", icon: "properties", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/tenants", label: "Tenants", icon: "tenants", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
+  { href: "/app/employees", label: "Employees", icon: "staff", portal: "business", roles: ["MANAGER"] },
   { href: "/app/invoices", label: "Financials", icon: "payments", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },
   { href: "/app/maintenance", label: "Maintenance", icon: "maintenance", portal: "business", roles: ["MANAGER", "EMPLOYEE", "CARETAKER"] },
   { href: "/app/announcements", label: "Announcements", icon: "announcements", portal: "business", roles: ["MANAGER", "EMPLOYEE"] },

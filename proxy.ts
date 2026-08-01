@@ -1,17 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { auth as authBusiness } from "@/server/auth/business";
-import { auth as authTenant } from "@/server/auth/tenant";
-import { auth as authPlatform } from "@/server/auth/platform";
+import NextAuth from "next-auth";
+import { baseAuthConfig } from "@/server/auth/config";
 import { PORTAL_CONFIG, resolvePortal, type Portal } from "@/server/auth/portals";
 
-// Reuses the SAME auth() instances as the route handlers/actions (not
-// fresh NextAuth(baseAuthConfig(portal)) copies) : six separate NextAuth()
-// instances in one process was the actual cause of sessions not surviving
-// a redirect; see docs/SILQU_BUILD_PLAN_V2.md Phase 3 notes.
-const portalAuth: Record<Portal, typeof authBusiness> = {
-  business: authBusiness,
-  tenant: authTenant,
-  platform: authPlatform,
+// Middleware only needs to read the signed JWT session cookie. Keep this
+// separate from the full route-handler auth modules so proxy does not import
+// credential providers, Prisma, Neon, or WebSocket code into the request gate.
+const portalAuth: Record<Portal, ReturnType<typeof NextAuth>["auth"]> = {
+  business: NextAuth(baseAuthConfig("business")).auth,
+  tenant: NextAuth(baseAuthConfig("tenant")).auth,
+  platform: NextAuth(baseAuthConfig("platform")).auth,
 };
 
 const PUBLIC_PATHS = [

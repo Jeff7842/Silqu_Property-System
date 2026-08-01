@@ -16,7 +16,7 @@ export default function LoginPage() {
           expiring Google URL : not safe to hotlink from production). */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
   {/* Layer 1 (bottom): the actual photo, filling the whole panel */}
-  <div className="absolute inset-0 bg-[url('/image/building.png')] bg-cover bg-center bg-no-repeat w-full h-full" />
+  <div className="absolute inset-0 bg-[url('/image/building.png')] bg-cover bg-center bg-no-repeat" />
 
   {/* Layer 2: ambient glow blobs — now sit ON the photo, not INSTEAD of it*/} 
   <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-accent/30 blur-3xl" />

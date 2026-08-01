@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
 import { Logo } from "@/components/ui/logo";
 import { TenantLoginForm } from "@/components/auth/tenant-login-form";
+import Image from 'next/image';
 
 export const metadata: Metadata = { title: "Tenant sign in – SILQU" };
 
@@ -12,11 +13,18 @@ export default function TenantLoginPage() {
       {/* Left panel : marketing. Token-based glow, same treatment as the
           business login page, forest-green here via [data-portal="tenant"]. */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
-        <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-primary/40 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
-        <div className="absolute inset-0 bg-linear-to-b from-navy/85 to-navy/95" />
+        <div className="absolute inset-0 bg-[url('/image/screen.png')] bg-cover bg-center bg-no-repeat w-full h-full" />
+        <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-accent/30 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(155deg,rgb(1,45,29,0.05)_0%,rgb(1,45,29,0.65)_50%,rgba(0,45,4,0.95)_93%)]" />
         <div className="relative z-10 flex flex-col">
-          <Logo height={32} onDark />
+          <Image
+        src="/logo/logo.webp"
+        alt="SILQU"
+        width={100}
+        height={100}
+        priority
+      />
         </div>
         <div className="relative z-10 mt-auto flex flex-col gap-6">
           <h2 className="text-4xl font-black leading-tight">Your home, in one place.</h2>

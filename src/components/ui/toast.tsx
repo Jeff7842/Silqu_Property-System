@@ -1,18 +1,21 @@
 "use client";
 
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { Icon } from "@/components/ui/icon";
+import type { IconName } from "@/lib/icons";
 
-type ToastTone = "success" | "danger" | "info";
+type ToastTone = "success" | "danger" | "warning" | "info";
 type ToastItem = { id: number; message: string; tone: ToastTone };
 
 const ToastContext = createContext<{ push: (message: string, tone?: ToastTone) => void } | null>(
   null
 );
 
-const TONE_CLASS: Record<ToastTone, string> = {
-  success: "border-success/30 text-success",
-  danger: "border-danger/30 text-danger",
-  info: "border-info/30 text-info",
+const TONE: Record<ToastTone, { className: string; icon: IconName }> = {
+  success: { className: "border-success/30 bg-success/5 text-success", icon: "success" },
+  danger: { className: "border-danger/30 bg-danger/5 text-danger", icon: "error" },
+  warning: { className: "border-warning/30 bg-warning/5 text-warning", icon: "warning" },
+  info: { className: "border-info/30 bg-info/5 text-info", icon: "info" },
 };
 
 let nextId = 1;
@@ -33,9 +36,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`rounded-[--radius-control] border bg-surface px-4 py-3 text-sm shadow-[--shadow-float] ${TONE_CLASS[t.tone]}`}
+            role="alert"
+            className={`flex max-w-xs w-full items-start gap-3 rounded-[--radius-control] border bg-surface p-4 shadow-[--shadow-float] ${TONE[t.tone].className}`}
           >
-            {t.message}
+            <Icon name={TONE[t.tone].icon} size={18} className="mt-0.5 shrink-0" />
+            <p className="text-sm text-ink">{t.message}</p>
           </div>
         ))}
       </div>

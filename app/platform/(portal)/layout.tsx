@@ -17,7 +17,6 @@ export default async function PlatformLayout({ children }: { children: ReactNode
 
   return (
     <PortalShell
-      brandTitle="SILQU"
       brandSubtitle="Platform Console"
       navItems={navForUser("platform", user)}
       user={{ fullName: user.fullName, role: user.role === "PLATFORM_ADMIN" ? "Platform Admin" : "Platform Support" }}

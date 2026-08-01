@@ -9,7 +9,7 @@ import { publishAnnouncementAction } from "@/server/actions/announcement.actions
 
 type PropertyOption = { id: string; name: string; units: { id: string; label: string }[] };
 
-export function ComposeForm({ properties }: { properties: PropertyOption[] }) {
+export function ComposeForm({ properties, onSuccess }: { properties: PropertyOption[]; onSuccess?: () => void }) {
   const [state, formAction, pending] = useActionState(publishAnnouncementAction, undefined);
   const [audience, setAudience] = useState<"ALL" | "PROPERTY" | "UNIT">("ALL");
   const [propertyId, setPropertyId] = useState("");
@@ -20,8 +20,9 @@ export function ComposeForm({ properties }: { properties: PropertyOption[] }) {
       formRef.current?.reset();
       setAudience("ALL");
       setPropertyId("");
+      onSuccess?.();
     }
-  }, [state?.success]);
+  }, [state?.success, onSuccess]);
 
   const units = properties.find((p) => p.id === propertyId)?.units ?? [];
 

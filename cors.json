@@ -1,0 +1,14 @@
+[
+  {
+    "AllowedOrigins": [
+      "https://app.silqu.co.ke",
+      "https://my.silqu.co.ke",
+      "https://platform.silqu.co.ke",
+      "https://silqu.kyfaru.com",
+      "http://localhost:3000"
+    ],
+    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3600
+  }
+]

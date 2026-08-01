@@ -8,10 +8,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPhone } from "@/lib/phone";
 import { InvitationRow } from "@/components/tenants/invitation-row";
+import { AddTenantDrawer, AddTenantTrigger } from "@/components/tenants/tenant-drawer";
 
 const STATUS_TONE = { ACTIVE: "success", ARCHIVED: "neutral" } as const;
 
@@ -32,7 +32,7 @@ export default async function TenantsPage({ searchParams }: { searchParams: Prom
       <PageHeader
         title="Tenants"
         description="Everyone leasing a unit in your portfolio."
-        actions={canManage && <Link href="/app/tenants/new"><Button>Add tenant</Button></Link>}
+        actions={canManage && <AddTenantDrawer />}
       />
 
       <form className="max-w-md" method="get">
@@ -45,7 +45,7 @@ export default async function TenantsPage({ searchParams }: { searchParams: Prom
             icon="tenants"
             title="No tenants yet"
             description={canManage ? "Add your first tenant to start leasing units." : undefined}
-            action={canManage && <Link href="/app/tenants/new"><Button>Add tenant</Button></Link>}
+            action={canManage && <AddTenantTrigger />}
           />
         </Card>
       ) : (

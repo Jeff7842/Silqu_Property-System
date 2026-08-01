@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/ui/logo";
 
 const FOOTER_LINKS = [
   { href: "/", label: "Home" },
@@ -13,7 +14,7 @@ export function MarketingFooter() {
     <footer className="border-t border-line bg-navy text-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 sm:px-6 lg:flex-row lg:items-start lg:justify-between lg:px-8">
         <div className="max-w-sm">
-          <span className="text-xl font-black tracking-tight font-[--font-display]">SILQU</span>
+          <Logo height={26} onDark />
           <p className="mt-3 text-sm text-white/70">
             Rental property management for Kenyan landlords and property managers : leases,
             M-Pesa rent collection and maintenance, in one place.

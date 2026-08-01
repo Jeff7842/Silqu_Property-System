@@ -15,7 +15,8 @@
     "db:studio": "prisma studio",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "qstash:schedules": "tsx --env-file=.env.local scripts/qstash-schedules.mjs"
+    "qstash:schedules": "tsx --env-file=.env.local scripts/qstash-schedules.mjs",
+    "r2:cors": "tsx --env-file=.env.local scripts/apply-r2-cors.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1095.0",

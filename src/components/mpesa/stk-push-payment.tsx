@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
+import { normalizeKenyaPhone } from "@/lib/phone";
 import type { InitiatePaymentResult } from "@/server/services/mpesa/initiate-payment";
 
 type Phase = "idle" | "initiating" | "polling" | "success" | "failed" | "still-processing" | "not-configured";
@@ -64,7 +65,7 @@ export function StkPushPayment({
   async function start() {
     setError(null);
     setPhase("initiating");
-    const activePhone = fixedPhone ?? `254${phone}`;
+    const activePhone = fixedPhone ?? `254${normalizeKenyaPhone(phone)}`;
     const result = await onInitiate(activePhone);
     if ("error" in result) {
       if (demoFallback && result.error.includes("configured")) {
@@ -113,11 +114,18 @@ export function StkPushPayment({
   return (
     <div className="flex flex-col gap-3">
       {!fixedPhone && (
-        <Input label="M-Pesa phone" prefix="+254" placeholder="712345678" value={phone} onChange={(e) => setPhone(e.target.value)} />
+        <Input
+          label="M-Pesa phone"
+          prefix="+254"
+          placeholder="712345678"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          onBlur={() => setPhone((v) => normalizeKenyaPhone(v) ?? v)}
+        />
       )}
       {fixedPhone && <p className="text-sm text-ink-muted">Paying from +254 {fixedPhone.slice(3)}</p>}
       {error && <p className="text-sm text-danger">{error}</p>}
-      <Button onClick={start} disabled={!fixedPhone && !/^7\d{8}$/.test(phone)}>
+      <Button onClick={start} disabled={!fixedPhone && !normalizeKenyaPhone(phone)}>
         <Icon name="mpesa" size={18} />
         {payLabel}
       </Button>

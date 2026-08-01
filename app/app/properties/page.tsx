@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { KENYA_COUNTIES } from "@/lib/kenya-counties";
+import { AddPropertyDrawer, AddPropertyTrigger } from "@/components/properties/property-drawer";
 
 export default async function PropertiesPage({
   searchParams,
@@ -37,7 +38,7 @@ export default async function PropertiesPage({
       <PageHeader
         title="Properties"
         description="Every building in your portfolio."
-        actions={canManage && <Link href="/app/properties/new"><Button>Add property</Button></Link>}
+        actions={canManage && <AddPropertyDrawer />}
       />
 
       {user.role !== "CARETAKER" && (
@@ -66,7 +67,7 @@ export default async function PropertiesPage({
             icon="emptyBuilding"
             title="No properties yet"
             description={canManage ? "Add your first property to start tracking units and tenants." : "No properties are assigned to you yet."}
-            action={canManage && <Link href="/app/properties/new"><Button>Add property</Button></Link>}
+            action={canManage && <AddPropertyTrigger />}
           />
         </Card>
       ) : (

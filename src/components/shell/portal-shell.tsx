@@ -4,13 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/icon";
+import { Logo } from "@/components/ui/logo";
 import type { NavItem } from "@/lib/nav";
 import { BellMenu } from "@/components/notifications/bell-menu";
 
 type NotificationRow = { id: string; title: string; body: string; link: string | null; readAt: Date | null; createdAt: Date };
 
 export function PortalShell({
-  brandTitle,
   brandSubtitle,
   navItems,
   user,
@@ -20,7 +20,6 @@ export function PortalShell({
   notifications = [],
   unreadCount = 0,
 }: {
-  brandTitle: string;
   brandSubtitle: string;
   navItems: NavItem[];
   user: { fullName: string; role: string };
@@ -55,8 +54,8 @@ export function PortalShell({
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="mb-6 flex flex-col gap-1 px-6">
-          <span className="text-2xl font-bold tracking-tight text-white">{brandTitle}</span>
+        <div className="mb-6 flex flex-col gap-2 px-6">
+          <Logo height={26} onDark />
           <span className="text-xs uppercase tracking-wider text-white/60">{brandSubtitle}</span>
         </div>
 

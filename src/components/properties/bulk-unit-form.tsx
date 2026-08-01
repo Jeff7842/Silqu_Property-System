@@ -1,18 +1,16 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { bulkCreateUnitsAction } from "@/server/actions/property.actions";
 
-export function BulkUnitForm({ propertyId }: { propertyId: string }) {
+export function BulkUnitForm({ propertyId, onSuccess }: { propertyId: string; onSuccess?: () => void }) {
   const [state, formAction, pending] = useActionState(bulkCreateUnitsAction.bind(null, propertyId), undefined);
-  const router = useRouter();
 
   useEffect(() => {
-    if (state?.success) router.push(`/app/properties/${propertyId}`);
-  }, [state?.success, propertyId, router]);
+    if (state?.success) onSuccess?.();
+  }, [state?.success, onSuccess]);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">

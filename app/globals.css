@@ -44,9 +44,9 @@
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-body:    "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Radius : matches actual Stitch screens: rounded-lg (controls), rounded-xl (cards) */
-  --radius-control: 8px;
-  --radius-card:    12px;
+  /* Radius : rounder than the original Stitch export per design feedback */
+  --radius-control: 10px;
+  --radius-card:    16px;
 
   /* Elevation : exactly three levels, never invent a fourth */
   --shadow-card:  0 1px 3px rgba(15,27,46,.06);

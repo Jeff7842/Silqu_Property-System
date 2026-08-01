@@ -13,6 +13,14 @@ const SIZE_CLASS = {
   lg: "px-5 py-2.5 text-base gap-2",
 } as const;
 
+/** Button's own classes, exposed so non-<button> triggers (e.g. DrawerTrigger) can look identical. */
+export function buttonClass(
+  variant: keyof typeof VARIANT_CLASS = "primary",
+  size: keyof typeof SIZE_CLASS = "md",
+) {
+  return `inline-flex items-center justify-center rounded-[--radius-control] font-semibold transition-colors active:scale-[0.98] ${VARIANT_CLASS[variant]} ${SIZE_CLASS[size]}`;
+}
+
 export function Button({
   variant = "primary",
   size = "md",
@@ -28,7 +36,7 @@ export function Button({
 }) {
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-[--radius-control] font-semibold transition-colors active:scale-[0.98] ${VARIANT_CLASS[variant]} ${SIZE_CLASS[size]} ${className}`}
+      className={`${buttonClass(variant, size)} ${className}`}
       disabled={disabled || loading}
       {...props}
     >

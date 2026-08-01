@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { Logo } from "@/components/ui/logo";
 import { TenantLoginForm } from "@/components/auth/tenant-login-form";
 
 export const metadata: Metadata = { title: "Tenant sign in – SILQU" };
@@ -15,7 +16,7 @@ export default function TenantLoginPage() {
         <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute inset-0 bg-linear-to-b from-navy/85 to-navy/95" />
         <div className="relative z-10 flex flex-col">
-          <span className="text-3xl font-black tracking-tight">SILQU</span>
+          <Logo height={32} onDark />
         </div>
         <div className="relative z-10 mt-auto flex flex-col gap-6">
           <h2 className="text-4xl font-black leading-tight">Your home, in one place.</h2>

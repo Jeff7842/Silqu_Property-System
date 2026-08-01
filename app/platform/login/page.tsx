@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { Logo } from "@/components/ui/logo";
 import { PlatformLoginForm } from "@/components/auth/platform-login-form";
 
 export const metadata: Metadata = { title: "Platform sign in – SILQU" };
@@ -13,7 +14,8 @@ export default function PlatformLoginPage() {
           <div className="flex size-14 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
             <Icon name="shield" size={28} className="text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-navy">SILQU Platform</h1>
+          <Logo height={28} />
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Platform</p>
           <p className="text-sm text-ink-muted">Internal access only. Restricted to platform staff.</p>
         </div>
         <PlatformLoginForm />

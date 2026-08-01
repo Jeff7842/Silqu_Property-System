@@ -17,7 +17,6 @@ export default async function BusinessLayout({ children }: { children: ReactNode
 
   return (
     <PortalShell
-      brandTitle="SILQU"
       brandSubtitle="Property Management"
       navItems={navForUser("business", user)}
       user={{ fullName: user.fullName, role: roleLabel(user.role, user.subRole) }}

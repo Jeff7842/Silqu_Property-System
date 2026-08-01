@@ -7,12 +7,14 @@ import { getPropertyById, listCaretakers } from "@/server/db/queries/properties"
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Money } from "@/components/ui/money";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PhotoUpload } from "@/components/properties/photo-upload";
-import { CaretakerAssignForm } from "@/components/properties/caretaker-assign-form";
+import { CaretakerList } from "@/components/properties/caretaker-list";
+import { CaretakerAssignDrawer } from "@/components/properties/caretaker-assign-drawer";
 import { ArchivePropertyButton } from "@/components/properties/archive-property-button";
+import { EditPropertyDrawer } from "@/components/properties/property-drawer";
+import { AddUnitDrawer } from "@/components/properties/unit-drawer";
 
 const UNIT_STATUS_TONE = { VACANT: "neutral", OCCUPIED: "success", MAINTENANCE: "warning", RESERVED: "neutral" } as const;
 
@@ -43,8 +45,8 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
         actions={
           canManage && (
             <>
-              <Link href={`/app/properties/${id}/edit`}><Button variant="secondary">Edit</Button></Link>
-              <Link href={`/app/properties/${id}/units/new`}><Button>Add units</Button></Link>
+              <EditPropertyDrawer propertyId={id} defaults={property} />
+              <AddUnitDrawer propertyId={id} />
             </>
           )
         }
@@ -100,14 +102,16 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
             )}
           </Card>
 
-          <Card header={<h3 className="font-semibold text-ink">Caretakers</h3>}>
+          <Card
+            header={
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-semibold text-ink">Caretakers</h3>
+                {canManage && <CaretakerAssignDrawer propertyId={id} caretakers={caretakers} units={property.units} />}
+              </div>
+            }
+          >
             {canManage ? (
-              <CaretakerAssignForm
-                propertyId={id}
-                caretakers={caretakers}
-                units={property.units}
-                assignments={property.caretakerAssignments}
-              />
+              <CaretakerList propertyId={id} units={property.units} assignments={property.caretakerAssignments} />
             ) : property.caretakerAssignments.length === 0 ? (
               <p className="text-sm text-ink-muted">No caretakers assigned.</p>
             ) : (

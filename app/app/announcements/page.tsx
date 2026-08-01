@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ComposeForm } from "@/components/announcements/compose-form";
+import { ComposeDrawer } from "@/components/announcements/compose-drawer";
 
 const AUDIENCE_LABEL = { ALL: "All tenants", PROPERTY: "Property", UNIT: "Unit" } as const;
 
@@ -23,13 +23,11 @@ export default async function AnnouncementsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Announcements" description="Publish updates to your tenants." />
-
-      {canPublish && (
-        <Card header={<h3 className="font-semibold text-ink">Compose</h3>} className="max-w-2xl">
-          <ComposeForm properties={properties} />
-        </Card>
-      )}
+      <PageHeader
+        title="Announcements"
+        description="Publish updates to your tenants."
+        actions={canPublish && <ComposeDrawer properties={properties} />}
+      />
 
       <Card header={<h3 className="font-semibold text-ink">Published</h3>}>
         {announcements.length === 0 ? (

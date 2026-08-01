@@ -17,7 +17,6 @@ export default async function TenantLayout({ children }: { children: ReactNode }
 
   return (
     <PortalShell
-      brandTitle="SILQU"
       brandSubtitle="Tenant Portal"
       navItems={navForUser("tenant", user)}
       user={{ fullName: user.fullName, role: "Tenant" }}

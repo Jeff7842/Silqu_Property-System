@@ -10,6 +10,7 @@ import { bustKpiCache } from "@/server/services/redis/kpi-cache";
 import { toCents } from "@/lib/money";
 import { propertySchema } from "@/server/validators/property.schema";
 import { unitSchema, bulkUnitSchema, unitStatusSchema } from "@/server/validators/unit.schema";
+import { assignCaretakerSchema } from "@/server/validators/caretaker.schema";
 import { unitHasActiveLease, isUnitAssignedToCaretaker } from "@/server/db/queries/properties";
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
@@ -180,9 +181,12 @@ export async function assignCaretakerAction(propertyId: string, _prev: ActionSta
   const { user, error } = await requirePropertyManager();
   if (!user) return { error };
 
-  const userId = String(formData.get("userId") ?? "");
-  const unitId = (formData.get("unitId") as string) || null;
-  if (!userId) return { error: "Choose a caretaker." };
+  const parsed = assignCaretakerSchema.safeParse(fields(formData));
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const { userId, unitId } = parsed.data;
+
+  const property = await db.property.findFirst({ where: { id: propertyId, orgId: user.orgId! } });
+  if (!property) return { error: "Property not found." };
 
   const caretaker = await db.user.findFirst({ where: { id: userId, orgId: user.orgId!, role: "CARETAKER" } });
   if (!caretaker) return { error: "Caretaker not found." };
@@ -199,6 +203,11 @@ export async function assignCaretakerAction(propertyId: string, _prev: ActionSta
 export async function unassignCaretakerAction(assignmentId: string, propertyId: string): Promise<ActionState> {
   const { user, error } = await requirePropertyManager();
   if (!user) return { error };
+
+  const assignment = await db.caretakerAssignment.findFirst({
+    where: { id: assignmentId, property: { orgId: user.orgId! } },
+  });
+  if (!assignment) return { error: "Assignment not found." };
 
   await db.caretakerAssignment.delete({ where: { id: assignmentId } });
   logAudit({ orgId: user.orgId, actorUserId: user.id, action: "caretaker.unassigned", entityType: "Property", entityId: propertyId, before: { assignmentId } });

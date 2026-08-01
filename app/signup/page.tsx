@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Logo } from "@/components/ui/logo";
 import { SignupWizard } from "@/components/auth/signup-wizard";
 
 export const metadata: Metadata = { title: "Sign up – SILQU" };
@@ -9,7 +10,7 @@ export default function SignupPage() {
       {/* Left panel : marketing */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(15,45,82,0.9),rgba(15,45,82,0.95))]" />
-        <div className="relative z-10 text-3xl font-black tracking-tight">SILQU</div>
+        <div className="relative z-10"><Logo height={32} onDark /></div>
         <div className="relative z-10 mt-auto max-w-md">
           <h2 className="text-4xl font-black leading-tight">
             Join the premier property management platform in Kenya.

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@/components/ui/icon";
+import { Logo } from "@/components/ui/logo";
 import { BusinessLoginForm } from "@/components/auth/business-login-form";
 
 export const metadata: Metadata = { title: "Sign in – SILQU" };
@@ -17,7 +18,7 @@ export default function LoginPage() {
         <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
         <div className="absolute inset-0 bg-linear-to-b from-navy/85 to-navy/95" />
         <div className="relative z-10 flex flex-col">
-          <span className="text-3xl font-black tracking-tight">SILQU</span>
+          <Logo height={32} onDark />
         </div>
         <div className="relative z-10 mt-auto flex flex-col gap-6">
           <h2 className="text-4xl font-black leading-tight">Manage smarter.</h2>
@@ -50,7 +51,7 @@ export default function LoginPage() {
       {/* Right panel : form */}
       <div className="flex w-full flex-col items-center justify-center bg-canvas p-4 md:w-[55%]">
         <div className="mb-6 md:hidden">
-          <span className="text-2xl font-black text-navy">SILQU</span>
+          <Logo height={28} />
         </div>
         <div className="w-full max-w-md rounded-[--radius-card] border border-line bg-surface p-6 shadow-[--shadow-card] lg:p-8">
           <div className="mb-6 text-center">

@@ -14,6 +14,7 @@ import { PasswordInput } from "@/components/auth/password-input";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { StkPushPayment } from "@/components/mpesa/stk-push-payment";
+import { normalizeKenyaPhone } from "@/lib/phone";
 
 const STEPS = ["Account Details", "Activate Subscription", "Check Your Email"] as const;
 
@@ -51,12 +52,13 @@ export function SignupWizard() {
   const [step, setStep] = useState(1);
   const [orgId, setOrgId] = useState<string | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
+  const [phoneField, setPhoneField] = useState("");
   const [state, formAction, pending] = useActionState<SignUpState, FormData>(
     async (prevState, formData) => {
       const result = await createManagerAccountAction(prevState, formData);
       if (result?.orgId) {
         setOrgId(result.orgId);
-        setPhone(`254${formData.get("phone")}`);
+        setPhone(`254${normalizeKenyaPhone(String(formData.get("phone"))) ?? formData.get("phone")}`);
         setStep(2);
       }
       return result;
@@ -101,6 +103,9 @@ export function SignupWizard() {
                   label="Phone Number"
                   name="phone"
                   type="tel"
+                  value={phoneField}
+                  onChange={(e) => setPhoneField(e.target.value)}
+                  onBlur={() => setPhoneField((v) => normalizeKenyaPhone(v) ?? v)}
                   prefix="+254"
                   placeholder="712 345 678"
                   required

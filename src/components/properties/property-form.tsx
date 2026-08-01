@@ -1,8 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -13,21 +11,20 @@ const PROPERTY_TYPES = ["APARTMENT", "BUNGALOW", "MAISONETTE", "COMMERCIAL", "OT
 
 export function PropertyForm({
   action,
-  redirectTo,
+  onSuccess,
   defaults,
   submitLabel = "Save property",
 }: {
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>;
-  redirectTo: string;
+  onSuccess?: () => void;
   defaults?: { name: string; county: string; town: string; address: string; type: string };
   submitLabel?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
-  const router = useRouter();
 
   useEffect(() => {
-    if (state?.success) router.push(redirectTo);
-  }, [state?.success, redirectTo, router]);
+    if (state?.success) onSuccess?.();
+  }, [state?.success, onSuccess]);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">

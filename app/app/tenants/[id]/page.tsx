@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/server/auth/business";
 import { requireOrg, requireRole } from "@/server/auth/session";
@@ -9,7 +8,6 @@ import { listTenantDocuments } from "@/server/db/queries/documents";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Money } from "@/components/ui/money";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Icon } from "@/components/ui/icon";
@@ -19,6 +17,7 @@ import { LeaseActions } from "@/components/tenants/lease-actions";
 import { SendInviteButton, ArchiveTenantButton } from "@/components/tenants/tenant-actions";
 import { DocumentUpload } from "@/components/tenants/document-upload";
 import { RecordPaymentForm } from "@/components/tenants/record-payment-form";
+import { EditTenantDrawer } from "@/components/tenants/tenant-drawer";
 
 const LEASE_TONE = { PENDING: "warning", ACTIVE: "success", ENDED: "neutral", TERMINATED: "danger" } as const;
 
@@ -50,7 +49,7 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
         actions={
           canManage && (
             <>
-              <Link href={`/app/tenants/${id}/edit`}><Button variant="secondary">Edit</Button></Link>
+              <EditTenantDrawer tenantId={id} defaults={tenant} />
               {!tenant.userId && !pendingInvite && tenant.email && <SendInviteButton tenantId={id} />}
               {tenant.status === "ACTIVE" && <ArchiveTenantButton tenantId={id} />}
             </>

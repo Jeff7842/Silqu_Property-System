@@ -80,7 +80,7 @@ const STEPS = [
 const TESTIMONIALS = [
   {
     quote:
-      "Before SILQU, end of month was a nightmare of bank statements and M-Pesa messages. Now the system reconciles automatically — it's saved me hours of admin work.",
+      "Before SILQU, end of month was a nightmare of bank statements and M-Pesa messages. Now the system reconciles automatically : it's saved me hours of admin work.",
     name: "David Kiprono",
     role: "Nairobi West Properties",
   },

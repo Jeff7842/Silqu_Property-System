@@ -1,7 +1,7 @@
 import { redis } from "@/server/services/redis/client";
 
 // A platform staffer viewing one org's detail page is scoped, time-boxed and
-// audited — this is that scope's TTL, not a general "how long until logout" value.
+// audited : this is that scope's TTL, not a general "how long until logout" value.
 const TTL_SECONDS = 30 * 60; // 30 minutes
 
 export type SupportSession = { reason: string; startedAt: string };
@@ -14,7 +14,7 @@ function sessionKey(platformUserId: string, orgId: string): string {
  * Reads the live support session for this (staffer, org) pair, or null if
  * none exists / it expired. No-op-safe: always null until Redis is
  * configured, which means the org-detail page always shows the "give a
- * reason" form in that case — the gate degrades to "ask every time" rather
+ * reason" form in that case : the gate degrades to "ask every time" rather
  * than "let everyone through", since this guards visibility into another
  * org's tenant/financial data.
  */

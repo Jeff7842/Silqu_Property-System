@@ -6,7 +6,7 @@ import type { IconName } from "@/lib/icons";
 
 export const metadata: Metadata = {
   title: "Contact – SILQU",
-  description: "Get in touch with the SILQU team — general inquiries, technical support and billing questions.",
+  description: "Get in touch with the SILQU team : general inquiries, technical support and billing questions.",
 };
 
 const CONTACT_CARDS: { icon: IconName; title: string; description: string; detail: string }[] = [

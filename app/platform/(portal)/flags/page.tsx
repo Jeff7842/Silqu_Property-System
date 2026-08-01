@@ -9,18 +9,18 @@ import { FeatureFlagRow } from "@/components/flags/feature-flag-row";
 
 export default async function FlagsPage() {
   const session = await auth();
-  // toggleFeatureFlag is PLATFORM_ADMIN only per the permission matrix — PLATFORM_SUPPORT has no access at all here.
+  // toggleFeatureFlag is PLATFORM_ADMIN only per the permission matrix : PLATFORM_SUPPORT has no access at all here.
   requireRole(session, ["PLATFORM_ADMIN"]);
 
   // Postgres (feature_flags table) is the source of truth, so this page works
-  // with or without Redis configured — Redis is only an optional read-through
+  // with or without Redis configured : Redis is only an optional read-through
   // cache in front of it now, no longer a hard requirement to manage flags.
   const flags = await getFlags();
   const entries = Object.entries(flags);
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Feature flags" description="Rollout toggles — no code deploy required." />
+      <PageHeader title="Feature flags" description="Rollout toggles : no code deploy required." />
 
       <Card header={<h3 className="font-semibold text-ink">Add or update a flag</h3>}>
         <FeatureFlagForm />

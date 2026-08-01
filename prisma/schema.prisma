@@ -1,12 +1,12 @@
-// SILQU data model — see docs/SILQU_BUILD_PLAN_V2.md section 5.
+// SILQU data model : see docs/SILQU_BUILD_PLAN_V2.md section 5.
 //
-// Money: every *Cents column is Int (never Float/Decimal/BigInt on a row —
+// Money: every *Cents column is Int (never Float/Decimal/BigInt on a row :
 // section 5.3). Cap is 2,147,483,647 cents = KES 21,474,836 per row; a
 // CHECK enforcing that cap lives in a hand-written migration, not here
 // (Prisma's schema DSL can't express CHECK constraints).
 //
 // Multi-tenancy: every org-owned model carries orgId and is indexed on it.
-// Financial relations use onDelete: Restrict — archive, never delete.
+// Financial relations use onDelete: Restrict : archive, never delete.
 
 generator client {
   provider = "prisma-client"
@@ -485,7 +485,7 @@ model MpesaTransaction {
   phone             String
   amountCents       Int
   accountRef        String
-  // RENT purpose only — which lease/tenant to allocate the completed payment
+  // RENT purpose only : which lease/tenant to allocate the completed payment
   // to. accountRef alone can't carry this: Daraja's AccountReference field is
   // capped at 12 characters, too short for a cuid.
   tenantId          String?

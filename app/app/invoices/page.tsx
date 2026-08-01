@@ -84,7 +84,7 @@ export default async function InvoicesPage({
           columns={[
             { key: "no", header: "Invoice", render: (inv) => <Link href={`/app/invoices/${inv.id}`} className="font-medium text-primary hover:underline">{inv.invoiceNo}</Link> },
             { key: "tenant", header: "Tenant", render: (inv) => <span>{inv.lease.tenant.fullName}</span> },
-            { key: "unit", header: "Unit", render: (inv) => <span className="text-ink-muted">{inv.lease.unit.property.name} — {inv.lease.unit.label}</span> },
+            { key: "unit", header: "Unit", render: (inv) => <span className="text-ink-muted">{inv.lease.unit.property.name} : {inv.lease.unit.label}</span> },
             { key: "period", header: "Period", render: (inv) => `${MONTHS[inv.periodMonth - 1]} ${inv.periodYear}` },
             { key: "status", header: "Status", render: (inv) => <Badge tone={INVOICE_TONE[inv.status]}>{inv.status.replace("_", " ")}</Badge> },
             { key: "balance", header: "Balance", align: "right", render: (inv) => <Money cents={inv.balanceCents} tone={inv.balanceCents > 0 ? "negative" : "default"} size="small" /> },

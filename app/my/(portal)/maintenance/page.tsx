@@ -36,7 +36,7 @@ export default async function TenantMaintenancePage() {
               <Link key={r.id} href={`/my/maintenance/${r.id}`} className="flex items-center justify-between py-3 hover:bg-canvas">
                 <div>
                   <p className="text-sm font-medium text-ink">{r.category.replace("_", " ")}</p>
-                  <p className="text-xs text-ink-muted">{r.unit.property.name} — {r.unit.label} · {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(r.createdAt)}</p>
+                  <p className="text-xs text-ink-muted">{r.unit.property.name} : {r.unit.label} · {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(r.createdAt)}</p>
                 </div>
                 <Badge tone={STATUS_TONE[r.status]}>{r.status.replace("_", " ")}</Badge>
               </Link>

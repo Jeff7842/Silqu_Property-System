@@ -10,7 +10,7 @@ export type ActionState = { error?: string; success?: boolean } | undefined;
 
 /**
  * Toggles an org between ACTIVE and SUSPENDED. Archived orgs are left alone
- * — reactivating an archive isn't this button's job. `authorizeCredentials`
+ * : reactivating an archive isn't this button's job. `authorizeCredentials`
  * (src/server/auth/authorize.ts) checks org.status on every sign-in across
  * all three portals, so a SUSPENDED org's staff and tenants are locked out
  * immediately.

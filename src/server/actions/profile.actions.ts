@@ -13,14 +13,14 @@ export type ActionState = { error?: string; success?: boolean } | undefined;
  * Changes the signed-in tenant's own NextAuth password.
  * @param formData - currentPassword, newPassword, confirmPassword.
  * @returns { success: true } on success, or { error } describing what to fix.
- * @throws Never — all failures are returned as structured ActionState, since
+ * @throws Never : all failures are returned as structured ActionState, since
  *   this is a form action and the UI needs a message, not a thrown error.
  * Why it exists: tenants have no self-service way to rotate a compromised or
  * forgotten-but-still-known password without going through the manager.
  */
 export async function changePasswordAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const session = await auth();
-  // Own-user-id only — the id comes from the session, never from the client,
+  // Own-user-id only : the id comes from the session, never from the client,
   // so there's no capability check beyond "is this a signed-in tenant".
   const user = requireRole(session, ["TENANT"]);
 

@@ -8,10 +8,10 @@ export const metadata: Metadata = { title: "Sign in – SILQU" };
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col md:flex-row">
-      {/* Left panel — marketing. "Updated Background" per the Stitch screen:
+      {/* Left panel : marketing. "Updated Background" per the Stitch screen:
           soft token-based glow instead of a flat fill, no external image
           (the Stitch project's photo asset is served from a signed,
-          expiring Google URL — not safe to hotlink from production). */}
+          expiring Google URL : not safe to hotlink from production). */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-navy p-8 text-white md:flex">
         <div className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-primary/40 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -right-16 size-96 rounded-full bg-accent/20 blur-3xl" />
@@ -47,7 +47,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right panel — form */}
+      {/* Right panel : form */}
       <div className="flex w-full flex-col items-center justify-center bg-canvas p-4 md:w-[55%]">
         <div className="mb-6 md:hidden">
           <span className="text-2xl font-black text-navy">SILQU</span>

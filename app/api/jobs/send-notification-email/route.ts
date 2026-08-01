@@ -5,7 +5,7 @@ import { escapeHtml, sendEmail } from "@/server/services/email/client";
 
 // The most-used email path: every notify() call in the app (announcements,
 // maintenance assignment/resolution, payment confirmations, etc.) fans out
-// here. Idempotent by nature — re-sending the same notification email has
+// here. Idempotent by nature : re-sending the same notification email has
 // no destructive side effect, only a duplicate, which is fine for a
 // QStash-retried job.
 async function handler(req: Request) {

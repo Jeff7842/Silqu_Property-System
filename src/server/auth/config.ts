@@ -6,7 +6,7 @@ import { PORTAL_CONFIG } from "@/server/auth/portals";
 /**
  * Shared by all three portals' full NextAuth() instances (business.ts,
  * tenant.ts, platform.ts). src/proxy.ts imports and reuses those same
- * `auth` exports rather than creating its own — six separate NextAuth()
+ * `auth` exports rather than creating its own : six separate NextAuth()
  * instances in one process (three here + three more in proxy.ts) was the
  * actual cause of sessions never surviving the post-sign-in redirect: the
  * jwt/session callbacks decoded correctly, cookies().set() ran, but the
@@ -18,7 +18,7 @@ export function baseAuthConfig(portal: Portal): NextAuthConfig {
   return {
     basePath: `/api/auth/${portal}`,
     // Without this, Auth.js rejects the Host header it needs to build its
-    // internal sign-in URL whenever the app isn't on a fixed AUTH_URL —
+    // internal sign-in URL whenever the app isn't on a fixed AUTH_URL :
     // which is always true in dev, since the port varies (3000 vs 3001).
     trustHost: true,
     session: {

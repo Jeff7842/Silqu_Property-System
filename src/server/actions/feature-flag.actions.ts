@@ -8,7 +8,7 @@ import { getFlags, setFlag, type FeatureFlag } from "@/server/services/redis/fea
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
-// e.g. "new-invoice-ui" — restrictive on purpose so a typo'd key can't collide with something unrelated in the hash.
+// e.g. "new-invoice-ui" : restrictive on purpose so a typo'd key can't collide with something unrelated in the hash.
 const KEY_PATTERN = /^[a-z0-9][a-z0-9-_]{1,63}$/i;
 
 async function writeFlag(actorUserId: string, key: string, flag: FeatureFlag) {
@@ -18,7 +18,7 @@ async function writeFlag(actorUserId: string, key: string, flag: FeatureFlag) {
   revalidatePath("/platform/flags");
 }
 
-/** Add-or-update form on the flags page — validates the typed key/percent before writing. */
+/** Add-or-update form on the flags page : validates the typed key/percent before writing. */
 export async function upsertFeatureFlagAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const session = await auth();
   const user = requireRole(session, ["PLATFORM_ADMIN"]);
@@ -36,7 +36,7 @@ export async function upsertFeatureFlagAction(_prev: ActionState, formData: Form
   return { success: true };
 }
 
-/** Quick enable/disable from the flag list row — keeps the existing rollout percent. */
+/** Quick enable/disable from the flag list row : keeps the existing rollout percent. */
 export async function toggleFeatureFlagAction(key: string, enabled: boolean, rolloutPercent: number): Promise<ActionState> {
   const session = await auth();
   const user = requireRole(session, ["PLATFORM_ADMIN"]);

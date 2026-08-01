@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { db } from "@/server/db/client";
 
-/** Undefined until RESEND_API_KEY is set — not provisioned yet. sendEmail() falls back to logging. */
+/** Undefined until RESEND_API_KEY is set : not provisioned yet. sendEmail() falls back to logging. */
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : undefined;
 
 export type SendEmailParams = {
@@ -18,12 +18,12 @@ export type SendEmailParams = {
 
 /**
  * Sends a transactional email via Resend, or no-ops (logs) if Resend isn't
- * configured — same "absent env var -> skip" shape as mpesa/client.ts and
+ * configured : same "absent env var -> skip" shape as mpesa/client.ts and
  * queue/client.ts's publishJob, so this activates automatically the moment
  * RESEND_API_KEY and RESEND_FROM_EMAIL are set, with no code change needed.
  *
  * Every attempt is written to EmailLog (SENT or FAILED), mirroring how
- * M-Pesa transactions are recorded — support needs to see what was sent to
+ * M-Pesa transactions are recorded : support needs to see what was sent to
  * a tenant without grepping Vercel logs.
  *
  * @param params.to - recipient address
@@ -34,7 +34,7 @@ export type SendEmailParams = {
  */
 export async function sendEmail(params: SendEmailParams): Promise<string | null> {
   if (!resend || !process.env.RESEND_FROM_EMAIL) {
-    console.log(`[email] Resend not configured — skipping send to ${params.to}: ${params.subject}`);
+    console.log(`[email] Resend not configured : skipping send to ${params.to}: ${params.subject}`);
     return null;
   }
 
@@ -65,7 +65,7 @@ export async function sendEmail(params: SendEmailParams): Promise<string | null>
   }
 }
 
-/** Escapes free-text values before they're interpolated into an email's HTML body — the email HTML has no template engine doing this for us. */
+/** Escapes free-text values before they're interpolated into an email's HTML body : the email HTML has no template engine doing this for us. */
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -75,7 +75,7 @@ export function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-/** Fire-and-forget, matching logAudit()'s pattern — a logging write must never block or fail the send it's recording. */
+/** Fire-and-forget, matching logAudit()'s pattern : a logging write must never block or fail the send it's recording. */
 function writeEmailLog(params: SendEmailParams, status: "SENT" | "FAILED", providerId: string | null, error: string | null) {
   return db.emailLog
     .create({

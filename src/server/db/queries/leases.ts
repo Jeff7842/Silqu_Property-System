@@ -27,7 +27,7 @@ export function getActiveLeaseForUnit(orgId: string, unitId: string) {
   });
 }
 
-// Tenant portal lease page starts from the signed-in user, not a unit — resolve
+// Tenant portal lease page starts from the signed-in user, not a unit : resolve
 // their Tenant row first, then its current active lease with unit + property.
 export async function getActiveLeaseForTenantUser(orgId: string, userId: string) {
   const tenant = await db.tenant.findFirst({

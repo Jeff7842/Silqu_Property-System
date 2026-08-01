@@ -11,7 +11,7 @@ export default async function TenantProfilePage() {
   const user = requireRole(session, ["TENANT"]);
   const orgId = requireOrg(session);
 
-  // Same inline own-record lookup pattern as app/my/(portal)/payments/page.tsx —
+  // Same inline own-record lookup pattern as app/my/(portal)/payments/page.tsx :
   // a single-row, session-scoped read that isn't worth a dedicated query module.
   const tenant = await db.tenant.findFirst({
     where: { orgId, userId: user.id },
@@ -35,7 +35,7 @@ export default async function TenantProfilePage() {
             </div>
             <div className="flex justify-between">
               <dt className="text-ink-muted">Phone</dt>
-              <dd className="text-ink">{tenant?.phone ? formatPhone(tenant.phone) : "—"}</dd>
+              <dd className="text-ink">{tenant?.phone ? formatPhone(tenant.phone) : ":"}</dd>
             </div>
             {tenant?.nationalId && (
               <div className="flex justify-between">

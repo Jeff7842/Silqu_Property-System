@@ -15,7 +15,7 @@ const client = new Client({ token });
 // ponytail: only the job Phase 7 actually built is scheduled here. The build
 // plan's other three (arrears reminders, lease expiry, subscription renewals)
 // depend on features not built yet (email, lease-expiry checks, subscriptions
-// billing) — add them here once their /api/jobs/* routes exist.
+// billing) : add them here once their /api/jobs/* routes exist.
 const schedules = [
   { path: "/api/jobs/generate-invoices", cron: "0 6 1 * *", label: "Monthly invoice generation (1st, 06:00)" },
   { path: "/api/jobs/reconcile-mpesa", cron: "*/30 * * * *", label: "M-Pesa reconciliation sweep (every 30 min)" },

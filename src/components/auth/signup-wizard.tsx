@@ -159,7 +159,7 @@ export function SignupWizard() {
           <Icon name="email" size={64} className="mx-auto mb-4 text-primary" />
           <h2 className="mb-2 text-2xl font-bold text-primary">Check Your Email</h2>
           <p className="mb-6 text-sm text-ink-muted">
-            We&apos;ve sent a welcome email to your inbox. Your account is ready — sign in whenever
+            We&apos;ve sent a welcome email to your inbox. Your account is ready : sign in whenever
             you like.
           </p>
           <Link href="/login">

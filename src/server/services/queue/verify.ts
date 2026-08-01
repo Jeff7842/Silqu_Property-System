@@ -6,7 +6,7 @@ type Handler = (req: Request) => Promise<Response>;
 /**
  * Wraps a /api/jobs/* handler with QStash signature verification. If the
  * signing keys aren't configured yet, returns a handler that always rejects
- * — verifySignatureAppRouter itself throws at import time without them,
+ * : verifySignatureAppRouter itself throws at import time without them,
  * which would otherwise take the whole build down. Never runs a job body
  * without a verified signature.
  */

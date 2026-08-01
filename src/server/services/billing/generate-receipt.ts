@@ -6,7 +6,7 @@ import { escapeHtml, sendEmail } from "@/server/services/email/client";
 
 /**
  * Called right after a payment's allocation transaction commits (never inside
- * it — PDF rendering + upload has no place holding a database transaction open).
+ * it : PDF rendering + upload has no place holding a database transaction open).
  * Shared by the record-payment action (calls it directly, since QStash isn't
  * provisioned in dev) and the /api/jobs/send-receipt job (for when it is).
  */
@@ -32,7 +32,7 @@ export async function generateAndStoreReceipt(paymentId: string) {
   });
 
   if (!r2) {
-    console.log(`[receipt] storage not configured — generated ${pdf.length}-byte PDF for payment ${paymentId} but couldn't store it`);
+    console.log(`[receipt] storage not configured : generated ${pdf.length}-byte PDF for payment ${paymentId} but couldn't store it`);
     return null;
   }
 
@@ -48,7 +48,7 @@ export async function generateAndStoreReceipt(paymentId: string) {
     console.log(`[receipt] ${payment.tenant.email} -> ${downloadLink}`);
     await sendEmail({
       to: payment.tenant.email,
-      subject: `Your SILQU payment receipt — ${payment.lease.unit.label}`,
+      subject: `Your SILQU payment receipt : ${payment.lease.unit.label}`,
       template: "payment-receipt",
       orgId: payment.orgId,
       html: `<p>Hi ${escapeHtml(payment.tenant.fullName)},</p><p>We've recorded your payment of KES ${(payment.amountCents / 100).toLocaleString("en-KE")} for ${escapeHtml(payment.lease.unit.label)}.</p><p><a href="${downloadLink}">Download your receipt</a></p>`,

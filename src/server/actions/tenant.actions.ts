@@ -10,7 +10,7 @@ import { generateToken } from "@/server/auth/password";
 import { tenantSchema } from "@/server/validators/tenant.schema";
 import { escapeHtml, sendEmail } from "@/server/services/email/client";
 
-/** Reuses QSTASH_TARGET_BASE_URL as "the public origin this deployment is reachable at" — same value already used to build callback URLs. */
+/** Reuses QSTASH_TARGET_BASE_URL as "the public origin this deployment is reachable at" : same value already used to build callback URLs. */
 function inviteLink(token: string) {
   return `${process.env.QSTASH_TARGET_BASE_URL ?? ""}/my/accept-invite?token=${token}`;
 }

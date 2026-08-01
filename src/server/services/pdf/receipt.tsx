@@ -35,7 +35,7 @@ function ReceiptDocument({ data }: { data: ReceiptData }) {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Unit</Text>
-          <Text>{data.propertyName} — {data.unitLabel}</Text>
+          <Text>{data.propertyName} : {data.unitLabel}</Text>
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Date</Text>

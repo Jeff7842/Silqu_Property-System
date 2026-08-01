@@ -1,17 +1,17 @@
-# SILQU — Rental Property Management System
-## Master Build Plan for Claude Code — v2.0 (Three Portals)
+# SILQU : Rental Property Management System
+## Master Build Plan for Claude Code : v2.0 (Three Portals)
 
 **Project:** SILQU Rental Property Management System
-**Student:** Muchiri Jefferson Kimotho — ADM 23/06135
+**Student:** Muchiri Jefferson Kimotho : ADM 23/06135
 **Programme:** Bachelor of Information Technology, KCA University
-**Unit:** BIT-04205 — Final Programming Project II
+**Unit:** BIT-04205 : Final Programming Project II
 **Supervisor:** Issac Okola
-**Version:** 2.0 — supersedes v1.0 entirely
+**Version:** 2.0 : supersedes v1.0 entirely
 **Purpose:** The single source of truth Claude Code reads before writing any SILQU code.
 
 ---
 
-## CHANGE LOG — WHAT CHANGED FROM v1.0 AND WHY
+## CHANGE LOG : WHAT CHANGED FROM v1.0 AND WHY
 
 | # | v1.0 | v2.0 | Reason |
 |---|---|---|---|
@@ -22,11 +22,11 @@
 | 5 | (none) | **Upstash Redis** | Rate limiting, caching, idempotency keys, distributed locks, STK status polling |
 | 6 | Cloudflare R2 | **Cloudflare R2** (expanded) | Now with private buckets + signed reads for tenant ID documents |
 | 7 | Radix UI primitives | **Preline UI v4.2** | Your call. Preline gives you 60+ prebuilt Tailwind components; anything missing is sourced outside and listed in §7.4 |
-| 8 | Tailwind v3 + `tailwind.config.ts` | **Tailwind CSS v4 + CSS-first `@theme`** | Forced by Preline v4.2 — it ships `@source`, `@import`, `@plugin` and `@custom-variant` directives, which are Tailwind v4 syntax |
+| 8 | Tailwind v3 + `tailwind.config.ts` | **Tailwind CSS v4 + CSS-first `@theme`** | Forced by Preline v4.2 : it ships `@source`, `@import`, `@plugin` and `@custom-variant` directives, which are Tailwind v4 syntax |
 
 ### A small but important correction
 
-You asked to *"use Iconify instead of Lucide."* These are not alternatives to each other — they sit at different layers:
+You asked to *"use Iconify instead of Lucide."* These are not alternatives to each other : they sit at different layers:
 
 - **Iconify** is the *delivery system*: one React package (`@iconify/react`) that can fetch icons from 200+ icon sets on demand.
 - **Lucide** is one *icon set* that Iconify serves, addressed as `lucide:building-2`.
@@ -51,7 +51,7 @@ This document is the **architect's drawing set**. Claude Code is the builder. A 
 
 Scope bleed inside a session is how student projects die. You ask for a login page, the AI also builds a dashboard and half a payment form, nothing is tested, and now you cannot tell which part broke.
 
-### 0.3 Session opener — paste this every time
+### 0.3 Session opener : paste this every time
 
 ```
 Read CLAUDE.md and docs/SILQU_BUILD_PLAN_V2.md before doing anything.
@@ -68,14 +68,14 @@ Then paste that phase's **Claude Code prompt**.
 
 | Section | Contents |
 |---|---|
-| 1 | Architecture — the why behind every tool |
-| 2 | Design system — tokens, type, Solar icons, Tailwind v4 setup |
-| 3 | **The three portals** — routing, subdomains, themes |
+| 1 | Architecture : the why behind every tool |
+| 2 | Design system : tokens, type, Solar icons, Tailwind v4 setup |
+| 3 | **The three portals** : routing, subdomains, themes |
 | 4 | File and folder structure |
-| 5 | Data model — Prisma schema design |
+| 5 | Data model : Prisma schema design |
 | 6 | Roles and permissions across three portals |
 | 7 | **Preline UI component mapping** + what to source outside |
-| 8 | Infrastructure — Redis, QStash, R2 |
+| 8 | Infrastructure : Redis, QStash, R2 |
 | 9 | **The 10 phases** |
 | 10 | Environment variables |
 | 11 | Mistakes ledger |
@@ -90,8 +90,8 @@ Then paste that phase's **Claude Code prompt**.
 
 SILQU is a **shop with three doors**.
 
-- The **shopfront** is what people see — the Next.js frontend. Pretty, fast, and it never touches the money box.
-- The **shopkeeper behind the counter** is the backend — Server Actions, API routes, and a small Go helper. He checks whether you are allowed to ask before he does anything.
+- The **shopfront** is what people see : the Next.js frontend. Pretty, fast, and it never touches the money box.
+- The **shopkeeper behind the counter** is the backend : Server Actions, API routes, and a small Go helper. He checks whether you are allowed to ask before he does anything.
 - The **stockroom** is the database (Neon Postgres). Nobody enters it except the shopkeeper.
 - **Three doors** because three different kinds of people come: the *landlord and his staff*, the *tenants*, and *you, the developer who owns the building*. Each door opens into a different room. None of them connects to another.
 - **M-Pesa** is the bank across the street. Your shopkeeper phones them; they phone back later.
@@ -108,7 +108,7 @@ A customer must never walk straight into the stockroom. That sentence is the ent
 | Styling | **Tailwind CSS v4** | CSS-first configuration via `@theme`. Required by Preline v4.2. |
 | Components | **Preline UI v4.2** | 60+ prebuilt Tailwind components with real JS plugins. Free, open source, Figma file available. |
 | Icons | **Iconify + Solar set** | One package, on-demand loading, duotone styles that carry navy + gold. |
-| Database | **Neon (Serverless Postgres)** | Postgres gives you the ACID guarantees and joins your proposal defends. Neon adds database branching — a copy of your DB per Git branch. |
+| Database | **Neon (Serverless Postgres)** | Postgres gives you the ACID guarantees and joins your proposal defends. Neon adds database branching : a copy of your DB per Git branch. |
 | ORM | **Prisma** | Schema file is human-readable documentation. `prisma studio` is an excellent demo aid. Trade-offs in §1.4. |
 | Auth | **Auth.js v5 (Credentials + JWT)** | You own authentication now, which means you can explain every step under questioning. |
 | Hashing | **bcrypt (cost 12)** | Already your documented decision. Keep it. |
@@ -118,28 +118,28 @@ A customer must never walk straight into the stockroom. That sentence is the ent
 | Jobs / queue | **Upstash QStash** | Scheduled *and* queued HTTP jobs with retries and a dead-letter queue. |
 | File storage | **Cloudflare R2** | S3-compatible, no egress fees. Public bucket for property photos, **private** bucket for tenant ID documents. |
 | Email | **Resend** + React Email | Invitations, temp passwords, receipts, arrears reminders. |
-| Payments | **Safaricom Daraja — STK Push** | Subscription at manager sign-up; rent payment in the tenant portal. |
+| Payments | **Safaricom Daraja : STK Push** | Subscription at manager sign-up; rent payment in the tenant portal. |
 | Charts | **ApexCharts** (Preline's charting plugin) | Stays inside the Preline ecosystem. |
-| Tables | **TanStack Table** (headless) + Preline table markup | Deliberately *not* Preline Datatables — see §7.4. |
+| Tables | **TanStack Table** (headless) + Preline table markup | Deliberately *not* Preline Datatables : see §7.4. |
 | Reports service | **Go microservice** on Fly.io / Render | The concurrency claim in your proposal, made real and small. |
 | Hosting | **Vercel** | Zero-config Next.js, preview URL per PR. |
 | Testing | **Vitest** + **Playwright** | Maps onto the 25 cases in your Test Plan. |
 
 ### 1.3 Four decisions you must be able to defend out loud
 
-**Decision 1 — Money is stored as integers, never as decimals.**
+**Decision 1 : Money is stored as integers, never as decimals.**
 `14500.00` in a floating-point number is not exactly 14,500.00. Repeat that arithmetic a few thousand times and an arrears report is wrong by shillings with no traceable cause. So every money column is an integer of **cents**, named `*Cents`. KES 14,500 is stored as `1450000`. Formatting happens once, at the very last moment, in `<Money />`. This is what every payments engineer does.
 
-**Decision 2 — Multi-tenancy is enforced in a data-access layer, not in each page.**
-Every property, unit, tenant and invoice belongs to an `Organization`. If one query anywhere forgets its org filter, one landlord sees another landlord's tenants — a Data Protection Act, 2019 breach, not a bug. **No page component ever writes a query.** Everything goes through `src/server/db/queries/*`, where the scope is applied once and tested once.
+**Decision 2 : Multi-tenancy is enforced in a data-access layer, not in each page.**
+Every property, unit, tenant and invoice belongs to an `Organization`. If one query anywhere forgets its org filter, one landlord sees another landlord's tenants : a Data Protection Act, 2019 breach, not a bug. **No page component ever writes a query.** Everything goes through `src/server/db/queries/*`, where the scope is applied once and tested once.
 
-**Decision 3 — Three portals are three separate applications that happen to share a database.**
+**Decision 3 : Three portals are three separate applications that happen to share a database.**
 Not three menus in one app. Separate route groups, separate layouts, separate themes, separate login doors, separate middleware rules, separate session cookie names. A tenant session must be structurally incapable of rendering a platform page. This is defence in depth, and it is the single most impressive architectural point you can make in a viva.
 
-**Decision 4 — Anything that can fail and must not be lost goes on a queue.**
-Generating 200 invoices inside an HTTP request means a timeout leaves you half-billed. Emailing 200 receipts synchronously means one bad address kills the batch. QStash takes the job, retries it with backoff, and drops it into a dead-letter queue if it keeps failing — where you can see it and fix it. Cron cannot do that.
+**Decision 4 : Anything that can fail and must not be lost goes on a queue.**
+Generating 200 invoices inside an HTTP request means a timeout leaves you half-billed. Emailing 200 receipts synchronously means one bad address kills the batch. QStash takes the job, retries it with backoff, and drops it into a dead-letter queue if it keeps failing : where you can see it and fix it. Cron cannot do that.
 
-### 1.4 Prisma — the honest trade-offs
+### 1.4 Prisma : the honest trade-offs
 
 You chose Prisma. It is a good choice, and here is the balanced case so you can answer the examiner who asks "why not raw SQL?"
 
@@ -147,7 +147,7 @@ You chose Prisma. It is a good choice, and here is the balanced case so you can 
 - `schema.prisma` is a single readable file that *is* your data dictionary. Paste it straight into your SDS chapter.
 - Generated TypeScript types mean a renamed column becomes a compile error, not a runtime surprise.
 - `prisma migrate` gives you versioned, committed, reproducible schema history.
-- `prisma studio` is a clean visual browser — genuinely useful during your demo.
+- `prisma studio` is a clean visual browser : genuinely useful during your demo.
 - Relation queries (`include`, `select`) are readable to someone who has never seen an ORM.
 
 **What Prisma costs you, and how we mitigate it**
@@ -155,7 +155,7 @@ You chose Prisma. It is a good choice, and here is the balanced case so you can 
 | Cost | Mitigation |
 |---|---|
 | It hides the SQL, so you learn less about query performance | Enable query logging in dev (`log: ['query']`) and read what it generates. Run `EXPLAIN ANALYZE` on the slow ones in Phase 10. |
-| Serverless connection exhaustion — each function instance opens a pool | Use the **Neon driver adapter** (`@prisma/adapter-neon`) over the pooled connection string, plus a global client singleton. |
+| Serverless connection exhaustion : each function instance opens a pool | Use the **Neon driver adapter** (`@prisma/adapter-neon`) over the pooled connection string, plus a global client singleton. |
 | No partial unique indexes in the schema DSL | The `one ACTIVE lease per unit` index goes in a **hand-written migration SQL file**. Documented in §5.5. |
 | `BigInt` does not serialise to JSON, and cannot cross the Server→Client boundary in React | Use `Int` for per-row money (see §5.3) and a `toMoney()` boundary helper. |
 | Interactive transactions default to a 5-second timeout | Pass `{ maxWait, timeout }` explicitly on bulk operations. Bites you in Phase 7. |
@@ -172,8 +172,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")          // POOLED — used by the app
-  directUrl = env("DATABASE_URL_UNPOOLED") // DIRECT — used by migrations
+  url       = env("DATABASE_URL")          // POOLED : used by the app
+  directUrl = env("DATABASE_URL_UNPOOLED") // DIRECT : used by migrations
 }
 ```
 
@@ -187,9 +187,9 @@ datasource db {
 
 SILQU is a **ledger you can trust**, used by a Kenyan property manager standing in a corridor on a phone and by the same person at a desk at month-end.
 
-That drives everything: calm, dense with numbers, never ambiguous about money. The **signature move** is the ledger treatment — every money figure in the entire product is monospaced, right-aligned, with a muted `KES` prefix, so shillings line up digit-for-digit down a column. Nothing else in the UI shouts. That one detail makes SILQU read as accounting-grade rather than generic admin template.
+That drives everything: calm, dense with numbers, never ambiguous about money. The **signature move** is the ledger treatment : every money figure in the entire product is monospaced, right-aligned, with a muted `KES` prefix, so shillings line up digit-for-digit down a column. Nothing else in the UI shouts. That one detail makes SILQU read as accounting-grade rather than generic admin template.
 
-### 2.2 Tailwind v4 — the setup Preline forces, and why it is better
+### 2.2 Tailwind v4 : the setup Preline forces, and why it is better
 
 Preline v4.2 ships Tailwind v4 syntax (`@source`, `@import`, `@plugin`, `@custom-variant`). Tailwind v4 replaces `tailwind.config.ts` with **CSS-first configuration**: you declare your design tokens inside an `@theme` block in your stylesheet, and Tailwind generates the utility classes from them.
 
@@ -200,11 +200,11 @@ This is a genuine improvement for your project. Your token table below becomes l
 ```css
 @import "tailwindcss";
 
-/* Preline UI — must come after the tailwindcss import */
+/* Preline UI : must come after the tailwindcss import */
 @source "../../node_modules/preline/dist/*.js";
 @import "../../node_modules/preline/variants.css";
 
-/* Tailwind Forms plugin — required by all Preline form components */
+/* Tailwind Forms plugin : required by all Preline form components */
 @plugin "@tailwindcss/forms";
 
 /* ---------------------------------------------------------------
@@ -214,13 +214,13 @@ This is a genuine improvement for your project. Your token table below becomes l
    override a token at runtime and re-skin every component at once.
    --------------------------------------------------------------- */
 @theme {
-  /* Brand — navy */
+  /* Brand : navy */
   --color-navy-900: #0B2942;
   --color-navy-700: #14527A;
   --color-navy-500: #2E7BAE;
   --color-navy-100: #E6F0F7;
 
-  /* Brand — gold */
+  /* Brand : gold */
   --color-gold-700: #A6701A;
   --color-gold-500: #E9A227;
   --color-gold-300: #F7C96B;
@@ -238,7 +238,7 @@ This is a genuine improvement for your project. Your token table below becomes l
   --color-danger:  #C0392B;
   --color-info:    #2E75B6;
 
-  /* Semantic aliases — these are what portals re-point */
+  /* Semantic aliases : these are what portals re-point */
   --color-primary:       var(--color-navy-700);
   --color-primary-hover: var(--color-navy-900);
   --color-accent:        var(--color-gold-500);
@@ -253,7 +253,7 @@ This is a genuine improvement for your project. Your token table below becomes l
   --radius-control: 8px;
   --radius-card:    12px;
 
-  /* Elevation — exactly three levels, never invent a fourth */
+  /* Elevation : exactly three levels, never invent a fourth */
   --shadow-card:  0 1px 2px rgba(15,30,43,.06);
   --shadow-float: 0 8px 24px rgba(15,30,43,.10);
 }
@@ -284,7 +284,7 @@ This is a genuine improvement for your project. Your token table below becomes l
 }
 @custom-variant hover (&:hover);
 
-/* Focus ring — every interactive element, no exceptions */
+/* Focus ring : every interactive element, no exceptions */
 @layer base {
   :focus-visible {
     outline: 2px solid var(--color-accent);
@@ -293,11 +293,11 @@ This is a genuine improvement for your project. Your token table below becomes l
 }
 ```
 
-> **Beginner note — why `@theme` and not `@theme inline`?** With plain `@theme`, the class `bg-primary` compiles to `background-color: var(--color-primary)`. Because it still points at the variable, redefining that variable under `[data-portal="tenant"]` re-skins every button in the tenant portal instantly. With `@theme inline`, Tailwind bakes the literal hex into the class and portal theming stops working. One word, whole feature.
+> **Beginner note : why `@theme` and not `@theme inline`?** With plain `@theme`, the class `bg-primary` compiles to `background-color: var(--color-primary)`. Because it still points at the variable, redefining that variable under `[data-portal="tenant"]` re-skins every button in the tenant portal instantly. With `@theme inline`, Tailwind bakes the literal hex into the class and portal theming stops working. One word, whole feature.
 
 ### 2.3 Colour reference
 
-**Core brand — Business portal**
+**Core brand : Business portal**
 
 | Token | Hex | Used for |
 |---|---|---|
@@ -336,7 +336,7 @@ Scale (16px base):
 | `body` | 0.9375rem | 400 | 1.55 | Default |
 | `small` | 0.8125rem | 400 | 1.5 | Helper text |
 | `label` | 0.75rem | 500 | 1.4 | Uppercase, 0.06em tracking |
-| `metric` | 2rem | 500 | 1.1 | KPI numbers — IBM Plex Mono, tabular |
+| `metric` | 2rem | 500 | 1.1 | KPI numbers : IBM Plex Mono, tabular |
 
 Always apply `font-variant-numeric: tabular-nums` to money and metrics. Without it a `1` is narrower than a `7` and your columns wobble.
 
@@ -349,11 +349,11 @@ Always apply `font-variant-numeric: tabular-nums` to money and metrics. Without 
 - Buttons name the action: **"Record payment"**, not "Submit".
 - The name persists: a button labelled *Publish* produces a toast that says *Published*.
 - Errors say what happened and what to do: *"That phone number already belongs to another tenant. Use a different number, or open the existing tenant record."*
-- Empty states invite: *"No properties yet. Add your first property to start tracking units and rent."* — with the action right there.
+- Empty states invite: *"No properties yet. Add your first property to start tracking units and rent."* : with the action right there.
 - Sentence case everywhere except the `label` style.
 - Kenyan vocabulary: County, Estate, Caretaker, KES, M-Pesa code, `+254 7XX XXX XXX`.
 
-### 2.6 Icons — Iconify with the Solar set
+### 2.6 Icons : Iconify with the Solar set
 
 Install: `npm i @iconify/react`
 
@@ -361,11 +361,11 @@ Solar names follow `solar:<icon-name>-<style>` where style is one of `linear`, `
 
 **House rules**
 - **Navigation and actions:** `linear` at 20px, stroke reads cleanly at small sizes.
-- **Empty states and feature illustrations:** `bold-duotone` at 40–64px — the two tones pick up navy and gold automatically.
+- **Empty states and feature illustrations:** `bold-duotone` at 40–64px : the two tones pick up navy and gold automatically.
 - **Status chips:** `bold` at 16px, filled shapes read faster at a glance.
 - Never mix a second icon set. Visual consistency is an explicit UI/UX marking criterion.
 
-#### The icon registry — build this in Phase 1
+#### The icon registry : build this in Phase 1
 
 Never write `<Icon icon="solar:..." />` inside a page. Every icon is named semantically in one file, so a wrong or changed name is a one-line fix:
 
@@ -426,7 +426,7 @@ export const ICONS = {
   key:            "solar:key-linear",
   shield:         "solar:shield-check-linear",
 
-  // Empty states — duotone, large
+  // Empty states : duotone, large
   emptyFolder:    "solar:folder-open-bold-duotone",
   emptyBuilding:  "solar:buildings-3-bold-duotone",
   emptyInbox:     "solar:inbox-bold-duotone",
@@ -440,7 +440,7 @@ Usage: `<Icon name="properties" size={20} />`
 
 #### Verify the registry before you trust it
 
-Solar has 7,400 icons and I have not hand-verified every name above. Rather than checking 50 pages by hand, use the Iconify API — it returns only the icons that exist, so anything missing from the response is a bad name. Run this once in Phase 1 and again whenever you add an icon:
+Solar has 7,400 icons and I have not hand-verified every name above. Rather than checking 50 pages by hand, use the Iconify API : it returns only the icons that exist, so anything missing from the response is a bad name. Run this once in Phase 1 and again whenever you add an icon:
 
 ```js
 // scripts/verify-icons.mjs   →   node scripts/verify-icons.mjs
@@ -455,7 +455,7 @@ const missing = Object.entries(ICONS).filter(([, v]) => !found.has(v.replace("so
 if (missing.length === 0) {
   console.log(`✅ all ${names.length} icons resolve`);
 } else {
-  console.log("❌ these names do not exist in Solar — fix them in src/lib/icons.ts:");
+  console.log("❌ these names do not exist in Solar : fix them in src/lib/icons.ts:");
   missing.forEach(([k, v]) => console.log(`   ${k.padEnd(16)} ${v}`));
   process.exit(1);
 }
@@ -463,7 +463,7 @@ if (missing.length === 0) {
 
 Browse replacements at `https://icon-sets.iconify.design/solar/`. Wire this script into CI so a bad icon name fails the build rather than rendering a blank square in your demo.
 
-> **Why this pattern matters beyond icons.** You have just turned "I am not sure these strings are right" into a machine-checked guarantee. That instinct — make uncertainty testable rather than arguing about it — is the difference between a junior and a senior engineer, and it is worth saying out loud in your viva.
+> **Why this pattern matters beyond icons.** You have just turned "I am not sure these strings are right" into a machine-checked guarantee. That instinct : make uncertainty testable rather than arguing about it : is the difference between a junior and a senior engineer, and it is worth saying out loud in your viva.
 
 ---
 
@@ -474,10 +474,10 @@ Browse replacements at `https://icon-sets.iconify.design/solar/`. Wire this scri
 | # | Portal | Who | Route group | Production host | Local path | Theme |
 |---|---|---|---|---|---|---|
 | **1** | **Business Portal** | The landlord (Manager), his Employees, his Caretakers | `(business)` | `app.silqu.co.ke` | `/app/*` | Navy + gold, light |
-| **2** | **Platform Portal** | You — SILQU platform admin and support/developer | `(platform)` | `platform.silqu.co.ke` | `/platform/*` | Deep navy dark shell + gold |
+| **2** | **Platform Portal** | You : SILQU platform admin and support/developer | `(platform)` | `platform.silqu.co.ke` | `/platform/*` | Deep navy dark shell + gold |
 | **3** | **Tenant Portal** | Tenants | `(tenant)` | `my.silqu.co.ke` | `/my/*` | Forest green + warm cream, light |
 
-Plus `(marketing)` on `silqu.co.ke` — landing page, pricing, sign-up.
+Plus `(marketing)` on `silqu.co.ke` : landing page, pricing, sign-up.
 
 ### 3.2 Why three separate portals rather than one app with three menus
 
@@ -488,7 +488,7 @@ This is an architecture decision, and you should be able to give these four reas
 3. **Cognitive load.** A tenant should see five things, not fifty. A platform admin needs density and keyboard shortcuts. Those are opposite design goals; forcing them into one shell makes both worse.
 4. **It matches how the business actually works.** The landlord's staff, the landlord's customers, and the software vendor are three different organisations with three different relationships to the data. The software should say so.
 
-### 3.3 Three doors — the login routes
+### 3.3 Three doors : the login routes
 
 | Portal | Login route | Who may pass | Hardening |
 |---|---|---|---|
@@ -498,7 +498,7 @@ This is an architecture decision, and you should be able to give these four reas
 
 Each door rejects the wrong role with a helpful redirect rather than a dead end: *"This account signs in through the tenant portal"* with a link.
 
-> **Why the platform door is hardened differently:** it can see across every organization on the system. It is the highest-value target you have. Treating it identically to a tenant login would be the single biggest security hole in the design — and an examiner will look for exactly this.
+> **Why the platform door is hardened differently:** it can see across every organization on the system. It is the highest-value target you have. Treating it identically to a tenant login would be the single biggest security hole in the design : and an examiner will look for exactly this.
 
 ### 3.4 Routing by host in production, by path in development
 
@@ -529,7 +529,7 @@ Middleware then does three things, in order:
 
 `rewrite` maps the host to the internal route group so URLs stay clean: `app.silqu.co.ke/properties` internally serves `/(business)/properties`.
 
-> **Beginner note — what middleware actually is.** It is a small function that runs *before* the page, on every request, at the edge. Think of a security guard in the lobby who checks your badge before you reach the lift. He is fast and he checks everyone — but he is a *signpost*, not the lock on the office door. The real lock is the server-side permission check inside each action (§6.4).
+> **Beginner note : what middleware actually is.** It is a small function that runs *before* the page, on every request, at the edge. Think of a security guard in the lobby who checks your badge before you reach the lift. He is fast and he checks everyone : but he is a *signpost*, not the lock on the office door. The real lock is the server-side permission check inside each action (§6.4).
 
 ### 3.5 What lives in the Platform (developer) portal
 
@@ -539,9 +539,9 @@ This is the portal you have not designed yet, so here is the full specification.
 - Organizations: list, detail, suspend, reactivate, unit counts, storage used
 - Subscriptions: plan, status, renewal date, MRR, expiring in 7 days, failed payments
 - Users: platform-wide search, deactivate, force password reset, unlock after lockout
-- Support access: view an organization's data **only** via an explicit, time-boxed, audited support session — never silently
+- Support access: view an organization's data **only** via an explicit, time-boxed, audited support session : never silently
 
-**Developer operations** — this is what makes it a *developer* portal rather than a second admin page:
+**Developer operations** : this is what makes it a *developer* portal rather than a second admin page:
 - **Jobs & Queues:** QStash schedules, recent runs, failures, dead-letter queue with a one-click replay
 - **Webhooks:** every M-Pesa callback with its raw payload, result code, matched payment, and a replay button for sandbox testing
 - **Feature flags:** Redis-backed booleans and percentage rollouts, toggled without a deploy
@@ -557,9 +557,9 @@ This is the portal you have not designed yet, so here is the full specification.
 
 ### 4.1 Three rules explain the whole tree
 
-1. **`app/` is routing only** — which URL shows what. Thin: fetch data, render components.
-2. **`components/` is dumb and reusable** — receives props, renders. Knows nothing about your database.
-3. **`server/` is where all thinking happens** — queries, permissions, business rules, external APIs. If it touches the database or a secret, it lives here and never ships to the browser.
+1. **`app/` is routing only** : which URL shows what. Thin: fetch data, render components.
+2. **`components/` is dumb and reusable** : receives props, renders. Knows nothing about your database.
+3. **`server/` is where all thinking happens** : queries, permissions, business rules, external APIs. If it touches the database or a secret, it lives here and never ships to the browser.
 
 Keep those straight and you will never have a "why is my DATABASE_URL in the browser bundle" incident.
 
@@ -568,14 +568,14 @@ silqu/
 ├── CLAUDE.md
 ├── README.md
 ├── .env.local                      # NEVER committed
-├── .env.example                    # Committed — names only
+├── .env.example                    # Committed : names only
 ├── next.config.mjs
 ├── postcss.config.mjs              # Tailwind v4 via @tailwindcss/postcss
 ├── vercel.json
 ├── package.json
 │
 ├── prisma/
-│   ├── schema.prisma               # THE data dictionary — paste into your SDS
+│   ├── schema.prisma               # THE data dictionary : paste into your SDS
 │   ├── migrations/                 # COMMIT THESE
 │   │   ├── 0001_init/migration.sql
 │   │   └── 0002_partial_indexes/migration.sql   # hand-written
@@ -742,7 +742,7 @@ silqu/
 │   │   │   │   └── compute-arrears.ts
 │   │   │   ├── pdf/receipt.tsx
 │   │   │   └── audit.ts
-│   │   └── validators/             # Zod schemas — shared client + server
+│   │   └── validators/             # Zod schemas : shared client + server
 │   │
 │   ├── lib/
 │   │   ├── money.ts      # toCents, fromCents, formatKES
@@ -772,13 +772,13 @@ silqu/
 
 ### 5.1 The entities in plain English
 
-- An **Organization** is one property management business — the thing that pays the SILQU subscription.
+- An **Organization** is one property management business : the thing that pays the SILQU subscription.
 - A **User** is anyone who logs in. Their `role` decides which portal accepts them.
 - A **Property** is a building or estate. It has many **Units**.
 - A **Unit** is one rentable door ("B12").
 - A **Tenant** is a person renting. A **Lease** joins one Tenant to one Unit, for a period, at a rent.
 - An **Invoice** is a monthly bill generated from a Lease, made of **InvoiceLines** (rent, water, garbage, penalty).
-- A **Payment** is money received. **PaymentAllocations** decide which invoices that money settles — this is what lets a tenant pay KES 20,000 that clears last month's arrears *and* part of this month.
+- A **Payment** is money received. **PaymentAllocations** decide which invoices that money settles : this is what lets a tenant pay KES 20,000 that clears last month's arrears *and* part of this month.
 - **MpesaTransaction** is the raw, append-only log of every STK Push and every callback. Never delete a row from it.
 - **AuditLog** records who did what, when. Your Data Protection Act compliance story lives here.
 
@@ -795,7 +795,7 @@ Unit 1──n MaintenanceRequest n──1 Tenant
 User n──n Property   (via CaretakerAssignment)
 ```
 
-### 5.3 The money type decision — read this before writing the schema
+### 5.3 The money type decision : read this before writing the schema
 
 Money is integer cents. In Prisma that leaves a real choice, and it has a sharp edge:
 
@@ -803,7 +803,7 @@ Money is integer cents. In Prisma that leaves a real choice, and it has a sharp 
 |---|---|---|---|
 | `Int` | `integer` | 2,147,483,647 cents = **KES 21,474,836** | Caps a single row |
 | `BigInt` | `bigint` | effectively unlimited | **Does not serialise to JSON, and cannot cross the Server→Client boundary in React** |
-| `Decimal` | `numeric` | exact, unlimited | Returns a Decimal.js object — same serialisation problem, plus you lose the "integers only" discipline |
+| `Decimal` | `numeric` | exact, unlimited | Returns a Decimal.js object : same serialisation problem, plus you lose the "integers only" discipline |
 
 **Decision: use `Int` for every per-row money column, and compute aggregates as `BigInt` in SQL, converting to string at the query boundary.**
 
@@ -825,7 +825,7 @@ Add a database `CHECK` so the cap is enforced rather than assumed, and write a c
 | `Property` | id, orgId, name, county, town, address, type, photoUrl, status | |
 | `Unit` | id, orgId, propertyId, label, unitType, bedrooms, rentCents, depositCents, status | `@@unique([propertyId, label])` |
 | `Tenant` | id, orgId, userId?, fullName, nationalId, phone, email, nextOfKin*, status | `userId` set on invite acceptance |
-| `Lease` | id, orgId, unitId, tenantId, startDate, endDate, rentCents, depositCents, billingDay, status | One ACTIVE per unit — partial index |
+| `Lease` | id, orgId, unitId, tenantId, startDate, endDate, rentCents, depositCents, billingDay, status | One ACTIVE per unit : partial index |
 | `Invoice` | id, orgId, leaseId, invoiceNo, periodYear, periodMonth, issueDate, dueDate, totalCents, paidCents, balanceCents, status | `@@unique([leaseId, periodYear, periodMonth])` |
 | `InvoiceLine` | id, invoiceId, category, description, amountCents | RENT · WATER · GARBAGE · PENALTY · OTHER |
 | `Payment` | id, orgId, tenantId, leaseId, amountCents, method, mpesaReceipt?, reference?, paidAt, recordedById, status | MPESA · BANK · CASH |
@@ -836,7 +836,7 @@ Add a database `CHECK` so the cap is enforced rather than assumed, and write a c
 | `Announcement` | id, orgId, title, body, audience, propertyId?, unitId?, createdById, publishedAt? | |
 | `Invitation` | id, orgId, email, role, tokenHash, expiresAt, acceptedAt?, createdById | Token hashed, never raw |
 | `Notification` | id, userId, type, title, body, link?, readAt? | |
-| `Document` | id, orgId, entityType, entityId, kind, fileKey, isPrivate, uploadedById | `fileKey` not URL — see §8.3 |
+| `Document` | id, orgId, entityType, entityId, kind, fileKey, isPrivate, uploadedById | `fileKey` not URL : see §8.3 |
 | `AuditLog` | id, orgId?, actorUserId?, action, entityType, entityId?, before Json?, after Json?, ipAddress?, createdAt | |
 | `EmailLog` | id, orgId?, to, template, providerId?, status, error?, sentAt | Platform portal email log |
 
@@ -846,12 +846,12 @@ Each of these prevents one specific bug. Prisma expresses some; the rest need ha
 
 **Prisma can express these:**
 ```prisma
-@@unique([leaseId, periodYear, periodMonth])   // Invoice — idempotency
-@@unique([propertyId, label])                  // Unit — no duplicate door numbers
-@@unique([checkoutRequestId])                  // MpesaTransaction — duplicate callbacks
+@@unique([leaseId, periodYear, periodMonth])   // Invoice : idempotency
+@@unique([propertyId, label])                  // Unit : no duplicate door numbers
+@@unique([checkoutRequestId])                  // MpesaTransaction : duplicate callbacks
 ```
 
-**Prisma cannot — write these by hand.** Create an empty migration with `npx prisma migrate dev --create-only --name partial_indexes`, then paste:
+**Prisma cannot : write these by hand.** Create an empty migration with `npx prisma migrate dev --create-only --name partial_indexes`, then paste:
 
 ```sql
 -- One ACTIVE lease per unit. Prevents double-letting a door.
@@ -879,7 +879,7 @@ ALTER TABLE "PaymentAllocation" ADD CONSTRAINT allocation_positive
 
 **Indexes:** every foreign key, plus `Invoice.status`, `Lease.status`, `Unit.status`, `Payment.paidAt`, `AuditLog.createdAt`, and `(orgId, createdAt)` composites on anything you list chronologically.
 
-### 5.6 Prisma client singleton — get this right in Phase 2
+### 5.6 Prisma client singleton : get this right in Phase 2
 
 ```ts
 // src/server/db/client.ts
@@ -901,7 +901,7 @@ export const db = globalForPrisma.prisma ?? createClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
 ```
 
-> **Why the global.** In development, Next.js hot-reloads modules on every save. Without the singleton you create a new PrismaClient — and a new connection pool — every time you edit a file, and within twenty minutes Neon refuses new connections. This four-line pattern is the fix, and almost every Prisma + Next.js project has it.
+> **Why the global.** In development, Next.js hot-reloads modules on every save. Without the singleton you create a new PrismaClient : and a new connection pool : every time you edit a file, and within twenty minutes Neon refuses new connections. This four-line pattern is the fix, and almost every Prisma + Next.js project has it.
 
 ---
 
@@ -922,61 +922,61 @@ Employee sub-roles: **FINANCE** (invoices, payments, arrears, reports) · **CUST
 
 ### 6.2 Permission matrix
 
-`✓` full · `R` read-only · `S` scoped to assignment or self · `—` none
+`✓` full · `R` read-only · `S` scoped to assignment or self · `:` none
 
 | Capability | PLAT_ADMIN | PLAT_SUPPORT | MANAGER | EMP: Finance | EMP: Care | EMP: Owner | CARETAKER | TENANT |
 |---|---|---|---|---|---|---|---|---|
 | View own dashboard | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | S | S |
-| Create / edit property | — | — | ✓ | — | — | ✓ | — | — |
-| View properties | R | S | ✓ | R | R | ✓ | S | — |
-| Create / edit unit | — | — | ✓ | — | — | ✓ | — | — |
-| Update unit status | — | — | ✓ | — | — | ✓ | S | — |
-| Onboard tenant / send invite | — | — | ✓ | — | ✓ | ✓ | — | — |
-| View tenant records | R | S | ✓ | R | ✓ | ✓ | S | — |
-| Create / end lease | — | — | ✓ | — | — | ✓ | — | — |
-| Generate invoices | — | — | ✓ | ✓ | — | ✓ | — | — |
-| Record payment | — | — | ✓ | ✓ | — | ✓ | — | — |
-| View own invoices / payments | — | — | — | — | — | — | — | S |
-| Pay rent via M-Pesa | — | — | — | — | — | — | — | S |
-| View arrears report | R | R | ✓ | ✓ | R | ✓ | — | — |
-| Raise maintenance request | — | — | ✓ | — | ✓ | ✓ | S | S |
-| Resolve maintenance request | — | — | ✓ | — | ✓ | ✓ | S | — |
-| Close maintenance request | — | — | ✓ | — | — | ✓ | — | S |
-| Publish announcement | — | — | ✓ | — | ✓ | ✓ | — | — |
-| Invite / manage staff | — | — | ✓ | — | — | — | — | — |
-| Manage own subscription | — | — | ✓ | — | — | — | — | — |
-| View own org audit log | — | — | ✓ | — | — | R | — | — |
-| Suspend an organization | ✓ | — | — | — | — | — | — | — |
-| View platform audit log | ✓ | R | — | — | — | — | — | — |
-| Replay a queue job / webhook | ✓ | — | — | — | — | — | — | — |
-| Toggle a feature flag | ✓ | — | — | — | — | — | — | — |
-| Start a support session | ✓ | ✓ | — | — | — | — | — | — |
+| Create / edit property | : | : | ✓ | : | : | ✓ | : | : |
+| View properties | R | S | ✓ | R | R | ✓ | S | : |
+| Create / edit unit | : | : | ✓ | : | : | ✓ | : | : |
+| Update unit status | : | : | ✓ | : | : | ✓ | S | : |
+| Onboard tenant / send invite | : | : | ✓ | : | ✓ | ✓ | : | : |
+| View tenant records | R | S | ✓ | R | ✓ | ✓ | S | : |
+| Create / end lease | : | : | ✓ | : | : | ✓ | : | : |
+| Generate invoices | : | : | ✓ | ✓ | : | ✓ | : | : |
+| Record payment | : | : | ✓ | ✓ | : | ✓ | : | : |
+| View own invoices / payments | : | : | : | : | : | : | : | S |
+| Pay rent via M-Pesa | : | : | : | : | : | : | : | S |
+| View arrears report | R | R | ✓ | ✓ | R | ✓ | : | : |
+| Raise maintenance request | : | : | ✓ | : | ✓ | ✓ | S | S |
+| Resolve maintenance request | : | : | ✓ | : | ✓ | ✓ | S | : |
+| Close maintenance request | : | : | ✓ | : | : | ✓ | : | S |
+| Publish announcement | : | : | ✓ | : | ✓ | ✓ | : | : |
+| Invite / manage staff | : | : | ✓ | : | : | : | : | : |
+| Manage own subscription | : | : | ✓ | : | : | : | : | : |
+| View own org audit log | : | : | ✓ | : | : | R | : | : |
+| Suspend an organization | ✓ | : | : | : | : | : | : | : |
+| View platform audit log | ✓ | R | : | : | : | : | : | : |
+| Replay a queue job / webhook | ✓ | : | : | : | : | : | : | : |
+| Toggle a feature flag | ✓ | : | : | : | : | : | : | : |
+| Start a support session | ✓ | ✓ | : | : | : | : | : | : |
 
-### 6.3 Portal isolation rules — the hard boundary
+### 6.3 Portal isolation rules : the hard boundary
 
 These are absolute and must be covered by an automated test (`tests/e2e/portal-isolation.spec.ts`):
 
-1. A `TENANT` session presented at `app.silqu.co.ke` is rejected. Not "sees an empty page" — **rejected**.
+1. A `TENANT` session presented at `app.silqu.co.ke` is rejected. Not "sees an empty page" : **rejected**.
 2. A `MANAGER` session presented at `platform.silqu.co.ke` is rejected.
 3. A `PLATFORM_SUPPORT` session cannot read any organization's tenant personal data without an open, time-boxed support session, and opening one writes an `AuditLog` row naming the org, the reason, and the expiry.
 4. Cookie names differ per portal, so a cookie copied from one portal is not even parsed by another.
 5. The platform portal session expires after 15 minutes of inactivity. The others use 8 hours (business) and 30 days (tenant, because tenants log in rarely and abandonment is a real product risk).
 
-### 6.4 Three layers of enforcement — all required
+### 6.4 Three layers of enforcement : all required
 
-1. **Middleware** — is there a valid session for *this portal*, and is the role allowed here? Wrong portal → redirect. *This is a signpost, not a lock.*
-2. **Server guard** — every Server Action and every query begins with `const user = await requireRole(["MANAGER", "EMPLOYEE"])`. **This is the actual lock.**
-3. **UI** — hide what the user cannot do, so the interface is honest. *This is courtesy, and provides zero security.*
+1. **Middleware** : is there a valid session for *this portal*, and is the role allowed here? Wrong portal → redirect. *This is a signpost, not a lock.*
+2. **Server guard** : every Server Action and every query begins with `const user = await requireRole(["MANAGER", "EMPLOYEE"])`. **This is the actual lock.**
+3. **UI** : hide what the user cannot do, so the interface is honest. *This is courtesy, and provides zero security.*
 
 > **The mistake nearly every student makes** is implementing only layer 3, then discovering during the viva that typing the URL directly gives full access. Build layer 2 first, every time.
 
 ---
 
-## 7. UI COMPONENTS — PRELINE UI v4.2
+## 7. UI COMPONENTS : PRELINE UI v4.2
 
-### 7.1 Installing Preline with Next.js — the part that trips people up
+### 7.1 Installing Preline with Next.js : the part that trips people up
 
-Preline is a **DOM-driven** library. Its JavaScript scans the page after render and attaches behaviour to matching markup. Next.js App Router replaces route markup on client navigation *without* a page reload — so Preline must be told to re-scan after every navigation, or your dropdowns and modals silently stop working on the second page you visit.
+Preline is a **DOM-driven** library. Its JavaScript scans the page after render and attaches behaviour to matching markup. Next.js App Router replaces route markup on client navigation *without* a page reload : so Preline must be told to re-scan after every navigation, or your dropdowns and modals silently stop working on the second page you visit.
 
 ```bash
 npm i preline @tailwindcss/forms
@@ -1022,7 +1022,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 **Why `preline/non-auto` and not plain `preline`:** the default entry auto-initialises on page load, which fights Next.js hydration timing. `non-auto` gives you `HSStaticMethods` and named plugin classes and lets *you* decide when to scan. `usePathname()` as the effect dependency is what makes route-aware re-scanning work.
 
-`autoInit` is collection-aware — it skips elements that already have an instance and filters nodes that have left the document, so repeated scans are safe and expected.
+`autoInit` is collection-aware : it skips elements that already have an instance and filters nodes that have left the document, so repeated scans are safe and expected.
 
 **For a component that owns exactly one plugin root**, prefer a manual instance with cleanup:
 
@@ -1044,9 +1044,9 @@ export function Dropdown({ children }: { children: React.ReactNode }) {
 
 Preline keeps instances in global registries (`window.$hsDropdownCollection`). For manual instances call `destroy()`; for route-level scans `autoInit` cleans up for you. You can also call `HSStaticMethods.cleanCollection(["dropdown", "overlay"])`.
 
-**Optional dependencies:** most core plugins are plain JavaScript. Positioning uses `@floating-ui/dom`. jQuery is needed **only** for Preline's Datatables (because `datatables.net` requires it) — which is one reason we are not using it (§7.4). Range Slider needs `noUiSlider`.
+**Optional dependencies:** most core plugins are plain JavaScript. Positioning uses `@floating-ui/dom`. jQuery is needed **only** for Preline's Datatables (because `datatables.net` requires it) : which is one reason we are not using it (§7.4). Range Slider needs `noUiSlider`.
 
-### 7.2 The token swap — do not paste Preline markup unchanged
+### 7.2 The token swap : do not paste Preline markup unchanged
 
 Preline's examples use stock Tailwind palette classes (`bg-blue-600`, `text-gray-800`, `border-gray-200`). If you paste them as-is, your carefully designed navy-and-gold system dies within a week and every screen drifts.
 
@@ -1064,7 +1064,7 @@ Preline's examples use stock Tailwind palette classes (`bg-blue-600`, `text-gray
 | `text-red-600` / `bg-red-*` | `text-danger` / `bg-danger/10` |
 | `text-green-600` | `text-success` |
 | `text-yellow-600` / `text-amber-*` | `text-warning` |
-| `focus:ring-blue-500` | *(remove — global `:focus-visible` handles it)* |
+| `focus:ring-blue-500` | *(remove : global `:focus-visible` handles it)* |
 | `rounded-lg` | `rounded-[--radius-control]` |
 | `rounded-xl` | `rounded-[--radius-card]` |
 | `shadow-sm` | `shadow-[--shadow-card]` |
@@ -1111,17 +1111,17 @@ Every one of these is in the Preline docs at `https://preline.co/docs/components
 | File selection | **File Input**, **File Upload**, **File Uploading Progress** | Property photos, ID scans, lease PDFs |
 | Copy a reference | **Clipboard** | M-Pesa codes, invoice numbers, API keys |
 | Charts | **Charts** (ApexCharts) | Collections, occupancy, arrears ageing |
-| Tables | **Tables** (markup only) | All lists — logic from TanStack, see §7.4 |
+| Tables | **Tables** (markup only) | All lists : logic from TanStack, see §7.4 |
 | Layout | **Container**, **Grid**, **Columns**, **Dividers** | Everywhere |
 | Long lists | **Custom Scrollbar** | Sidebar, notification panel |
 | Keyboard shortcuts | **KBD** | Platform portal |
 | Marketing polish | **Carousel**, **Marquee**, **Devices** | Landing page only |
 
-### 7.4 What is **not** in Preline — sourced outside, with reasons
+### 7.4 What is **not** in Preline : sourced outside, with reasons
 
 | Need | Source | Why not Preline |
 |---|---|---|
-| **Table logic** (sorting, pagination, column visibility, row selection) | **TanStack Table** (headless) + Preline table markup | Preline's Datatables plugin wraps `datatables.net`, which **requires jQuery**. Pulling jQuery into a Next.js app for one feature is a real cost, and Preline's version is client-side — it cannot paginate 5,000 invoices on the server. TanStack gives you headless logic, and you keep Preline's markup. **Say this out loud in your viva; it is a genuine, defensible engineering judgement.** |
+| **Table logic** (sorting, pagination, column visibility, row selection) | **TanStack Table** (headless) + Preline table markup | Preline's Datatables plugin wraps `datatables.net`, which **requires jQuery**. Pulling jQuery into a Next.js app for one feature is a real cost, and Preline's version is client-side : it cannot paginate 5,000 invoices on the server. TanStack gives you headless logic, and you keep Preline's markup. **Say this out loud in your viva; it is a genuine, defensible engineering judgement.** |
 | **Form state & validation** | react-hook-form + Zod + `@hookform/resolvers` | Preline provides markup, not state. Zod also runs server-side, which is the part that actually matters. |
 | **Icons** | Iconify + Solar | Preline's "Styled Icons" are decorative containers, not an icon set. |
 | **Programmatic toasts from Server Actions** | Small custom store over Preline Toast markup (or `sonner`) | Preline Toasts are static markup; you need to fire one from an action result. ~40 lines. |
@@ -1133,15 +1133,15 @@ Every one of these is in the Preline docs at `https://preline.co/docs/components
 | **Toast/notification persistence** | Your `Notification` model | Product logic. |
 | **Rich text** (if announcements ever need it) | Preline **WYSIWYG Editor** (Quill) *or* plain textarea | Start with a textarea. Rich text on tenant-facing announcements is a sanitisation liability you do not need. |
 
-> **Design note.** Preline covers roughly 85% of SILQU's UI surface. The 15% you source outside is almost entirely *logic*, not *looks* — which is exactly the right split. A component library should give you appearance and interaction; your application should own behaviour and rules.
+> **Design note.** Preline covers roughly 85% of SILQU's UI surface. The 15% you source outside is almost entirely *logic*, not *looks* : which is exactly the right split. A component library should give you appearance and interaction; your application should own behaviour and rules.
 
 ---
 
-## 8. INFRASTRUCTURE — REDIS, QSTASH, R2
+## 8. INFRASTRUCTURE : REDIS, QSTASH, R2
 
-### 8.1 Upstash Redis — the counter's notebook
+### 8.1 Upstash Redis : the counter's notebook
 
-Redis is an in-memory key–value store: extremely fast, and everything in it can expire. Think of it as the notebook the shopkeeper keeps on the counter for things he needs to remember for a few minutes — not the stockroom ledger.
+Redis is an in-memory key–value store: extremely fast, and everything in it can expire. Think of it as the notebook the shopkeeper keeps on the counter for things he needs to remember for a few minutes : not the stockroom ledger.
 
 ```bash
 npm i @upstash/redis @upstash/ratelimit
@@ -1151,10 +1151,10 @@ npm i @upstash/redis @upstash/ratelimit
 
 | Job | Key pattern | TTL | Why |
 |---|---|---|---|
-| **Rate limiting** | `rl:login:{email}:{ip}` | 15 min | Stops password guessing. Sliding window, 5 attempts. Also on invite send, password reset, and STK Push (3 / 5 min per phone — a real cost control, since each push costs money and annoys the tenant). |
+| **Rate limiting** | `rl:login:{email}:{ip}` | 15 min | Stops password guessing. Sliding window, 5 attempts. Also on invite send, password reset, and STK Push (3 / 5 min per phone : a real cost control, since each push costs money and annoys the tenant). |
 | **KPI cache** | `kpi:{orgId}:dashboard` | 60 s | The manager dashboard runs six aggregate queries. Caching for 60 seconds turns a 900ms page into a 40ms page with no meaningful staleness. Bust it on any payment or invoice write. |
 | **Idempotency keys** | `idem:{operation}:{key}` | 24 h | Second layer of defence for M-Pesa callbacks and invoice runs. The database unique constraint is the real guarantee; Redis stops the work from even starting. |
-| **Distributed lock** | `lock:invoices:{orgId}:{yyyy-mm}` | 5 min | Two managers clicking *Generate invoices* at the same second. `SET key value NX EX 300` — only one wins, the other sees "This run is already in progress." |
+| **Distributed lock** | `lock:invoices:{orgId}:{yyyy-mm}` | 5 min | Two managers clicking *Generate invoices* at the same second. `SET key value NX EX 300` : only one wins, the other sees "This run is already in progress." |
 | **Feature flags** | `flag:{name}` | none | Toggle from the platform portal without a deploy. |
 
 ```ts
@@ -1171,12 +1171,12 @@ export const loginLimiter = new Ratelimit({
 ```
 
 **Rules**
-- Redis is a **cache and a counter**, never a source of truth. If Redis is wiped, SILQU must still be completely correct — just slower.
+- Redis is a **cache and a counter**, never a source of truth. If Redis is wiped, SILQU must still be completely correct : just slower.
 - **Never store personal data in Redis** beyond a hashed identifier. It is easier to leak and harder to audit than Postgres. This is a Data Protection Act point worth one sentence in your documentation.
 - Every key gets a TTL unless it is a feature flag.
 - Namespace every key by purpose (`rl:`, `kpi:`, `idem:`, `lock:`, `flag:`) so the platform portal can list them by category.
 
-### 8.2 Upstash QStash — the to-do list that will not forget
+### 8.2 Upstash QStash : the to-do list that will not forget
 
 QStash is an HTTP message queue and scheduler. You publish a message; QStash calls one of your API routes; if that call fails, QStash retries with exponential backoff; if it keeps failing, the message lands in a **dead-letter queue** you can inspect and replay.
 
@@ -1186,7 +1186,7 @@ npm i @upstash/qstash
 
 **Why not Vercel Cron.** Cron fires an HTTP request on a schedule and then forgets. If your invoice run throws on tenant 147 of 200, cron does not know, does not retry, and nobody is told. QStash retries the message, and if it still fails, it is sitting in the DLQ with its payload when you look at the platform portal on Monday. For a system that bills people money, that difference is the whole ballgame.
 
-**The fan-out pattern — the most important idea in this section**
+**The fan-out pattern : the most important idea in this section**
 
 Generating invoices for every organization inside one HTTP request will time out on Vercel. So split the work:
 
@@ -1235,7 +1235,7 @@ export const POST = verifySignatureAppRouter(handler);
 - Keep each handler under ~10 seconds. If it is longer, it should have been fanned out.
 - Job payloads carry IDs, never whole objects. Re-read from the database inside the handler so you act on current state.
 
-### 8.3 Cloudflare R2 — object storage
+### 8.3 Cloudflare R2 : object storage
 
 Neon stores rows. Files go to R2, which is S3-compatible with no egress fees.
 
@@ -1244,11 +1244,11 @@ Neon stores rows. Files go to R2, which is S3-compatible with no egress fees.
 | Bucket | Access | Contents |
 |---|---|---|
 | `silqu-public` | Public read | Property photos, organization logos |
-| `silqu-private` | **No public access** — signed URLs only, 5-minute expiry | Tenant national ID scans, signed lease PDFs, receipts, maintenance photos |
+| `silqu-private` | **No public access** : signed URLs only, 5-minute expiry | Tenant national ID scans, signed lease PDFs, receipts, maintenance photos |
 
 A tenant's national ID sitting on a guessable public URL is a Data Protection Act, 2019 breach. Private bucket, short-lived signed reads, and an `AuditLog` row every time a private document is fetched.
 
-**Key structure** — orderly keys make lifecycle rules and debugging possible:
+**Key structure** : orderly keys make lifecycle rules and debugging possible:
 
 ```
 {orgId}/properties/{propertyId}/photo/{uuid}.webp
@@ -1260,20 +1260,20 @@ A tenant's national ID sitting on a guessable public URL is a Data Protection Ac
 
 Store the **key**, not the URL, in the `Document.fileKey` column. URLs change when you move buckets or add a CDN; keys do not.
 
-**Upload flow — the file never touches your server**
+**Upload flow : the file never touches your server**
 
 1. Browser asks `POST /api/uploads/sign` with filename, MIME type and size.
 2. Server checks permission, validates type and size, generates a key, returns a **presigned PUT URL** valid for 5 minutes.
 3. Browser uploads directly to R2.
 4. Browser confirms; server writes the `Document` row.
 
-Validate MIME type and size **server-side before signing** — the presigned URL is a permission slip, so the check has to happen before you write it. Cap at 5MB for images, 10MB for PDFs; allow JPEG, PNG, WebP and PDF only.
+Validate MIME type and size **server-side before signing** : the presigned URL is a permission slip, so the check has to happen before you write it. Cap at 5MB for images, 10MB for PDFs; allow JPEG, PNG, WebP and PDF only.
 
 ```bash
 npm i @aws-sdk/client-s3 @aws-sdk/s3-request-presigner
 ```
 
-R2 speaks the S3 API, so the AWS SDK works unchanged — you only point it at your R2 endpoint.
+R2 speaks the S3 API, so the AWS SDK works unchanged : you only point it at your R2 endpoint.
 
 ---
 
@@ -1292,35 +1292,35 @@ Do not move on until every Definition-of-Done box is ticked and committed.
 | **Redis** | Phase 3 (rate limiting) | Phase 4 (KPI cache) · 7 (locks) · 8 (idempotency) · 9 (flags) |
 | **R2** | Phase 5 (property photos) | Phase 6 (private documents) |
 | **QStash** | Phase 7 (invoice fan-out) | Phase 8 (reconcile) · 9 (email) |
-| Daraja | Phase 8 | — |
-| Go service | Phase 10 | — |
+| Daraja | Phase 8 | : |
+| Go service | Phase 10 | : |
 
 ---
 
-### PHASE 1 — Foundation, Tailwind v4, Preline and the Design System
+### PHASE 1 : Foundation, Tailwind v4, Preline and the Design System
 
-**Goal:** A running Next.js app with Preline wired correctly, your tokens live, your icon registry verified, and the whole thing deployed — before any feature exists.
+**Goal:** A running Next.js app with Preline wired correctly, your tokens live, your icon registry verified, and the whole thing deployed : before any feature exists.
 
 **Why now:** Design tokens are load-bearing. Build twelve screens with hard-coded colours and *then* introduce tokens, and you rewrite twelve screens. Deploying an empty app on day one also proves your pipeline works while the stakes are zero.
 
 **What you build**
 
-1. `npx create-next-app@latest silqu --typescript --eslint --app --src-dir --import-alias "@/*"` (decline the Tailwind prompt — you will install v4 manually).
+1. `npx create-next-app@latest silqu --typescript --eslint --app --src-dir --import-alias "@/*"` (decline the Tailwind prompt : you will install v4 manually).
 2. Tailwind v4: `npm i tailwindcss @tailwindcss/postcss postcss` and a `postcss.config.mjs` with the `@tailwindcss/postcss` plugin.
 3. `npm i preline @tailwindcss/forms @iconify/react`.
-4. `globals.css` exactly as in §2.2 — Tailwind import, Preline `@source` + `variants.css`, forms plugin, the full `@theme` token block, the three `[data-portal]` overrides, base styles and the global focus ring.
+4. `globals.css` exactly as in §2.2 : Tailwind import, Preline `@source` + `variants.css`, forms plugin, the full `@theme` token block, the three `[data-portal]` overrides, base styles and the global focus ring.
 5. Fonts via `next/font/google`: Sora, Inter, IBM Plex Mono, exposed as `--font-display`, `--font-body`, `--font-mono`.
 6. `PrelineClient` component (§7.1) mounted at the end of the root layout body.
-7. `src/lib/icons.ts` — the icon registry — plus `src/components/ui/icon.tsx` wrapping Iconify.
+7. `src/lib/icons.ts` : the icon registry : plus `src/components/ui/icon.tsx` wrapping Iconify.
 8. `scripts/verify-icons.mjs`, wired into an `npm run verify:icons` script **and into CI**.
-9. `src/lib/money.ts` — `toCents`, `fromCents`, `formatKES` — and `src/components/ui/money.tsx`.
+9. `src/lib/money.ts` : `toCents`, `fromCents`, `formatKES` : and `src/components/ui/money.tsx`.
 10. First wave of Preline-wrapped primitives, token-swapped per §7.2: `button`, `input`, `select`, `textarea`, `checkbox`, `switch`, `badge`, `card`, `modal`, `dropdown`, `toast`, `skeleton`, `spinner`, `empty-state`.
-11. A `/design-system` page rendering every component in every state, in all three portal themes. **This page is a deliverable — screenshot it for your documentation.**
+11. A `/design-system` page rendering every component in every state, in all three portal themes. **This page is a deliverable : screenshot it for your documentation.**
 12. GitHub → Vercel → confirm the live URL.
 
 **Concepts explained simply**
 
-- *Design token:* a name for a value. Instead of `#14527A` in ninety files, you write `bg-primary` and the value lives in one place — like saving a phone number under a contact name rather than memorising digits.
+- *Design token:* a name for a value. Instead of `#14527A` in ninety files, you write `bg-primary` and the value lives in one place : like saving a phone number under a contact name rather than memorising digits.
 - *Tailwind v4's `@theme`:* your token list *is* the config. Declaring `--color-navy-700` creates `bg-navy-700`, `text-navy-700`, `border-navy-700` automatically. There is no second config file to drift.
 - *Why Preline needs a client component:* Preline reads the browser's DOM after React has rendered. Server Components have no DOM. So initialisation must live behind a `"use client"` boundary and run after hydration.
 - *Why re-init on route change:* App Router swaps page markup without reloading. New markup has no Preline behaviour attached until you scan again. `usePathname()` is the trigger.
@@ -1328,10 +1328,10 @@ Do not move on until every Definition-of-Done box is ticked and committed.
 
 **Mistakes to avoid**
 
-- ❌ Using `@theme inline` — portal theming silently stops working.
+- ❌ Using `@theme inline` : portal theming silently stops working.
 - ❌ Pasting Preline markup with its stock `blue-600` / `gray-500` classes. Run the §7.2 swap every time.
 - ❌ Forgetting `@tailwindcss/forms`. Every Preline form component depends on it and will look broken without it.
-- ❌ Putting `PrelineClient` at the top of the body — content must exist before the scan.
+- ❌ Putting `PrelineClient` at the top of the body : content must exist before the scan.
 - ❌ Importing `@iconify/react` directly in a page instead of going through the registry.
 - ❌ Committing `.env.local`. Add it to `.gitignore` in the **first** commit.
 - ❌ Deploying at the end of the project instead of the beginning.
@@ -1348,7 +1348,7 @@ Do not move on until every Definition-of-Done box is ticked and committed.
 **Claude Code prompt**
 
 ```
-Phase 1 only — Foundation, Tailwind v4, Preline, design system.
+Phase 1 only : Foundation, Tailwind v4, Preline, design system.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 2 and 7.
 
@@ -1384,7 +1384,7 @@ Show me your plan before writing code.
 
 ---
 
-### PHASE 2 — Data Layer: Neon + Prisma
+### PHASE 2 : Data Layer: Neon + Prisma
 
 **Goal:** Every model from §5 exists in Neon with its constraints, plus a seed script full of realistic Kenyan data.
 
@@ -1394,26 +1394,26 @@ Show me your plan before writing code.
 
 1. Neon project with two branches: `main` (production) and `dev`. Copy pooled and unpooled connection strings for both.
 2. `npm i @prisma/client @prisma/adapter-neon @neondatabase/serverless` and `npm i -D prisma tsx`.
-3. `prisma/schema.prisma` — `driverAdapters` preview feature, `url` pooled, `directUrl` unpooled, every model from §5.4, every enum, `Int` money columns named `*Cents`, `onDelete: Restrict` on all financial relations.
+3. `prisma/schema.prisma` : `driverAdapters` preview feature, `url` pooled, `directUrl` unpooled, every model from §5.4, every enum, `Int` money columns named `*Cents`, `onDelete: Restrict` on all financial relations.
 4. `npx prisma migrate dev --name init`, then **read the generated SQL** before applying.
 5. `npx prisma migrate dev --create-only --name partial_indexes` and hand-write the SQL from §5.5.
-6. `src/server/db/client.ts` — the singleton with the Neon adapter (§5.6).
+6. `src/server/db/client.ts` : the singleton with the Neon adapter (§5.6).
 7. `prisma/seed.ts`: 1 platform admin, 1 organization, 1 manager, 2 employees (finance + care), 1 caretaker, 3 properties, 24 units, 18 tenants with leases, 3 months of invoices mixing paid / partial / overdue, payments with M-Pesa receipt codes, 6 maintenance requests, 3 announcements. Real Kenyan names, estates, `+2547…` numbers, KES amounts.
-8. Query helpers in `src/server/db/queries/` — **every exported function takes `orgId` first**.
+8. Query helpers in `src/server/db/queries/` : **every exported function takes `orgId` first**.
 9. Export the ERD from Prisma (`prisma-erd-generator`) or dbdiagram.io into `docs/` for your SDS chapter.
 
 **Concepts explained simply**
 
-- *ORM:* a translator. You write `db.unit.findMany({ where: { propertyId } })` and it writes the SQL. Turn on query logging in dev so you can see what it wrote — that is how you keep learning SQL while using an ORM.
+- *ORM:* a translator. You write `db.unit.findMany({ where: { propertyId } })` and it writes the SQL. Turn on query logging in dev so you can see what it wrote : that is how you keep learning SQL while using an ORM.
 - *Migration:* a numbered, permanent, committed instruction for changing the database. This is how your laptop and Vercel stay identical. **Never edit the live database by hand.**
-- *Pooled vs direct connection:* the app uses the pooled string because serverless functions come and go constantly and would otherwise exhaust connections. Migrations use the direct string because pooling breaks schema changes. Getting these swapped produces confusing errors — comment them in the schema.
-- *Seed data:* fake but realistic rows so screens have something to show. Realism is not vanity — a demo full of "Test Tenant 1" reads as unfinished.
+- *Pooled vs direct connection:* the app uses the pooled string because serverless functions come and go constantly and would otherwise exhaust connections. Migrations use the direct string because pooling breaks schema changes. Getting these swapped produces confusing errors : comment them in the schema.
+- *Seed data:* fake but realistic rows so screens have something to show. Realism is not vanity : a demo full of "Test Tenant 1" reads as unfinished.
 - *Index:* a book's index. Without one, Postgres reads every row. Index every foreign key and every column you filter by.
 - *Neon branching:* a copy-on-write clone of your database in seconds. Test a scary migration on a branch and throw it away if it goes wrong.
 
 **Mistakes to avoid**
 
-- ❌ `Float` or `Decimal` for money. `Int` cents. (And never `BigInt` on a per-row column — you will meet the serialisation error.)
+- ❌ `Float` or `Decimal` for money. `Int` cents. (And never `BigInt` on a per-row column : you will meet the serialisation error.)
 - ❌ Forgetting `orgId` on a model. Retrofitting a multi-tenant column later is miserable.
 - ❌ `DateTime` without timezone thinking. Store UTC, display `Africa/Nairobi`.
 - ❌ `onDelete: Cascade` on anything financial. Use `Restrict` and archive.
@@ -1423,7 +1423,7 @@ Show me your plan before writing code.
 
 **Definition of Done**
 - [ ] `npx prisma studio` shows every model from §5.4
-- [ ] All partial indexes and CHECK constraints exist **and are proven** — try inserting a duplicate invoice period and a second active lease; both must fail
+- [ ] All partial indexes and CHECK constraints exist **and are proven** : try inserting a duplicate invoice period and a second active lease; both must fail
 - [ ] `npm run db:seed` produces a believable dataset
 - [ ] Every query helper requires `orgId`
 - [ ] ERD exported into `docs/`
@@ -1432,7 +1432,7 @@ Show me your plan before writing code.
 **Claude Code prompt**
 
 ```
-Phase 2 only — Data layer with Neon + Prisma.
+Phase 2 only : Data layer with Neon + Prisma.
 
 Read docs/SILQU_BUILD_PLAN_V2.md section 5.
 
@@ -1448,10 +1448,10 @@ Build:
 3. migrate dev --name init, then a --create-only migration containing the
    hand-written partial indexes and CHECK constraints from section 5.5.
    Comment each constraint with the bug it prevents.
-4. src/server/db/client.ts — Prisma singleton with PrismaNeon adapter and
+4. src/server/db/client.ts : Prisma singleton with PrismaNeon adapter and
    dev query logging.
 5. prisma/seed.ts with the realistic Kenyan dataset described in Phase 2.
-6. src/server/db/queries/{properties,tenants,leases,invoices,payments}.ts —
+6. src/server/db/queries/{properties,tenants,leases,invoices,payments}.ts :
    orgId is the first parameter of every exported function.
 7. npm scripts: db:migrate, db:seed, db:studio, db:reset.
 
@@ -1465,7 +1465,7 @@ Show me the schema before generating migrations.
 
 ---
 
-### PHASE 3 — Authentication, RBAC and Portal Isolation
+### PHASE 3 : Authentication, RBAC and Portal Isolation
 
 **Goal:** Six roles enter through three separate doors, land in the correct portal, and cannot reach any other.
 
@@ -1474,39 +1474,39 @@ Show me the schema before generating migrations.
 **What you build**
 
 1. Auth.js v5, Credentials provider, JWT sessions carrying `{ userId, orgId, role, subRole, portal }`.
-2. **Three cookie configurations** — `silqu.biz` (8h), `silqu.my` (30d), `silqu.platform` (15min idle) — with distinct names so a cookie from one portal is not even parsed by another.
-3. `src/middleware.ts` — portal resolution by host in production and path in development (§3.4), session lookup for that portal only, role gate, redirect with a `?reason=` code.
+2. **Three cookie configurations** : `silqu.biz` (8h), `silqu.my` (30d), `silqu.platform` (15min idle) : with distinct names so a cookie from one portal is not even parsed by another.
+3. `src/middleware.ts` : portal resolution by host in production and path in development (§3.4), session lookup for that portal only, role gate, redirect with a `?reason=` code.
 4. Three login pages, each rejecting the wrong role with a helpful cross-link:
-   - `/login` — MANAGER, EMPLOYEE, CARETAKER
-   - `/my/login` — TENANT
-   - `/platform/login` — PLATFORM_ADMIN, PLATFORM_SUPPORT, **plus TOTP** using Preline's PIN Input
-5. `src/server/auth/password.ts` — bcrypt cost 12, and `generateTempPassword()` using `crypto.randomBytes`.
-6. `src/server/auth/totp.ts` — `otplib` or `@epic-web/totp`, secret stored encrypted, enrolment with a QR code.
-7. Manager sign-up at `/signup`: organization → account → plan → `Subscription` with status `PENDING`. **M-Pesa is stubbed** — `initiateSubscriptionPayment()` returns a fake success in dev. Phase 8 replaces the stub behind the same interface.
+   - `/login` : MANAGER, EMPLOYEE, CARETAKER
+   - `/my/login` : TENANT
+   - `/platform/login` : PLATFORM_ADMIN, PLATFORM_SUPPORT, **plus TOTP** using Preline's PIN Input
+5. `src/server/auth/password.ts` : bcrypt cost 12, and `generateTempPassword()` using `crypto.randomBytes`.
+6. `src/server/auth/totp.ts` : `otplib` or `@epic-web/totp`, secret stored encrypted, enrolment with a QR code.
+7. Manager sign-up at `/signup`: organization → account → plan → `Subscription` with status `PENDING`. **M-Pesa is stubbed** : `initiateSubscriptionPayment()` returns a fake success in dev. Phase 8 replaces the stub behind the same interface.
 8. Staff onboarding: manager creates staff → temp password generated → Resend email → `mustChangePassword = true` → first login forcibly redirects to `/set-password` (Preline **Strong Password** component).
 9. Tenant invitations: random token, **hashed** before storage, raw token in the emailed link, 72-hour expiry, single use, `/my/accept-invite` sets the tenant's own password and links `Tenant.userId`.
 10. Forgot / reset password with 1-hour hashed tokens.
 11. **Redis rate limiting** on login (5 / 15 min per email+IP), invitation send, and password reset.
-12. `src/server/auth/session.ts` — `getCurrentUser`, `requireUser`, `requireRole(roles)`, `requirePortal(portal)`, `requireOrg()`.
-13. `src/server/auth/permissions.ts` — `can(user, action, resource)` encoding the §6.2 matrix, with a unit test per cell.
+12. `src/server/auth/session.ts` : `getCurrentUser`, `requireUser`, `requireRole(roles)`, `requirePortal(portal)`, `requireOrg()`.
+13. `src/server/auth/permissions.ts` : `can(user, action, resource)` encoding the §6.2 matrix, with a unit test per cell.
 14. Audit log rows for: login success, login failure, password change, TOTP enrolment, invitation sent, invitation accepted, lockout.
 
 **Concepts explained simply**
 
-- *Hashing vs encryption:* encryption can be reversed; hashing cannot. A password hash is a one-way fingerprint — you hash what the user typed and compare fingerprints. That is why no legitimate service can email you your existing password.
+- *Hashing vs encryption:* encryption can be reversed; hashing cannot. A password hash is a one-way fingerprint : you hash what the user typed and compare fingerprints. That is why no legitimate service can email you your existing password.
 - *Salt:* random data mixed into the hash so two people with the password `1234` get different hashes. bcrypt salts automatically.
 - *Cost factor 12:* bcrypt is deliberately slow, around 250ms per hash. Fine for one login; ruinous for an attacker trying millions.
-- *JWT session:* a signed note in a cookie saying "user 42, role MANAGER, portal business". Signed means the user cannot edit it — change one character and the signature breaks.
+- *JWT session:* a signed note in a cookie saying "user 42, role MANAGER, portal business". Signed means the user cannot edit it : change one character and the signature breaks.
 - *httpOnly cookie:* JavaScript cannot read it, so a cross-site scripting bug cannot steal the session.
 - *TOTP:* the six-digit code from an authenticator app. Server and phone share a secret and both compute a code from the current 30-second window. Possession of the phone becomes a second factor, so a stolen platform password alone is not enough.
 - *Why hash invitation tokens:* if your database ever leaks, raw tokens would let an attacker accept every pending invitation. Hashed tokens are useless to them.
-- *Why three separate cookies:* a cookie is scoped to a name and a path. Three names means a tenant cookie is not merely rejected at the platform door — it is not even read.
+- *Why three separate cookies:* a cookie is scoped to a name and a path. Three names means a tenant cookie is not merely rejected at the platform door : it is not even read.
 
 **Mistakes to avoid**
 
 - ❌ Trusting a role claimed by the client. The role comes from the database at login, is signed into the token, and is re-read server-side on every request.
 - ❌ Checking permissions only in the UI. Type `/app/staff` as a caretaker; if you see a page, layer 2 is missing.
-- ❌ Logging passwords, temp passwords or tokens. Ever. Not even in dev — habits transfer.
+- ❌ Logging passwords, temp passwords or tokens. Ever. Not even in dev : habits transfer.
 - ❌ Telling the login form *which* field was wrong. Say "Email or password is incorrect", or you have built an account-enumeration tool.
 - ❌ One cookie for all three portals. This is the whole point of the design.
 - ❌ Forgetting to invalidate sessions when a user is deactivated or an org is suspended.
@@ -1527,7 +1527,7 @@ Show me the schema before generating migrations.
 **Claude Code prompt**
 
 ```
-Phase 3 only — Authentication, RBAC, portal isolation.
+Phase 3 only : Authentication, RBAC, portal isolation.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 3 and 6.
 
@@ -1570,7 +1570,7 @@ Show me the auth and portal-routing flow before writing code.
 
 ---
 
-### PHASE 4 — Three Portal Shells and Role Dashboards
+### PHASE 4 : Three Portal Shells and Role Dashboards
 
 **Goal:** All three portals have a real, navigable, correctly-themed home. The system becomes visible.
 
@@ -1578,10 +1578,10 @@ Show me the auth and portal-routing flow before writing code.
 
 **What you build**
 
-1. `business-shell.tsx` — Preline **Sidebar** + topbar with SearchBox, notification bell and user dropdown; `data-portal="business"`.
-2. `tenant-shell.tsx` — Preline **Navbar** + mobile bottom bar; `data-portal="tenant"`; larger touch targets, fewer options.
-3. `platform-shell.tsx` — dark ops shell, dense, Preline **KBD** hints for keyboard shortcuts; `data-portal="platform"`.
-4. **Config-driven navigation** in `src/lib/nav.ts`: each item is `{ href, label, icon, portal, roles[], subRoles? }`. Each shell filters by session. The caretaker entry reads `label: "My Units"` where the manager's reads `"Properties"` — same route, different label, one config.
+1. `business-shell.tsx` : Preline **Sidebar** + topbar with SearchBox, notification bell and user dropdown; `data-portal="business"`.
+2. `tenant-shell.tsx` : Preline **Navbar** + mobile bottom bar; `data-portal="tenant"`; larger touch targets, fewer options.
+3. `platform-shell.tsx` : dark ops shell, dense, Preline **KBD** hints for keyboard shortcuts; `data-portal="platform"`.
+4. **Config-driven navigation** in `src/lib/nav.ts`: each item is `{ href, label, icon, portal, roles[], subRoles? }`. Each shell filters by session. The caretaker entry reads `label: "My Units"` where the manager's reads `"Properties"` : same route, different label, one config.
 5. Dashboards per role, fed by **real seeded data**:
    - **Manager:** properties, occupied vs vacant, expected vs collected this month, arrears total, 6-month collection chart, occupancy donut, recent payments
    - **Employee: Finance:** collections today, unpaid invoices, arrears ageing
@@ -1589,14 +1589,14 @@ Show me the auth and portal-routing flow before writing code.
    - **Caretaker:** my units, occupancy among them, open maintenance on my units
    - **Tenant:** current balance as the hero number, next due date, last payment, open requests
    - **Platform:** organizations, active subscriptions, MRR, sign-ups this month, failed jobs, 24h M-Pesa failure rate
-6. **Redis KPI cache** — 60-second TTL per org dashboard, busted on any invoice or payment write.
+6. **Redis KPI cache** : 60-second TTL per org dashboard, busted on any invoice or payment write.
 7. Shared blocks: `page-header`, Preline **Breadcrumb**, `kpi-card`, `data-table` (TanStack logic + Preline table markup), `empty-state`, `loading.tsx` skeletons.
 8. Charts: `react-apexcharts` wrapped in `dynamic(..., { ssr: false })`.
 
 **Concepts explained simply**
 
 - *Route group:* the parentheses in `(business)` mean "share a layout, but keep the word out of the URL". That is how three portals get three chromes from one deployment.
-- *Server Component:* renders on the server, can `await` a query directly, ships no JavaScript for itself. Dashboards should be Server Components. Only mark a file `"use client"` when you need state, effects or event handlers — a chart, a dropdown, a form.
+- *Server Component:* renders on the server, can `await` a query directly, ships no JavaScript for itself. Dashboards should be Server Components. Only mark a file `"use client"` when you need state, effects or event handlers : a chart, a dropdown, a form.
 - *`loading.tsx`:* Next.js shows it automatically while a Server Component's data loads. Skeletons here are why a good app feels fast even when it is not.
 - *Config-driven nav:* the menu is data, not markup. Adding an item is one line, and permissions come from the same array, so they cannot drift apart.
 - *Cache busting:* the cached dashboard must be deleted the instant a payment lands, or a manager records KES 20,000 and the number does not move for a minute. Delete the key inside the same code path as the write.
@@ -1604,11 +1604,11 @@ Show me the auth and portal-routing flow before writing code.
 **Mistakes to avoid**
 
 - ❌ Marking the whole layout `"use client"` to fix one interactive element. Push the boundary down to the smallest leaf.
-- ❌ Fetching dashboard data in `useEffect` — flash of empty state, slower page.
+- ❌ Fetching dashboard data in `useEffect` : flash of empty state, slower page.
 - ❌ Building desktop-first. Kenyan property managers are on phones. Design at 360px.
 - ❌ Duplicating the sidebar per role. One component, filtered config.
 - ❌ Hard-coded KPI numbers. Wire them to seeded data now, or you will demo a lie.
-- ❌ Importing ApexCharts without `ssr: false` — it touches `window` and breaks the build.
+- ❌ Importing ApexCharts without `ssr: false` : it touches `window` and breaks the build.
 - ❌ Caching a dashboard without a bust path.
 
 **Definition of Done**
@@ -1623,7 +1623,7 @@ Show me the auth and portal-routing flow before writing code.
 **Claude Code prompt**
 
 ```
-Phase 4 only — Three portal shells and role dashboards.
+Phase 4 only : Three portal shells and role dashboards.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 3, 6 and 7.
 
@@ -1633,7 +1633,7 @@ Build:
    Each sets data-portal on its layout root.
 2. src/lib/nav.ts config: { href, label, icon, portal, roles[], subRoles? }.
    Shells filter by session. CARETAKER sees "My Units" where MANAGER sees
-   "Properties" — same route, different label, one config entry.
+   "Properties" : same route, different label, one config entry.
 3. Dashboards for MANAGER, EMPLOYEE (both sub-roles), CARETAKER, TENANT,
    PLATFORM_ADMIN with the KPI sets listed in Phase 4. Real queries only.
 4. Redis KPI cache, 60s TTL, key kpi:{orgId}:dashboard, busted on invoice
@@ -1648,16 +1648,16 @@ Constraints:
 - Dashboards are Server Components; "use client" only on charts and menus.
 - Mobile-first, verified at 360px.
 - Icons only via the ICONS registry.
-- No CRUD forms in this phase — navigation and read-only dashboards only.
+- No CRUD forms in this phase : navigation and read-only dashboards only.
 ```
 
 ---
 
-### PHASE 5 — Properties, Units and R2 Uploads
+### PHASE 5 : Properties, Units and R2 Uploads
 
 **Goal:** Full lifecycle for properties and units, with caretaker scoping proven by an automated test.
 
-**Why now:** Properties and units are the root of the data tree — a tenant cannot exist without a door to live behind.
+**Why now:** Properties and units are the root of the data tree : a tenant cannot exist without a door to live behind.
 
 **What you build**
 
@@ -1666,14 +1666,14 @@ Constraints:
 3. Optional but excellent: Preline **Tree View** as a property → unit explorer in the sidebar.
 4. Units: single create, **bulk create** via Preline **Stepper** ("add 12 units named A1–A12 at KES 14,500"), edit, status change.
 5. Unit detail: current lease, tenant, recent payments, maintenance history.
-6. Caretaker assignment UI — property-level and unit-level.
-7. **The scoping test:** a caretaker's unit list returns only assigned units, and a direct URL to an unassigned unit returns 403 — proven by Playwright, not by clicking around.
+6. Caretaker assignment UI : property-level and unit-level.
+7. **The scoping test:** a caretaker's unit list returns only assigned units, and a direct URL to an unassigned unit returns 403 : proven by Playwright, not by clicking around.
 8. **R2 uploads:** presigned PUT flow (§8.3) using Preline **File Upload** and **File Uploading Progress**. Public bucket, 5MB cap, JPEG/PNG/WebP only, validated server-side before signing.
 9. Audit log on create, update, archive, status change.
 
 **Concepts explained simply**
 
-- *Server Action:* a function marked `"use server"` that a form calls directly — Next.js handles the round trip. But being server code does not make it trusted: anyone can invoke it, so it must still validate input and check permissions.
+- *Server Action:* a function marked `"use server"` that a form calls directly : Next.js handles the round trip. But being server code does not make it trusted: anyone can invoke it, so it must still validate input and check permissions.
 - *Optimistic update:* show the change immediately, roll back if the server refuses. `useOptimistic` makes status toggles feel instant.
 - *`revalidatePath`:* after a write, tell Next.js the cached `/app/properties` is stale. Forget it and users see old lists and assume the app is broken.
 - *Presigned upload:* your server tells R2 "let this person upload one file, to this key, in the next five minutes". The file goes browser → R2 directly, never through your server. Cheaper, faster, and your server never handles a 5MB blob.
@@ -1685,7 +1685,7 @@ Constraints:
 - ❌ Allowing a unit with an active lease to be archived. Block it: *"This unit has an active lease. End the lease before archiving the unit."*
 - ❌ Forgetting `revalidatePath` after a mutation.
 - ❌ Enforcing caretaker scope only by hiding menu items.
-- ❌ Storing rent as `"14,500"` — a string with a comma. `toCents` at the boundary, always.
+- ❌ Storing rent as `"14,500"` : a string with a comma. `toCents` at the boundary, always.
 - ❌ Signing an upload URL before validating MIME type and size. The signature *is* the permission.
 - ❌ Storing the R2 URL instead of the key.
 
@@ -1700,7 +1700,7 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 5 only — Properties, Units, R2 uploads.
+Phase 5 only : Properties, Units, R2 uploads.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 5, 6, 7 and 8.3.
 
@@ -1730,9 +1730,9 @@ Constraints:
 
 ---
 
-### PHASE 6 — Tenants, Leases and Invitations
+### PHASE 6 : Tenants, Leases and Invitations
 
-**Goal:** A manager onboards a real tenant end to end — record, unit, lease, invitation — and the tenant sets their own password and logs into their portal.
+**Goal:** A manager onboards a real tenant end to end : record, unit, lease, invitation : and the tenant sets their own password and logs into their portal.
 
 **Why now:** Leases bridge property data and money data. Nothing in Phase 7 can be generated without an active lease.
 
@@ -1740,9 +1740,9 @@ Constraints:
 
 1. Tenants: list, create, detail, edit, archive. Phone normalised to `254XXXXXXXXX` on save, displayed as `+254 7XX XXX XXX`.
 2. Tenant detail using Preline **Tabs**: Ledger · Lease · Requests · Documents.
-3. **The ledger view** — invoices and payments merged chronologically with a running balance, rendered with Preline **Timeline**. This is the single most useful screen in the product for a landlord. Give it real attention.
+3. **The ledger view** : invoices and payments merged chronologically with a running balance, rendered with Preline **Timeline**. This is the single most useful screen in the product for a landlord. Give it real attention.
 4. Leases: creation wizard using Preline **Stepper** (vacant unit → tenant via **ComboBox** → dates via **Datepicker** → rent → deposit → billing day), detail, renew, end, terminate.
-5. **The lease-creation transaction:** insert lease + set unit `OCCUPIED` + record deposit + audit log — all or nothing.
+5. **The lease-creation transaction:** insert lease + set unit `OCCUPIED` + record deposit + audit log : all or nothing.
 6. Lease state machine `PENDING → ACTIVE → ENDED | TERMINATED`, with invalid transitions rejected in code.
 7. Invitation flow end to end, plus a pending-invitations list with resend and revoke.
 8. **Private R2 documents:** tenant ID scans and signed lease PDFs go to `silqu-private`, fetched only via 5-minute signed URLs, with an audit row per fetch.
@@ -1753,14 +1753,14 @@ Constraints:
 - *Transaction:* a set of changes that all succeed or all fail. Creating a lease without marking the unit occupied would leave the system lying about occupancy. `db.$transaction(async (tx) => { … })` makes that impossible.
 - *State machine:* draw the allowed transitions and refuse everything else. Without one, you eventually get a lease that is somehow both ended and active.
 - *Why tenants set their own password:* the manager never knows it, so a dispute can never be "the landlord logged in as me." That is a real legal argument and worth a sentence in your viva.
-- *Signed read URL:* the private-bucket equivalent of a presigned upload — a temporary permission slip to read one object. It expires, so a leaked link is worthless within minutes.
+- *Signed read URL:* the private-bucket equivalent of a presigned upload : a temporary permission slip to read one object. It expires, so a leaked link is worthless within minutes.
 - *Phone normalisation:* `0712345678`, `+254712345678` and `254712345678` are one person. Store one canonical form, display the friendly one. Skip this and you will create duplicate tenants and fail M-Pesa lookups.
 
 **Mistakes to avoid**
 
 - ❌ Creating the lease and updating the unit in two separate writes.
 - ❌ Relying only on the partial index for double-letting. Check in application code too, so the user gets a friendly message rather than a database error.
-- ❌ Deleting a tenant. Archive — their payment history is a financial record.
+- ❌ Deleting a tenant. Archive : their payment history is a financial record.
 - ❌ Putting an ID scan in the public bucket. This is the DPA-breach mistake.
 - ❌ Invitation emails with no expiry note. Tell the tenant it lasts 72 hours.
 - ❌ Dates as strings. Use `DateTime`, convert at the edges, display in `Africa/Nairobi`.
@@ -1778,7 +1778,7 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 6 only — Tenants, Leases, Invitations.
+Phase 6 only : Tenants, Leases, Invitations.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 5, 6, 7 and 8.3.
 
@@ -1810,7 +1810,7 @@ Constraints:
 
 ---
 
-### PHASE 7 — Billing Engine and QStash Background Jobs
+### PHASE 7 : Billing Engine and QStash Background Jobs
 
 **Goal:** The financial heart of SILQU. Invoices generate automatically on a real queue, payments allocate correctly, arrears are always accurate.
 
@@ -1818,24 +1818,24 @@ Constraints:
 
 **What you build**
 
-**7a — The billing engine**
-1. `generate-invoices.ts` — for one org and one period, find every `ACTIVE` lease, create one invoice each, with lines for rent plus any recurring charges. Due date from `lease.billingDay`. **Idempotent** via `@@unique([leaseId, periodYear, periodMonth])`.
+**7a : The billing engine**
+1. `generate-invoices.ts` : for one org and one period, find every `ACTIVE` lease, create one invoice each, with lines for rent plus any recurring charges. Due date from `lease.billingDay`. **Idempotent** via `@@unique([leaseId, periodYear, periodMonth])`.
 2. Manual trigger for the manager: pick month → **preview** (count, total, per-property breakdown) → confirm → run.
 3. **Redis distributed lock** `lock:invoices:{orgId}:{yyyy-mm}` so two simultaneous clicks cannot both start.
-4. `allocate-payment.ts` — the trickiest logic in the project:
+4. `allocate-payment.ts` : the trickiest logic in the project:
    - Oldest unpaid invoice first (FIFO)
    - Partially settle if short; overflow to the next invoice if long
    - Leftover becomes a credit on the tenant's account
    - Update `paidCents`, `balanceCents`, `status` on every affected invoice
    - Entirely inside one transaction, with `{ maxWait, timeout }` set explicitly
-5. `compute-arrears.ts` — ageing into 0–30 / 31–60 / 61–90 / 90+ buckets.
+5. `compute-arrears.ts` : ageing into 0–30 / 31–60 / 61–90 / 90+ buckets.
 6. Invoice list (filters by property, status, period, with a totals row) and invoice detail (lines in a Preline **Accordion**, payment history, balance, PDF, email).
-7. Record-payment form — MANAGER and EMPLOYEE:FINANCE only. Tenant → amount → method → reference → date.
+7. Record-payment form : MANAGER and EMPLOYEE:FINANCE only. Tenant → amount → method → reference → date.
 8. Receipt PDF via `@react-pdf/renderer`, emailed **after** the transaction commits.
 9. Arrears page with ageing buckets, sortable, CSV export via `papaparse`.
 
-**7b — QStash**
-10. `src/server/services/queue/client.ts` — publish helpers.
+**7b : QStash**
+10. `src/server/services/queue/client.ts` : publish helpers.
 11. `verifySignatureAppRouter` on **every** `/api/jobs/*` route.
 12. Fan-out chain: `generate-invoices` → one message per org → one message per invoice email.
 13. Schedules created by `scripts/qstash-schedules.mjs`: invoices (1st 06:00), arrears reminders (5th 08:00), lease expiry (daily 00:30), subscription renewals (daily 07:00).
@@ -1844,18 +1844,18 @@ Constraints:
 **Concepts explained simply**
 
 - *Idempotency:* an operation you can safely repeat. Pressing a lift button five times summons one lift. Your invoice job must behave the same, because queues retry, networks fail mid-run, and managers double-click.
-- *FIFO allocation:* oldest debt first. A tenant owes June (KES 5,000 short) and July (KES 14,500) and pays KES 16,000 → June clears, July receives KES 11,000, KES 3,500 remains. **Write that exact example into a test** — it is precisely what an examiner will ask you to trace.
+- *FIFO allocation:* oldest debt first. A tenant owes June (KES 5,000 short) and July (KES 14,500) and pays KES 16,000 → June clears, July receives KES 11,000, KES 3,500 remains. **Write that exact example into a test** : it is precisely what an examiner will ask you to trace.
 - *Ageing buckets:* debt sorted by age. KES 5,000 outstanding for three months is a far worse signal than KES 20,000 from last week. Standard accounts-receivable practice, and it makes your reports look professional.
-- *Distributed lock:* `SET key value NX EX 300` — "set this only if nobody else has". The first click wins; the second is told the run is already in progress. Without it, two simultaneous runs race and one crashes on the unique constraint mid-way.
+- *Distributed lock:* `SET key value NX EX 300` : "set this only if nobody else has". The first click wins; the second is told the run is already in progress. Without it, two simultaneous runs race and one crashes on the unique constraint mid-way.
 - *Why preview before generating:* creating 200 invoices is easy; un-creating them is not. Any bulk financial operation shows a summary and asks for confirmation.
 - *Derived vs stored balance:* `balance` could be computed every read or stored. We store it **and** recompute it inside the same transaction as the payment, so reports stay fast and the number stays true. Never let the two drift.
-- *Prisma's 5-second transaction timeout:* the default. Allocating one payment is fine; a bulk operation is not. Pass `{ maxWait: 5000, timeout: 20000 }` — this one bites people in exactly this phase.
+- *Prisma's 5-second transaction timeout:* the default. Allocating one payment is fine; a bulk operation is not. Pass `{ maxWait: 5000, timeout: 20000 }` : this one bites people in exactly this phase.
 
 **Mistakes to avoid**
 
 - ❌ Floating-point money. (Third and final warning.)
 - ❌ A non-idempotent invoice job. Double-billing is the worst possible demo failure.
-- ❌ Allocating a payment outside a transaction. A crash halfway leaves money recorded with no invoice updated — the books stop balancing.
+- ❌ Allocating a payment outside a transaction. A crash halfway leaves money recorded with no invoice updated : the books stop balancing.
 - ❌ Assuming one payment settles exactly one invoice. Real tenants pay round numbers and part-payments.
 - ❌ Silently discarding overpayment. Model it as a credit.
 - ❌ An unsigned `/api/jobs/*` route. That is an open "bill everyone" button on the public internet.
@@ -1866,7 +1866,7 @@ Constraints:
 **Definition of Done**
 - [ ] Generating invoices twice for the same month creates no duplicates
 - [ ] Preview matches exactly what gets created
-- [ ] Two simultaneous generate clicks — one runs, one is told it is in progress
+- [ ] Two simultaneous generate clicks : one runs, one is told it is in progress
 - [ ] Allocation passes every edge case, including the worked example above
 - [ ] Overpayment produces a visible tenant credit
 - [ ] Arrears ageing reconciles with tenant ledgers
@@ -1878,17 +1878,17 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 7 only — Billing engine + QStash background jobs.
+Phase 7 only : Billing engine + QStash background jobs.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 5, 8.1, 8.2 and Phase 7.
 
 Build:
-1. src/server/services/billing/generate-invoices.ts — idempotent generation for
+1. src/server/services/billing/generate-invoices.ts : idempotent generation for
    one org + one period, rent + recurring lines, due date from lease.billingDay.
 2. Manager UI: pick month -> preview (count, total, per-property breakdown)
    -> confirm -> run. Guard with a Redis lock lock:invoices:{orgId}:{yyyy-mm}
    using SET NX EX 300.
-3. src/server/services/billing/allocate-payment.ts — FIFO across invoices,
+3. src/server/services/billing/allocate-payment.ts : FIFO across invoices,
    partial and over payment, leftover becomes tenant credit, updates
    paidCents/balanceCents/status, ONE transaction with explicit
    { maxWait: 5000, timeout: 20000 }.
@@ -1916,7 +1916,7 @@ Constraints:
 
 ---
 
-### PHASE 8 — M-Pesa Daraja Integration
+### PHASE 8 : M-Pesa Daraja Integration
 
 **Goal:** Real STK Push. A manager pays a subscription and a tenant pays rent from their phone, and SILQU records both automatically.
 
@@ -1926,7 +1926,7 @@ Constraints:
 
 1. Daraja sandbox: Consumer Key, Consumer Secret, Business Short Code, Passkey.
 2. `mpesa/client.ts`:
-   - `getAccessToken()` — OAuth, **cached in Redis** until just before expiry (one token, many function instances)
+   - `getAccessToken()` : OAuth, **cached in Redis** until just before expiry (one token, many function instances)
    - `initiateSTKPush({ phone, amountCents, accountRef, description, purpose })`
    - Password = base64(`ShortCode + Passkey + Timestamp`), timestamp `YYYYMMDDHHmmss` in **Africa/Nairobi**
    - Phone normalised to `254XXXXXXXXX`; amount converted from cents to whole shillings
@@ -1934,12 +1934,12 @@ Constraints:
 4. `/api/mpesa/callback`:
    - Log the entire raw body to `rawCallback` **before** parsing anything
    - **Redis idempotency key** `idem:mpesa:{checkoutRequestId}` as the first gate; the `@unique` column is the backstop
-   - If already `COMPLETED`, return 200 and stop — **duplicate callbacks are normal**
-   - On `ResultCode 0`: extract `MpesaReceiptNumber`, amount, phone; create the payment and run the Phase 7 allocation engine, or activate the subscription — in one transaction
+   - If already `COMPLETED`, return 200 and stop : **duplicate callbacks are normal**
+   - On `ResultCode 0`: extract `MpesaReceiptNumber`, amount, phone; create the payment and run the Phase 7 allocation engine, or activate the subscription : in one transaction
    - On non-zero: store `resultDesc`, mark `FAILED`, notify the user
    - **Always return HTTP 200**, or Safaricom retries forever
-5. `/api/mpesa/timeout` — the queue timeout URL.
-6. Polling UI: after initiating, poll `/api/stk-status/[checkoutId]` every 3s for up to 90s — *"Check your phone and enter your M-Pesa PIN"* → success / failed / *"Still processing — this page will update itself."* Cache the status in Redis so polling does not hammer Postgres.
+5. `/api/mpesa/timeout` : the queue timeout URL.
+6. Polling UI: after initiating, poll `/api/stk-status/[checkoutId]` every 3s for up to 90s : *"Check your phone and enter your M-Pesa PIN"* → success / failed / *"Still processing : this page will update itself."* Cache the status in Redis so polling does not hammer Postgres.
 7. **Redis rate limit** on STK Push: 3 per 5 minutes per phone. Each push costs money and annoys the tenant.
 8. Two real use cases: manager subscription (`/signup` and `/app/settings/subscription`) and tenant rent (`/my/pay`, prefilled with the outstanding balance).
 9. **QStash reconciliation sweep** every 30 minutes: find transactions stuck `INITIATED` for over 10 minutes and query their status from Daraja.
@@ -1948,11 +1948,11 @@ Constraints:
 
 **Concepts explained simply**
 
-- *STK Push:* your server asks Safaricom to make a PIN prompt appear on a specific phone. The user types their PIN on their handset. You never see it — that is the whole point.
+- *STK Push:* your server asks Safaricom to make a PIN prompt appear on a specific phone. The user types their PIN on their handset. You never see it : that is the whole point.
 - *Webhook / callback:* Safaricom does not answer immediately. Your first request only means "prompt sent." The real answer arrives seconds or minutes later as a *separate* HTTP request to your public URL. Your code must treat "I don't know yet" as a normal state, not an error.
 - *Why log the raw callback first:* if the payload shape changes or your parser throws, you still hold the evidence. In payments, the raw record is sacred.
 - *Two layers of idempotency:* Redis stops duplicate work from starting (fast, cheap); the database unique constraint guarantees correctness even if Redis is down (slow, absolute). Belt and braces, and you should be able to explain why you have both.
-- *Sandbox vs production:* sandbox uses test short codes and a fixed test PIN; production needs a Go-Live application and a real paybill. **Build and defend on sandbox**, and say so openly in your documentation — that is the honest, expected position for a student project.
+- *Sandbox vs production:* sandbox uses test short codes and a fixed test PIN; production needs a Go-Live application and a real paybill. **Build and defend on sandbox**, and say so openly in your documentation : that is the honest, expected position for a student project.
 - *ngrok in development:* Safaricom must reach your callback over public HTTPS. `ngrok http 3000` gives your laptop a temporary public address. Update `MPESA_CALLBACK_URL` every time ngrok restarts.
 
 **Mistakes to avoid**
@@ -1961,10 +1961,10 @@ Constraints:
 - ❌ Not handling duplicate callbacks.
 - ❌ Returning 500 to Safaricom on your own internal error. Return 200, log it, handle it out of band.
 - ❌ Wrong timezone in the password timestamp. Nairobi is UTC+3; a UTC timestamp gives an invalid password and a cryptic error.
-- ❌ Phone in the wrong format. Daraja wants `254712345678` — no `+`, no leading `0`.
+- ❌ Phone in the wrong format. Daraja wants `254712345678` : no `+`, no leading `0`.
 - ❌ Sending decimals. Daraja expects whole shillings; convert from cents and reject fractional amounts.
 - ❌ Fetching a fresh OAuth token on every request. Cache it in Redis.
-- ❌ Committing your Consumer Secret. If you ever do, **rotate it** — Git history is forever.
+- ❌ Committing your Consumer Secret. If you ever do, **rotate it** : Git history is forever.
 - ❌ Making M-Pesa the only way to record a payment.
 
 **Definition of Done**
@@ -1981,7 +1981,7 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 8 only — M-Pesa Daraja STK Push.
+Phase 8 only : M-Pesa Daraja STK Push.
 
 Read docs/SILQU_BUILD_PLAN_V2.md Phase 8 and section 8.1.
 
@@ -2016,28 +2016,28 @@ Constraints:
 
 ---
 
-### PHASE 9 — Operations, Tenant Portal and the Platform (Developer) Portal
+### PHASE 9 : Operations, Tenant Portal and the Platform (Developer) Portal
 
-**Goal:** Close the loop between tenants, caretakers and managers — and give yourself real operational control over the platform.
+**Goal:** Close the loop between tenants, caretakers and managers : and give yourself real operational control over the platform.
 
 **Why now:** Money is handled. Now the day-to-day reality (a leaking tap, a water-rationing notice) and the developer's view of the whole system.
 
 **What you build**
 
-**9a — Maintenance and complaints**
+**9a : Maintenance and complaints**
 1. Tenant raises a request: category, description, priority, photo (private R2).
 2. Manager / Customer Care queue: filter by property, status, priority, age; assign to a caretaker.
 3. Caretaker view: only requests on assigned units; update status, comment, attach photos.
-4. Status flow `OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED`. Only the raising tenant or a manager may **close** — otherwise "resolved" means nothing.
+4. Status flow `OPEN → ASSIGNED → IN_PROGRESS → RESOLVED → CLOSED`. Only the raising tenant or a manager may **close** : otherwise "resolved" means nothing.
 5. Comment thread using Preline **Chat Bubbles**; status history using Preline **Timeline**.
 
-**9b — Announcements**
+**9b : Announcements**
 6. Compose with audience `ALL | PROPERTY:id | UNIT:id`, optional scheduled publish. Audience is stored as a **rule**, resolved to recipients at send time, so a tenant who moves in tomorrow still sees a standing notice.
 
-**9c — Tenant portal, complete**
+**9c : Tenant portal, complete**
 7. Home (balance hero, next due, Pay rent, latest announcement, open requests), invoices, payments with receipts, maintenance, lease, profile, change password.
 
-**9d — Platform (developer) portal, complete** — see §3.5
+**9d : Platform (developer) portal, complete** : see §3.5
 8. Organizations (suspend / reactivate), subscriptions + MRR, platform users
 9. **Support sessions:** time-boxed, reason-required, fully audited access to an org's data
 10. **Jobs & Queues:** QStash schedules, recent runs, failures, DLQ with one-click replay
@@ -2046,17 +2046,17 @@ Constraints:
 13. **System health:** database latency, Redis latency, R2 reachability, last successful job, 24h M-Pesa failure rate
 14. **Audit logs** (filter + CSV) and **email log** (delivery status)
 
-**9e — Notifications**
+**9e : Notifications**
 15. One fan-out service function per event, publishing a QStash message for the email and writing a `Notification` row: invoice issued, payment received, arrears reminder, maintenance status change, announcement published, invitation received.
 16. Bell menu with unread count and mark-as-read.
 
 **Concepts explained simply**
 
-- *Notification fan-out:* one event produces several outputs — a row, an email, a dashboard change. Write it once in a service function and call it from the action. Never scatter `sendEmail` calls through UI code.
+- *Notification fan-out:* one event produces several outputs : a row, an email, a dashboard change. Write it once in a service function and call it from the action. Never scatter `sendEmail` calls through UI code.
 - *Audience as a rule, not a list:* storing `PROPERTY:7` instead of a frozen list of 12 tenant IDs means the notice stays correct as tenancies change.
-- *Support session:* the honest way to let support see customer data. Time-boxed, reason-required, audited. The alternative — permanent silent access — is what regulators fine companies for.
+- *Support session:* the honest way to let support see customer data. Time-boxed, reason-required, audited. The alternative : permanent silent access : is what regulators fine companies for.
 - *Feature flag:* a switch that separates *deploying* code from *releasing* it. Ship a half-finished report behind a flag, turn it on for yourself only, turn it off instantly if it misbehaves during your defence.
-- *Dead-letter queue:* where a message goes after every retry has failed. Without one, failures vanish. With one, Monday morning shows you a list of exactly what needs attention — and a replay button.
+- *Dead-letter queue:* where a message goes after every retry has failed. Without one, failures vanish. With one, Monday morning shows you a list of exactly what needs attention : and a replay button.
 
 **Mistakes to avoid**
 
@@ -2080,7 +2080,7 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 9 only — Operations, Tenant Portal, Platform Portal.
+Phase 9 only : Operations, Tenant Portal, Platform Portal.
 
 Read docs/SILQU_BUILD_PLAN_V2.md sections 3.5, 6, 7 and 8.
 
@@ -2113,7 +2113,7 @@ Constraints:
 
 ---
 
-### PHASE 10 — Reporting, Go Service, Testing, Hardening, Deployment
+### PHASE 10 : Reporting, Go Service, Testing, Hardening, Deployment
 
 **Goal:** Turn a working application into a defensible, deployed, documented product.
 
@@ -2121,22 +2121,22 @@ Constraints:
 
 **What you build**
 
-**10a — Reporting and the Go microservice**
+**10a : Reporting and the Go microservice**
 1. Reports: monthly collection summary, arrears ageing, occupancy trend, property performance comparison, tenant statement. Each with a date range, property filter, ApexCharts chart + table, CSV and PDF export.
-2. **Go microservice** (`services/reports-go`): one small HTTP service computing the heavy aggregations — portfolio-wide collection rate, multi-month occupancy trend, arrears ageing across all properties — using **goroutines for concurrent per-property queries**.
+2. **Go microservice** (`services/reports-go`): one small HTTP service computing the heavy aggregations : portfolio-wide collection rate, multi-month occupancy trend, arrears ageing across all properties : using **goroutines for concurrent per-property queries**.
    - Shared-secret header auth between Next.js and Go
    - `/healthz` endpoint, Dockerfile, deployed to Fly.io or Render
    - Next.js calls it and **falls back to a slower SQL path** if it is unreachable
-   - Keep it genuinely small and genuinely real — that is what makes the "Go microservice" claim in your proposal defensible rather than decorative
+   - Keep it genuinely small and genuinely real : that is what makes the "Go microservice" claim in your proposal defensible rather than decorative
 
-**10b — Testing**
+**10b : Testing**
 3. Unit (Vitest): money helpers, allocation engine, permission matrix, invoice idempotency, job idempotency, period maths, phone normalisation, Redis lock behaviour.
 4. Integration: server actions against a Neon **test branch**.
 5. E2E (Playwright): auth, property CRUD, tenant onboarding, invoice + payment, caretaker scope, **portal isolation**.
 6. Map all 25 Test Plan cases to an automated or documented manual test, and produce a results table for your final report.
 7. UAT with 3–5 real landlords: scripted tasks, observation notes, a short questionnaire, and a table of changes made in response.
 
-**10c — Security hardening**
+**10c : Security hardening**
 8. Checklist:
    - [ ] Every server action begins with a permission check
    - [ ] Every query is org-scoped
@@ -2152,19 +2152,19 @@ Constraints:
    - [ ] Errors shown to users leak no stack traces
    - [ ] Platform portal enforces TOTP and idle timeout
    - [ ] Audit log covers every sensitive action
-9. **Data Protection Act, 2019 write-up:** lawful basis, purpose limitation, data minimisation, retention, subject access (a tenant can export their own data), breach procedure — and a note that Redis holds no personal data.
+9. **Data Protection Act, 2019 write-up:** lawful basis, purpose limitation, data minimisation, retention, subject access (a tenant can export their own data), breach procedure : and a note that Redis holds no personal data.
 
-**10d — Performance**
+**10d : Performance**
 10. `EXPLAIN ANALYZE` on the slowest list queries; add missing indexes.
 11. Pagination everywhere. Never fetch an unbounded table.
 12. `next/image` for all images; fonts subset and preloaded.
 13. Lighthouse ≥ 90 on performance and accessibility for the main dashboards and the tenant portal.
 
-**10e — Deployment and documentation**
+**10e : Deployment and documentation**
 14. Vercel production: env vars set, Neon `main` connected, three subdomains configured, QStash schedules pointing at production URLs.
 15. Go service deployed with health checks.
 16. `README.md`: setup, env vars, scripts, architecture diagram, deployment steps.
-17. Update your SRS, SDS, Test Plan and User Manual to match what was **actually built**. Where the build diverged from the design, **document the divergence and the reason** — examiners reward honest, reasoned change far more than a pretend-perfect plan.
+17. Update your SRS, SDS, Test Plan and User Manual to match what was **actually built**. Where the build diverged from the design, **document the divergence and the reason** : examiners reward honest, reasoned change far more than a pretend-perfect plan.
 18. Demo script: a 10-minute walkthrough with prepared data, rehearsed. Record a backup video in case the Wi-Fi fails.
 
 **Concepts explained simply**
@@ -2197,7 +2197,7 @@ Constraints:
 **Claude Code prompt**
 
 ```
-Phase 10 only — Reporting, Go service, testing, hardening, deployment.
+Phase 10 only : Reporting, Go service, testing, hardening, deployment.
 
 Read docs/SILQU_BUILD_PLAN_V2.md Phase 10.
 
@@ -2240,8 +2240,8 @@ NEXT_PUBLIC_TENANT_HOST=my.silqu.co.ke
 NEXT_PUBLIC_PLATFORM_HOST=platform.silqu.co.ke
 
 # ---- Database (Neon) ----
-DATABASE_URL=                      # POOLED  — used by the app
-DATABASE_URL_UNPOOLED=             # DIRECT  — used by Prisma migrations
+DATABASE_URL=                      # POOLED  : used by the app
+DATABASE_URL_UNPOOLED=             # DIRECT  : used by Prisma migrations
 
 # ---- Auth ----
 AUTH_SECRET=                       # openssl rand -base64 32
@@ -2295,7 +2295,7 @@ PLAN_MONTHLY_UNIT_LIMIT=50
 **Rules**
 - Only `NEXT_PUBLIC_` variables reach the browser. **Never prefix a secret.**
 - `.env.local` is in `.gitignore` from commit #1.
-- If a secret is ever committed, **rotate it** — removing it in a later commit does not remove it from history.
+- If a secret is ever committed, **rotate it** : removing it in a later commit does not remove it from history.
 - On Vercel, set every variable separately for Production, Preview and Development.
 - `QSTASH_TARGET_BASE_URL` changes every time ngrok restarts. Re-run `scripts/qstash-schedules.mjs` when it does.
 
@@ -2303,7 +2303,7 @@ PLAN_MONTHLY_UNIT_LIMIT=50
 
 ## 11. MISTAKES LEDGER
 
-### 11.1 What you have already done right — keep doing it
+### 11.1 What you have already done right : keep doing it
 
 | Decision | Why it is strong |
 |---|---|
@@ -2312,7 +2312,7 @@ PLAN_MONTHLY_UNIT_LIMIT=50
 | **Caretaker scope framed as data access, not menu hiding** | The difference between having *heard of* RBAC and *understanding* it. |
 | **Temp password over magic link, with written justification** | You made a trade-off and recorded the reasoning. Examiners reward reasoned trade-offs far above recited best practice. |
 | **Three separate portals** | An architecture decision with four independent justifications (§3.2). This is the strongest single point in your design. |
-| **Traceability — every feature maps to an SRS requirement** | Exactly how requirements engineering is assessed. Keep the mapping current. |
+| **Traceability : every feature maps to an SRS requirement** | Exactly how requirements engineering is assessed. Keep the mapping current. |
 | **Hashed invitation tokens, bcrypt, TLS, forced first-login change** | Security thinking beyond the syllabus minimum. |
 | **Owning your own auth after leaving Supabase** | Harder, but you can now explain every line of the flow. Strictly better under questioning. |
 | **Moving from cron to a real queue** | Shows you understand that billing failures must be recoverable, not merely logged. |
@@ -2329,7 +2329,7 @@ PLAN_MONTHLY_UNIT_LIMIT=50
 | Preline | Reaching for Preline Datatables | Drags jQuery in; cannot server-paginate | TanStack logic + Preline markup |
 | Icons | Guessed Solar names | Blank squares in your demo | `verify-icons.mjs` in CI |
 | Database | `Float`, `Decimal` or `BigInt` per row | Wrong balances, or a serialisation crash | `Int` cents (§5.3) |
-| Database | Missing `orgId` | Cross-organization data leak — a DPA breach | `orgId` everywhere + query-layer enforcement |
+| Database | Missing `orgId` | Cross-organization data leak : a DPA breach | `orgId` everywhere + query-layer enforcement |
 | Prisma | New client per request | Neon refuses connections in 20 minutes | Global singleton |
 | Prisma | Pooled/direct URLs swapped | Confusing migration failures | Comment them in the schema |
 | Prisma | Default 5s transaction timeout on bulk work | Half-generated invoice runs | Explicit `{ maxWait, timeout }` |
@@ -2357,8 +2357,8 @@ PLAN_MONTHLY_UNIT_LIMIT=50
 
 ### 11.3 Four questions before every commit
 
-1. **Why** does this exist — which SRS requirement does it serve?
-2. **How** is it protected — which permission check and which validation guard it?
+1. **Why** does this exist : which SRS requirement does it serve?
+2. **How** is it protected : which permission check and which validation guard it?
 3. **What** breaks if it runs twice, or halfway?
 4. **Who** can see this data, and is that scope enforced on the server?
 
@@ -2366,12 +2366,12 @@ If you cannot answer all four, the code is not ready.
 
 ---
 
-## 12. `CLAUDE.md` — PUT THIS AT YOUR REPOSITORY ROOT
+## 12. `CLAUDE.md` : PUT THIS AT YOUR REPOSITORY ROOT
 
 Claude Code reads this automatically at the start of every session. Copy it verbatim.
 
 ```markdown
-# SILQU — Working Agreement
+# SILQU : Working Agreement
 
 ## Project
 SILQU is a web-based rental property management system for small and medium
@@ -2389,9 +2389,9 @@ ApexCharts · Upstash Redis · Upstash QStash · Cloudflare R2 · Resend ·
 Safaricom Daraja (sandbox) · Go reports microservice · Vercel
 
 ## Three portals
-1. Business  — app.silqu.co.ke      — MANAGER, EMPLOYEE, CARETAKER
-2. Tenant    — my.silqu.co.ke       — TENANT
-3. Platform  — platform.silqu.co.ke — PLATFORM_ADMIN, PLATFORM_SUPPORT
+1. Business  : app.silqu.co.ke      : MANAGER, EMPLOYEE, CARETAKER
+2. Tenant    : my.silqu.co.ke       : TENANT
+3. Platform  : platform.silqu.co.ke : PLATFORM_ADMIN, PLATFORM_SUPPORT
 Separate layouts, themes, cookies, login pages and middleware rules.
 
 ## Non-negotiable rules
@@ -2406,7 +2406,7 @@ Separate layouts, themes, cookies, login pages and middleware rules.
 6. Portals never share a session cookie.
 7. UI components come from Preline UI v4.2 first. Anything not in Preline is
    listed in build plan section 7.4. Run every Preline snippet through the
-   token swap in section 7.2 — no stock Tailwind palette classes.
+   token swap in section 7.2 : no stock Tailwind palette classes.
 8. Icons come only from the ICONS registry in src/lib/icons.ts. Never write a
    raw "solar:..." string in a component. Run npm run verify:icons after edits.
 9. No hex codes in components. Tokens only, declared with @theme (not
@@ -2449,7 +2449,7 @@ M-Pesa code, +254 7XX XXX XXX.
 | 1 | 1 | Design system live on Vercel; Preline surviving route changes |
 | 2 | 2 | Prisma schema migrated, seeded, ERD exported |
 | 3 | 3 | Six roles, three doors, portal isolation tested |
-| 4 | 4 | Three shells with real dashboard data — **screenshot for progress report** |
+| 4 | 4 | Three shells with real dashboard data : **screenshot for progress report** |
 | 5 | 5 | Properties, units, R2 uploads, caretaker scope proven |
 | 6 | 6 | Tenant onboarding end to end |
 | 7–8 | 7 | Billing engine + QStash fan-out with tests |
@@ -2458,13 +2458,13 @@ M-Pesa code, +254 7XX XXX XXX.
 | 11 | 10a–b | Reports, Go service, full test suite |
 | 12 | 10c–e | Hardening, deployment, documentation, demo rehearsal |
 
-**Buffer rule:** whatever you estimate, add 40%. M-Pesa in particular will take longer than you think — everyone who has integrated Daraja says the same thing.
+**Buffer rule:** whatever you estimate, add 40%. M-Pesa in particular will take longer than you think : everyone who has integrated Daraja says the same thing.
 
 ### 13.2 Commands
 
 ```bash
 pnpm dev                  # Development server
-pnpm build                # Production build — run before every push
+pnpm build                # Production build : run before every push
 pnpm verify:icons         # Validate the Solar icon registry
 pnpm dlx prisma migrate dev       # Create + apply a migration
 pnpm dlx prisma migrate deploy    # Apply migrations in production
@@ -2476,7 +2476,7 @@ node scripts/qstash-schedules.mjs   # Create / update QStash schedules
 pnpm dlx ngrok http 3000          # Public URL for M-Pesa and QStash callbacks
 ```
 
-### 13.3 Phase gates — do not proceed until true
+### 13.3 Phase gates : do not proceed until true
 
 | Phase | Gate |
 |---|---|
@@ -2495,16 +2495,16 @@ pnpm dlx ngrok http 3000          # Public URL for M-Pesa and QStash callbacks
 
 If you only get three sentences to explain your architecture, use these:
 
-1. *"SILQU is three isolated portals over one database, because the landlord's staff, the landlord's customers, and the software vendor have three different relationships to the data — and each has its own session, theme and permission set."*
+1. *"SILQU is three isolated portals over one database, because the landlord's staff, the landlord's customers, and the software vendor have three different relationships to the data : and each has its own session, theme and permission set."*
 2. *"All money is stored as integer cents, and every write that touches money happens inside a single database transaction, so the books cannot be left half-updated."*
-3. *"Anything that can fail and must not be lost — invoice generation, receipts, M-Pesa reconciliation — runs on a queue with retries and a dead-letter queue, so a failure is visible and replayable rather than silent."*
+3. *"Anything that can fail and must not be lost : invoice generation, receipts, M-Pesa reconciliation : runs on a queue with retries and a dead-letter queue, so a failure is visible and replayable rather than silent."*
 
 ---
 
-*End of build plan v2.0. Keep this document updated as the build diverges — a plan that no longer matches the product is worse than no plan at all.*
+*End of build plan v2.0. Keep this document updated as the build diverges : a plan that no longer matches the product is worse than no plan at all.*
 
 ---
 
-## APPENDIX — Package manager note
+## APPENDIX : Package manager note
 
 This project uses **pnpm**, not npm. Wherever this document says `npm i` / `npm run` in a code block, run the pnpm equivalent instead: `pnpm add` for installs, `pnpm <script>` for package.json scripts, and `pnpm dlx <pkg>` in place of `npx <pkg>`. CLAUDE.md's working agreement enforces this project-wide.

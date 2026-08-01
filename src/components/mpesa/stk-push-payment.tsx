@@ -20,13 +20,13 @@ export function StkPushPayment({
   demoFallback,
 }: {
   onInitiate: (phone: string) => Promise<InitiatePaymentResult>;
-  /** 254XXXXXXXXX — when set, the phone is shown but not editable (e.g. signup, where it's the number just registered). */
+  /** 254XXXXXXXXX : when set, the phone is shown but not editable (e.g. signup, where it's the number just registered). */
   fixedPhone?: string;
   /** 9-digit prefill for the editable phone input. */
   defaultPhone?: string;
   payLabel?: string;
   onSuccess?: () => void;
-  /** Rendered instead of the pay button when M-Pesa isn't configured — e.g. a demo/skip button in dev. */
+  /** Rendered instead of the pay button when M-Pesa isn't configured : e.g. a demo/skip button in dev. */
   demoFallback?: React.ReactNode;
 }) {
   const [phase, setPhase] = useState<Phase>("idle");
@@ -101,7 +101,7 @@ export function StkPushPayment({
   if (phase === "still-processing") {
     return (
       <div className="flex flex-col gap-2 rounded-[--radius-control] border border-warning/30 bg-warning/5 p-4">
-        <p className="text-sm text-ink">Still processing — this can take a moment. Check back shortly; it'll update itself once confirmed.</p>
+        <p className="text-sm text-ink">Still processing : this can take a moment. Check back shortly; it'll update itself once confirmed.</p>
       </div>
     );
   }

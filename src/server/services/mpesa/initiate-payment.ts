@@ -24,7 +24,7 @@ export async function initiateMpesaPayment(params: InitiatePaymentParams): Promi
     return { error: "Too many payment attempts for this number. Wait a few minutes and try again." };
   }
 
-  // Row exists BEFORE we ever call Safaricom — checkoutRequestId gets its
+  // Row exists BEFORE we ever call Safaricom : checkoutRequestId gets its
   // real value once the STK push request returns one. A unique NOT NULL
   // column can't start empty, so it starts as a throwaway placeholder.
   const txn = await db.mpesaTransaction.create({

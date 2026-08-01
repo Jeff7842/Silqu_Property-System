@@ -36,7 +36,7 @@ export async function CaretakerDashboard({ orgId, userId, fullName }: { orgId: s
                   >
                     <div>
                       <p className="text-sm font-medium text-ink">
-                        {unit.property.name} — {unit.label}
+                        {unit.property.name} : {unit.label}
                       </p>
                       <p className="text-xs text-ink-muted">
                         {unit.leases[0]?.tenant.fullName ?? "Vacant"}

@@ -25,7 +25,7 @@ export default async function HealthPage() {
   const session = await auth();
   requireRole(session, ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"]);
 
-  // Narrowed to locals before the closures below — `redis`/`r2` are typed as
+  // Narrowed to locals before the closures below : `redis`/`r2` are typed as
   // possibly-undefined module exports, and TS doesn't carry the ternary's
   // narrowing into a callback that runs later.
   const redisClient = redis;

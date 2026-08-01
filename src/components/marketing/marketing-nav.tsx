@@ -8,7 +8,7 @@ const LINKS = [
 ] as const;
 
 /**
- * Public marketing nav — shared by the home, pricing and contact pages via
+ * Public marketing nav : shared by the home, pricing and contact pages via
  * app/(marketing)/layout.tsx. Server Component: the mobile menu is Preline's
  * hs-collapse (data-attribute driven, re-initialised on route change by
  * PrelineClient), so no client-side state is needed here per rule 19.

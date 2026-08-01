@@ -1,6 +1,6 @@
 import { db } from "@/server/db/client";
 
-/** Platform flags page — every flag, most-recently-updated first. Table is small (admin-managed), no pagination needed. */
+/** Platform flags page : every flag, most-recently-updated first. Table is small (admin-managed), no pagination needed. */
 export function listFeatureFlags() {
   return db.featureFlag.findMany({ orderBy: { updatedAt: "desc" }, take: 500 });
 }
@@ -10,7 +10,7 @@ export function getFeatureFlag(key: string) {
   return db.featureFlag.findUnique({ where: { key } });
 }
 
-/** Upserts by key — Postgres is the source of truth; the caller invalidates the Redis cache after this resolves. */
+/** Upserts by key : Postgres is the source of truth; the caller invalidates the Redis cache after this resolves. */
 export function upsertFeatureFlag(key: string, enabled: boolean, rolloutPercent: number, updatedByUserId: string) {
   return db.featureFlag.upsert({
     where: { key },

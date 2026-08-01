@@ -24,7 +24,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
     <div className="flex flex-col gap-6">
       <PageHeader
         title={invoice.invoiceNo}
-        description={`${invoice.lease.tenant.fullName} — ${invoice.lease.unit.property.name} ${invoice.lease.unit.label}`}
+        description={`${invoice.lease.tenant.fullName} : ${invoice.lease.unit.property.name} ${invoice.lease.unit.label}`}
         actions={<Link href={`/app/tenants/${invoice.lease.tenantId}`}><Button variant="secondary">Record payment</Button></Link>}
       />
 

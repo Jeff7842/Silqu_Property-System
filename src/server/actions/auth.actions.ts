@@ -21,7 +21,7 @@ async function login(
   try {
     await signIn("credentials", { ...parsed.data, redirectTo });
   } catch (error) {
-    // signIn() redirects via a thrown NEXT_REDIRECT on success — only an
+    // signIn() redirects via a thrown NEXT_REDIRECT on success : only an
     // AuthError means the credentials were actually rejected.
     if (error instanceof AuthError) {
       return { error: "Email or password is incorrect." };

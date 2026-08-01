@@ -5,7 +5,7 @@ import { escapeHtml, sendEmail } from "@/server/services/email/client";
 
 export type ContactState = { error?: string; success?: boolean } | undefined;
 
-// No requireRole() here, unlike the in-app server actions — this is the
+// No requireRole() here, unlike the in-app server actions : this is the
 // public marketing contact form and has no session to check. Every other
 // non-negotiable still applies: input is re-validated server-side with the
 // matching Zod schema, nothing here trusts the client.
@@ -28,7 +28,7 @@ export async function submitContactAction(
   // follow-up once a support inbox address is decided.
   await sendEmail({
     to: parsed.data.email,
-    subject: "We received your message — SILQU",
+    subject: "We received your message : SILQU",
     template: "contact-confirmation",
     html: `<p>Hi ${escapeHtml(parsed.data.name)},</p><p>Thanks for reaching out about <strong>${escapeHtml(parsed.data.subject)}</strong>. Our team has received your message and will get back to you shortly.</p><p>Your message:</p><p>${escapeHtml(parsed.data.message)}</p>`,
   });

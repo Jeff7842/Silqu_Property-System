@@ -2,7 +2,7 @@ import { afterAll, describe, expect, it, vi } from "vitest";
 
 // authorizeCredentials reads the request IP off next/headers' headers(), which
 // only works inside a real Next.js request scope. Outside of one it throws
-// "headers was called outside a request scope" — so stub it the same way a
+// "headers was called outside a request scope" : so stub it the same way a
 // request with no forwarded-for header would look.
 vi.mock("next/headers", () => ({
   headers: async () => new Map<string, string>(),
@@ -12,7 +12,7 @@ import { db } from "@/server/db/client";
 import { hashPassword } from "@/server/auth/password";
 import { authorizeCredentials } from "@/server/auth/authorize";
 
-// Hits the real dev database (needs DATABASE_URL — see vitest.setup.ts) since
+// Hits the real dev database (needs DATABASE_URL : see vitest.setup.ts) since
 // this specifically proves org suspension blocks sign-in for org-scoped
 // roles, not just the password/role checks unit tests already cover.
 describe("org suspension blocks sign-in", () => {

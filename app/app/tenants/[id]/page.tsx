@@ -77,7 +77,7 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-ink">{currentLease.unit.property.name} — {currentLease.unit.label}</p>
+                    <p className="font-medium text-ink">{currentLease.unit.property.name} : {currentLease.unit.label}</p>
                     <p className="text-sm text-ink-muted">
                       {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(currentLease.startDate)} –{" "}
                       {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(currentLease.endDate)}
@@ -142,8 +142,8 @@ export default async function TenantDetailPage({ params }: { params: Promise<{ i
           <Card header={<h3 className="font-semibold text-ink">Details</h3>}>
             <dl className="flex flex-col gap-2 text-sm">
               <div className="flex justify-between"><dt className="text-ink-muted">National ID</dt><dd className="text-ink">{tenant.nationalId}</dd></div>
-              <div className="flex justify-between"><dt className="text-ink-muted">Email</dt><dd className="text-ink">{tenant.email ?? "—"}</dd></div>
-              <div className="flex justify-between"><dt className="text-ink-muted">Next of kin</dt><dd className="text-ink">{tenant.nextOfKinName ?? "—"}</dd></div>
+              <div className="flex justify-between"><dt className="text-ink-muted">Email</dt><dd className="text-ink">{tenant.email ?? ":"}</dd></div>
+              <div className="flex justify-between"><dt className="text-ink-muted">Next of kin</dt><dd className="text-ink">{tenant.nextOfKinName ?? ":"}</dd></div>
               <div className="flex justify-between"><dt className="text-ink-muted">Status</dt><dd><Badge tone={tenant.status === "ACTIVE" ? "success" : "neutral"}>{tenant.status}</Badge></dd></div>
               {tenant.creditCents > 0 && (
                 <div className="flex justify-between"><dt className="text-ink-muted">Credit balance</dt><dd><Money cents={tenant.creditCents} tone="positive" size="small" /></dd></div>

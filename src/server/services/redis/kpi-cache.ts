@@ -2,7 +2,7 @@ import { redis } from "@/server/services/redis/client";
 
 const TTL_SECONDS = 60;
 
-/** Reads/writes are no-ops until Redis is configured — dashboards just always hit the DB. */
+/** Reads/writes are no-ops until Redis is configured : dashboards just always hit the DB. */
 export async function getCachedKpis<T>(orgId: string, key: string): Promise<T | null> {
   if (!redis) return null;
   return (await redis.get<T>(`kpi:${orgId}:${key}`)) ?? null;

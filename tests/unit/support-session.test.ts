@@ -3,7 +3,7 @@ import { getSupportSession, startSupportSession } from "@/server/services/redis/
 import { redis } from "@/server/services/redis/client";
 
 // This environment has no UPSTASH_REDIS_REST_URL/TOKEN configured (same as
-// dev — see vitest.setup.ts, which only loads .env.local), so `redis` is
+// dev : see vitest.setup.ts, which only loads .env.local), so `redis` is
 // undefined here. These tests lock in the no-op-safe fallback: without
 // Redis, the gate degrades to "always ask for a reason" rather than
 // crashing or silently granting access.

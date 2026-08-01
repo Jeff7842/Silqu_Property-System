@@ -40,7 +40,7 @@ export default async function TenantLeasePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Lease agreement" description={`${property.name} — ${unit.label}`} />
+      <PageHeader title="Lease agreement" description={`${property.name} : ${unit.label}`} />
 
       <Card
         header={

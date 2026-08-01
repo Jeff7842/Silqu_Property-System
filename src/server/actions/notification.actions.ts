@@ -6,7 +6,7 @@ import { auth as authBusiness } from "@/server/auth/business";
 import { auth as authTenant } from "@/server/auth/tenant";
 import { auth as authPlatform } from "@/server/auth/platform";
 
-/** Notifications are read across all three portals — try each portal's session cookie, whichever one is actually present wins. */
+/** Notifications are read across all three portals : try each portal's session cookie, whichever one is actually present wins. */
 async function currentUserId() {
   const [b, t, p] = await Promise.all([authBusiness(), authTenant(), authPlatform()]);
   return (b ?? t ?? p)?.user?.id ?? null;

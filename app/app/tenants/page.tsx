@@ -58,7 +58,7 @@ export default async function TenantsPage({ searchParams }: { searchParams: Prom
                   <div>
                     <p className="font-medium text-ink">{t.fullName}</p>
                     <p className="text-xs text-ink-muted">
-                      {formatPhone(t.phone)} {lease ? `— ${lease.unit.label}` : ""}
+                      {formatPhone(t.phone)} {lease ? `: ${lease.unit.label}` : ""}
                     </p>
                   </div>
                   <Badge tone={STATUS_TONE[t.status]}>{t.status}</Badge>

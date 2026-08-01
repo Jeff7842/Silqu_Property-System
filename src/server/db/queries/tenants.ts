@@ -58,7 +58,7 @@ export async function getTenantLedger(orgId: string, tenantId: string): Promise<
       type: "payment" as const,
       id: p.id,
       date: p.paidAt,
-      label: `Payment — ${p.method}`,
+      label: `Payment : ${p.method}`,
       amountCents: -p.amountCents,
     })),
   ].sort((a, b) => a.date.getTime() - b.date.getTime());

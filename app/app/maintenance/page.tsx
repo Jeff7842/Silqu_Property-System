@@ -64,11 +64,11 @@ export default async function MaintenanceQueuePage({
           emptyIcon="maintenance"
           emptyTitle="No requests"
           columns={[
-            { key: "unit", header: "Unit", render: (r) => <Link href={`/app/maintenance/${r.id}`} className="font-medium text-primary hover:underline">{r.unit.property.name} — {r.unit.label}</Link> },
+            { key: "unit", header: "Unit", render: (r) => <Link href={`/app/maintenance/${r.id}`} className="font-medium text-primary hover:underline">{r.unit.property.name} : {r.unit.label}</Link> },
             { key: "category", header: "Category", render: (r) => r.category.replace("_", " ") },
-            { key: "tenant", header: "Tenant", render: (r) => r.tenant?.fullName ?? "—" },
+            { key: "tenant", header: "Tenant", render: (r) => r.tenant?.fullName ?? ":" },
             { key: "priority", header: "Priority", render: (r) => <Badge tone={PRIORITY_TONE[r.priority]}>{r.priority}</Badge> },
-            { key: "assigned", header: "Assigned to", render: (r) => r.assignedTo?.fullName ?? "—" },
+            { key: "assigned", header: "Assigned to", render: (r) => r.assignedTo?.fullName ?? ":" },
             { key: "status", header: "Status", render: (r) => <Badge tone={STATUS_TONE[r.status]}>{r.status.replace("_", " ")}</Badge> },
             { key: "age", header: "Raised", render: (r) => new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(r.createdAt) },
           ]}

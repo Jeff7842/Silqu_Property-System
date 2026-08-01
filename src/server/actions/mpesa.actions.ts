@@ -6,9 +6,9 @@ import { auth as authTenant } from "@/server/auth/tenant";
 import { requireOrg, requireRole } from "@/server/auth/session";
 import { initiateMpesaPayment, type InitiatePaymentResult } from "@/server/services/mpesa/initiate-payment";
 
-const MONTHLY_PRICE_CENTS = 250_000; // KES 2,500 — matches build plan section 10 PLAN_MONTHLY_PRICE
+const MONTHLY_PRICE_CENTS = 250_000; // KES 2,500 : matches build plan section 10 PLAN_MONTHLY_PRICE
 
-/** Called from the signup wizard, before the manager has a session — the org and its PENDING subscription were just created in the same request chain. `phone` is already 254XXXXXXXXX. */
+/** Called from the signup wizard, before the manager has a session : the org and its PENDING subscription were just created in the same request chain. `phone` is already 254XXXXXXXXX. */
 export async function initiateSignupSubscriptionPaymentAction(orgId: string, phone: string): Promise<InitiatePaymentResult> {
   const sub = await db.subscription.findUnique({ where: { orgId } });
   if (!sub || sub.status === "ACTIVE") {
@@ -25,7 +25,7 @@ export async function initiateSignupSubscriptionPaymentAction(orgId: string, pho
   });
 }
 
-/** Called from /app/settings/subscription — manager renewing or reactivating. `phone` is already 254XXXXXXXXX. */
+/** Called from /app/settings/subscription : manager renewing or reactivating. `phone` is already 254XXXXXXXXX. */
 export async function initiateSubscriptionPaymentAction(phone: string): Promise<InitiatePaymentResult> {
   const session = await authBusiness();
   requireRole(session, ["MANAGER"]);
@@ -44,7 +44,7 @@ export async function initiateSubscriptionPaymentAction(phone: string): Promise<
   });
 }
 
-/** ponytail: dev-only fallback for /app/settings when M-Pesa isn't configured — mirrors the signup stub so the flow stays testable end to end. */
+/** ponytail: dev-only fallback for /app/settings when M-Pesa isn't configured : mirrors the signup stub so the flow stays testable end to end. */
 export async function activateSubscriptionDemoAction() {
   const session = await authBusiness();
   requireRole(session, ["MANAGER"]);
@@ -56,7 +56,7 @@ export async function activateSubscriptionDemoAction() {
   });
 }
 
-/** Called from /my/payments — tenant paying rent against their active lease. `phone` is already 254XXXXXXXXX. */
+/** Called from /my/payments : tenant paying rent against their active lease. `phone` is already 254XXXXXXXXX. */
 export async function initiateRentPaymentAction(phone: string, amountKES: number): Promise<InitiatePaymentResult> {
   const session = await authTenant();
   const user = requireRole(session, ["TENANT"]);

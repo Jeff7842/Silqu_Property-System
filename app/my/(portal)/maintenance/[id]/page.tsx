@@ -25,7 +25,7 @@ export default async function TenantMaintenanceDetailPage({ params }: { params: 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title={`${request.unit.property.name} — ${request.unit.label}`}
+        title={`${request.unit.property.name} : ${request.unit.label}`}
         description={request.category.replace("_", " ")}
         actions={<Badge tone={PRIORITY_TONE[request.priority]}>{request.priority}</Badge>}
       />

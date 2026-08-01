@@ -4,7 +4,7 @@ import PrelineClient from "@/components/ui/preline-client";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-// Stitch design uses Inter exclusively — see docs/SILQU_BUILD_PLAN_V2.md's
+// Stitch design uses Inter exclusively : see docs/SILQU_BUILD_PLAN_V2.md's
 // design-system section, now superseded by the Stitch project's designMd.
 const inter = Inter({
   variable: "--font-body",

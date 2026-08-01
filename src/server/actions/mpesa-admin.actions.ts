@@ -11,7 +11,7 @@ import { processStkCallbackBody } from "@/server/services/mpesa/process-callback
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
-/** Manager reconciliation page — check one stuck transaction against Daraja right now, instead of waiting for the 30-minute sweep. */
+/** Manager reconciliation page : check one stuck transaction against Daraja right now, instead of waiting for the 30-minute sweep. */
 export async function checkMpesaStatusAction(transactionId: string): Promise<ActionState> {
   const session = await authBusiness();
   requireRole(session, ["MANAGER"]);
@@ -34,7 +34,7 @@ export async function checkMpesaStatusAction(transactionId: string): Promise<Act
   return { success: true };
 }
 
-/** Platform portal's raw webhook viewer — reprocess a stored rawCallback exactly as the live route would. */
+/** Platform portal's raw webhook viewer : reprocess a stored rawCallback exactly as the live route would. */
 export async function replayMpesaCallbackAction(transactionId: string): Promise<ActionState> {
   const session = await authPlatform();
   requireRole(session, ["PLATFORM_ADMIN"]);
@@ -42,7 +42,7 @@ export async function replayMpesaCallbackAction(transactionId: string): Promise<
   const txn = await db.mpesaTransaction.findUnique({ where: { id: transactionId } });
   if (!txn) return { error: "Transaction not found." };
   if (!txn.rawCallback) return { error: "No stored callback to replay." };
-  if (txn.status === "COMPLETED") return { error: "Already completed — replaying would double-process it." };
+  if (txn.status === "COMPLETED") return { error: "Already completed : replaying would double-process it." };
 
   await processStkCallbackBody(txn, txn.rawCallback as Record<string, unknown>);
 

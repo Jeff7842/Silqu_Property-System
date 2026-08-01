@@ -101,7 +101,7 @@ export async function isUnitAssignedToCaretaker(userId: string, unitId: string, 
   return assignment !== null;
 }
 
-/** Caretaker-scoped unit detail — returns null if the unit exists but isn't assigned to this caretaker. */
+/** Caretaker-scoped unit detail : returns null if the unit exists but isn't assigned to this caretaker. */
 export async function getUnitDetailForCaretaker(orgId: string, unitId: string, userId: string) {
   const unit = await getUnitDetailById(orgId, unitId);
   if (!unit) return null;

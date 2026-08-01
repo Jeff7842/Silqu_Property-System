@@ -60,7 +60,7 @@ export async function createManagerAccountAction(
 }
 
 /**
- * ponytail: stub — Daraja STK Push is Phase 8. Marks the subscription
+ * ponytail: stub : Daraja STK Push is Phase 8. Marks the subscription
  * ACTIVE immediately, matching the plan's "returns a fake success in dev"
  * instruction, so sign-up is testable end to end before payments exist.
  */

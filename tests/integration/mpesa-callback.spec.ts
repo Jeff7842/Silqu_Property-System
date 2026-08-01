@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { db } from "@/server/db/client";
 import { processStkCallbackBody } from "@/server/services/mpesa/process-callback";
 
-// Hits the real dev database (needs DATABASE_URL — see vitest.setup.ts) since
+// Hits the real dev database (needs DATABASE_URL : see vitest.setup.ts) since
 // this specifically proves the callback route's idempotency guard, not just
 // the allocation math (that's invoice-payment.spec.ts's job).
 describe("M-Pesa callback idempotency", () => {
@@ -18,7 +18,7 @@ describe("M-Pesa callback idempotency", () => {
 
     // dueDate is deliberately way in the past so FIFO (oldest-due-first)
     // always processes this invoice before any real seeded arrears on the
-    // same lease — combined with an exact-match payment amount below, that
+    // same lease : combined with an exact-match payment amount below, that
     // guarantees the payment can't spill onto (and corrupt) real data.
     const invoice = await db.invoice.create({
       data: {

@@ -15,7 +15,7 @@ const ALLOWED_TYPES: Record<string, string> = {
   "application/pdf": "pdf",
 };
 
-// ponytail: tenant ID scans only for now — signed lease PDFs need a
+// ponytail: tenant ID scans only for now : signed lease PDFs need a
 // PDF-generation step that doesn't exist yet (Go reports service, later phase).
 export async function POST(req: Request) {
   const session = await auth();

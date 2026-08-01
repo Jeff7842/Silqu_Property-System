@@ -43,7 +43,7 @@ export default async function OrganizationsPage() {
     {
       key: "plan",
       header: "Plan",
-      render: (o) => (o.subscription ? PLAN_LABEL[o.subscription.plan] : "—"),
+      render: (o) => (o.subscription ? PLAN_LABEL[o.subscription.plan] : ":"),
     },
     {
       key: "status",
@@ -58,7 +58,7 @@ export default async function OrganizationsPage() {
   ];
 
   // Suspend/reactivate is PLATFORM_ADMIN only per the permission matrix
-  // (suspendOrganization) — PLATFORM_SUPPORT gets the same list without the control.
+  // (suspendOrganization) : PLATFORM_SUPPORT gets the same list without the control.
   if (user.role === "PLATFORM_ADMIN") {
     columns.push({
       key: "actions",

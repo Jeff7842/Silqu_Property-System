@@ -55,7 +55,7 @@ export function GenerateInvoicesForm() {
           {preview.byProperty.length > 0 && (
             <ul className="mt-2 flex flex-col gap-1 text-xs text-ink-muted">
               {preview.byProperty.map((p) => (
-                <li key={p.propertyName}>{p.propertyName}: {p.count} unit{p.count === 1 ? "" : "s"} — <Money cents={p.totalCents} size="small" showCurrency={false} /></li>
+                <li key={p.propertyName}>{p.propertyName}: {p.count} unit{p.count === 1 ? "" : "s"} : <Money cents={p.totalCents} size="small" showCurrency={false} /></li>
               ))}
             </ul>
           )}

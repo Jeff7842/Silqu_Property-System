@@ -20,7 +20,7 @@ export const PORTAL_CONFIG: Record<
   },
   platform: {
     cookieName: "silqu.platform",
-    // Auth.js has no separate idle timeout — a short maxAge + matching
+    // Auth.js has no separate idle timeout : a short maxAge + matching
     // updateAge approximates "expires 15 minutes after last activity".
     maxAgeSeconds: 15 * 60,
     allowedRoles: ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"],

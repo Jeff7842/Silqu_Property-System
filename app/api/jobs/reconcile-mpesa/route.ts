@@ -7,7 +7,7 @@ import { withJobSignature } from "@/server/services/queue/verify";
 const STUCK_AFTER_MS = 10 * 60 * 1000;
 
 // Runs every 30 minutes (scripts/qstash-schedules.mjs). Daraja's STK Push
-// Query endpoint confirms success/failure but — unlike the callback — never
+// Query endpoint confirms success/failure but : unlike the callback : never
 // carries CallbackMetadata, so a reconciled success is recorded using the
 // amount we originally requested, with no mpesaReceipt. That's still
 // materially better than a payment silently lost because a callback never
@@ -27,7 +27,7 @@ async function handler() {
       console.error("[reconcile-mpesa] query failed for", txn.checkoutRequestId, e);
       return null;
     });
-    if (!result) continue; // still can't tell — leave it for the next sweep
+    if (!result) continue; // still can't tell : leave it for the next sweep
 
     if (result.resultCode === "0") {
       await completeMpesaTransaction(txn, { mpesaReceipt: null, paidAt: new Date(), resultDesc: result.resultDesc });

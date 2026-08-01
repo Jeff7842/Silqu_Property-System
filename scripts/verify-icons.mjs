@@ -33,7 +33,7 @@ for (const [prefix, group] of byPrefix) {
 if (missing.length === 0) {
   console.log(`✅ all ${entries.length} icons resolve`);
 } else {
-  console.log("❌ these names do not exist — fix them in src/lib/icons.ts:");
+  console.log("❌ these names do not exist : fix them in src/lib/icons.ts:");
   missing.forEach((e) => console.log(`   ${e.key.padEnd(16)} ${e.full}`));
   process.exit(1);
 }

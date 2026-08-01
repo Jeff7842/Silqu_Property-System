@@ -26,7 +26,7 @@ export default async function JobsPage() {
     );
   }
 
-  // Narrowed to a local before use — `qstash` is typed as possibly
+  // Narrowed to a local before use : `qstash` is typed as possibly
   // undefined (it's a module export), and the `if (!qstash) return` above
   // doesn't narrow it inside the object/array literals below.
   const client = qstash;
@@ -72,7 +72,7 @@ export default async function JobsPage() {
                 <div>
                   <p className="font-mono text-xs text-ink">{m.url}</p>
                   <p className="text-xs text-ink-muted">
-                    Status {m.responseStatus ?? "—"} · {new Date(m.createdAt).toLocaleString("en-KE", { timeZone: "Africa/Nairobi" })}
+                    Status {m.responseStatus ?? ":"} · {new Date(m.createdAt).toLocaleString("en-KE", { timeZone: "Africa/Nairobi" })}
                   </p>
                 </div>
                 {user.role === "PLATFORM_ADMIN" && <ReplayDlqMessageButton dlqId={m.dlqId} />}

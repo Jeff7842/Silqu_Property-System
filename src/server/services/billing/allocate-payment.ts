@@ -9,7 +9,7 @@ export type OpenInvoice = { id: string; balanceCents: number };
 export type Allocation = { invoiceId: string; appliedCents: number; newBalanceCents: number };
 
 /**
- * Pure FIFO allocation math — oldest invoice first, partial settle if short,
+ * Pure FIFO allocation math : oldest invoice first, partial settle if short,
  * overflow to the next invoice if long. Whatever's left over is a credit.
  * `openInvoices` must already be sorted oldest-due-first.
  */
@@ -30,7 +30,7 @@ export function computeAllocation(openInvoices: OpenInvoice[], amountCents: numb
 
 /**
  * Notifies a tenant that a payment was received and applied. Isolated into
- * its own try/catch — notify() does a DB write plus an external publishJob
+ * its own try/catch : notify() does a DB write plus an external publishJob
  * call, so a failure here must never undo or mask a payment that already
  * landed. Exported so callers that pass their own `tx` into allocatePayment
  * (the M-Pesa callback) can call this themselves once *their* transaction
@@ -53,13 +53,13 @@ export async function notifyPaymentReceived(tenantId: string, amountCents: numbe
 
 /**
  * Runs inside `tx` if given (e.g. the M-Pesa callback, which must mark the
- * transaction COMPLETED and allocate the payment atomically) — otherwise
+ * transaction COMPLETED and allocate the payment atomically) : otherwise
  * opens its own.
  *
  * Notification placement: when we open our own transaction (the manual
  * "record payment" call site), it has fully committed by the time
  * `db.$transaction` resolves below, so we notify right there. When a `tx`
- * is passed in, this function does not own the transaction's lifecycle —
+ * is passed in, this function does not own the transaction's lifecycle :
  * the caller's transaction is still open when `run(tx)` returns here, so
  * notifying at this point would fire notify() (external I/O) *inside* a
  * live DB transaction. In that case we deliberately skip notifying and

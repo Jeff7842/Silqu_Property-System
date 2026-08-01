@@ -9,7 +9,7 @@ import { startSupportSession } from "@/server/services/redis/support-session";
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
-// Force an actual explanation ("checking" isn't one) — this reason is what
+// Force an actual explanation ("checking" isn't one) : this reason is what
 // makes a support session defensible later, since it's the only thing that
 // distinguishes "platform staff looking at a tenant's rent history" from a
 // breach.
@@ -22,7 +22,7 @@ export async function startSupportSessionAction(orgId: string, _prev: ActionStat
 
   const reason = String(formData.get("reason") ?? "").trim();
   if (reason.length < REASON_MIN_LENGTH) {
-    return { error: `Give a reason (at least ${REASON_MIN_LENGTH} characters) — this is recorded in the audit log.` };
+    return { error: `Give a reason (at least ${REASON_MIN_LENGTH} characters) : this is recorded in the audit log.` };
   }
 
   await startSupportSession(user.id, orgId, reason);

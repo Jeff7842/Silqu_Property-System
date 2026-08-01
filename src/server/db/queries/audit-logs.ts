@@ -7,7 +7,7 @@ export type AuditLogFilters = {
   to?: Date;
 };
 
-/** Platform portal only — audit trail across every org, not org-scoped by design (viewOwnOrgAuditLog covers the business portal's own-org view). */
+/** Platform portal only : audit trail across every org, not org-scoped by design (viewOwnOrgAuditLog covers the business portal's own-org view). */
 export function listAuditLogs(filters: AuditLogFilters = {}) {
   return db.auditLog.findMany({
     where: {

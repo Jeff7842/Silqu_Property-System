@@ -22,7 +22,7 @@ export async function requestPasswordResetAction(
   formData: FormData,
 ): Promise<ForgotPasswordState> {
   const parsed = emailSchema.safeParse(formData.get("email"));
-  // Always report success — confirming/denying an email exists is an
+  // Always report success : confirming/denying an email exists is an
   // account-enumeration tool, same reasoning as the login error message.
   if (!parsed.success) return { sent: true };
   if (await isPasswordResetRateLimited(parsed.data)) return { sent: true };
@@ -34,7 +34,7 @@ export async function requestPasswordResetAction(
       data: { userId: user.id, tokenHash: hash, expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS) },
     });
     // Reuses QSTASH_TARGET_BASE_URL as "the public origin this deployment is
-    // reachable at" — the same value already used to build callback URLs.
+    // reachable at" : the same value already used to build callback URLs.
     // Falls back to a relative link (harmless while Resend is unconfigured too).
     const resetLink = `${process.env.QSTASH_TARGET_BASE_URL ?? ""}/set-password?token=${raw}`;
     console.log(`[password-reset] ${user.email} -> ${resetLink}`);

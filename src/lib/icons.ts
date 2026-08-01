@@ -1,4 +1,4 @@
-// Material Symbols Outlined, via Iconify's material-symbols set — matches
+// Material Symbols Outlined, via Iconify's material-symbols set : matches
 // the actual Stitch design (stitch.withgoogle.com project 5527835115590543141),
 // which uses Google's Material Symbols Outlined variable font throughout.
 // "-outline" suffix = the outlined/default style; no suffix = filled (used
@@ -75,7 +75,7 @@ export const ICONS = {
   timer: "material-symbols:timer-outline",
   monitoring: "material-symbols:monitoring",
 
-  // Empty states — filled, large
+  // Empty states : filled, large
   emptyFolder: "material-symbols:folder-off",
   emptyBuilding: "material-symbols:domain",
   emptyInbox: "material-symbols:inbox",

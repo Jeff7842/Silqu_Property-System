@@ -15,7 +15,7 @@ export function MarketingFooter() {
         <div className="max-w-sm">
           <span className="text-xl font-black tracking-tight font-[--font-display]">SILQU</span>
           <p className="mt-3 text-sm text-white/70">
-            Rental property management for Kenyan landlords and property managers — leases,
+            Rental property management for Kenyan landlords and property managers : leases,
             M-Pesa rent collection and maintenance, in one place.
           </p>
           <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-white/50">

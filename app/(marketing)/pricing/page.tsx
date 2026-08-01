@@ -59,7 +59,7 @@ export default function PricingPage() {
             Honest pricing. No surprises.
           </h1>
           <p className="mt-5 text-lg text-ink-muted">
-            Start managing your properties efficiently today. All plans include a 14-day free trial —
+            Start managing your properties efficiently today. All plans include a 14-day free trial :
             no credit card required.
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function PricingPage() {
           ))}
         </div>
         <p className="mt-8 text-center text-sm text-ink-muted">
-          Paying annually saves 20% on the Starter and Professional plans — set up billing after your
+          Paying annually saves 20% on the Starter and Professional plans : set up billing after your
           trial from your organization settings.
         </p>
       </section>

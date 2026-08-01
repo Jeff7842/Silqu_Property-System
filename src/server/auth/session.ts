@@ -5,7 +5,7 @@ import type { Role } from "@/generated/prisma/client";
 /**
  * These take an already-resolved session rather than calling auth()
  * internally, because "which auth()" depends on which portal's module the
- * caller imported (business.ts / tenant.ts / platform.ts) — there is no
+ * caller imported (business.ts / tenant.ts / platform.ts) : there is no
  * single global auth() that would be correct here.
  *
  *   const session = await auth(); // from @/server/auth/business

@@ -20,7 +20,7 @@ export default async function NewUnitPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={`Add units — ${property.name}`} />
+      <PageHeader title={`Add units : ${property.name}`} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card header={<h3 className="font-semibold text-ink">Single unit</h3>}>
           <UnitForm propertyId={id} />

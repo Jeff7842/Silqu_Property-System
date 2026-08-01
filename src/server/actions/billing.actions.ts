@@ -67,7 +67,7 @@ export async function recordPaymentAction(tenantId: string, _prev: ActionState, 
 
   logAudit({ orgId: user.orgId, actorUserId: user.id, action: "payment.recorded", entityType: "Payment", entityId: paymentId, after: { tenantId, amountCents: toCents(parsed.data.amountKES), creditCents } });
 
-  // Receipt generation runs after the payment transaction has committed —
+  // Receipt generation runs after the payment transaction has committed :
   // called directly since QStash isn't provisioned in dev (see /api/jobs/send-receipt
   // for the queued path once it is). Best-effort: a receipt failure shouldn't undo a recorded payment.
   try {
@@ -85,7 +85,7 @@ export async function recordPaymentAction(tenantId: string, _prev: ActionState, 
 
 /**
  * Sends a one-off in-app + email reminder to a tenant with an overdue
- * invoice, triggered manually by staff from the arrears report — not a
+ * invoice, triggered manually by staff from the arrears report : not a
  * cron job, so there's no dedup concern here beyond a double-click, which
  * is an acceptable duplicate (the manager chose to send it twice).
  */

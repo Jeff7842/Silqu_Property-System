@@ -14,7 +14,7 @@ const ALLOWED_TYPES: Record<string, string> = {
   "image/webp": "webp",
 };
 
-// Property photos only (public bucket, no Document row — see setPropertyPhotoAction).
+// Property photos only (public bucket, no Document row : see setPropertyPhotoAction).
 // Private tenant documents (ID scans) sign through /api/documents/sign instead.
 export async function POST(req: Request) {
   const session = await auth();

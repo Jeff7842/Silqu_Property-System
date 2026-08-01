@@ -33,7 +33,7 @@ export function CaretakerAssignForm({
             <li key={a.id} className="flex items-center justify-between rounded-[--radius-control] border border-line px-3 py-2 text-sm">
               <span>
                 {a.user.fullName}{" "}
-                <span className="text-ink-muted">— {a.unitId ? units.find((u) => u.id === a.unitId)?.label ?? "unit" : "whole property"}</span>
+                <span className="text-ink-muted">: {a.unitId ? units.find((u) => u.id === a.unitId)?.label ?? "unit" : "whole property"}</span>
               </span>
               <form action={async () => { await unassignCaretakerAction(a.id, propertyId); }}>
                 <button type="submit" className="text-ink-muted hover:text-danger" aria-label="Remove assignment">

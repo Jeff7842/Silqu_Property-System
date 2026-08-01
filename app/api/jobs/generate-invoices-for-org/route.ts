@@ -7,7 +7,7 @@ import { withJobSignature } from "@/server/services/queue/verify";
 async function handler(req: Request) {
   const { orgId, year, month } = await req.json();
   if (!orgId || !year || !month) {
-    // Malformed payload — retrying won't help, so ack it rather than let QStash retry forever.
+    // Malformed payload : retrying won't help, so ack it rather than let QStash retry forever.
     return NextResponse.json({ error: "Missing orgId/year/month" }, { status: 200 });
   }
 

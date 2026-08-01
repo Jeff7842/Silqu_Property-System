@@ -1,4 +1,4 @@
-// Prisma CLI (migrate/studio) connects directly — it does not go through the
+// Prisma CLI (migrate/studio) connects directly : it does not go through the
 // Neon WebSocket adapter used by the app at runtime (src/server/db/client.ts).
 // So this loads DATABASE_URL_UNPOOLED (direct), not DATABASE_URL (pooled).
 import { config } from "dotenv";

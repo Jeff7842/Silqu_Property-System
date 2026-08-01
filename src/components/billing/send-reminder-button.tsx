@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
 import { sendArrearsReminderAction } from "@/server/actions/billing.actions";
 
-/** Per-row "send reminder" action on the arrears report — mirrors the
+/** Per-row "send reminder" action on the arrears report : mirrors the
  *  pattern in ReplayButton: a small client island calling a server action
  *  and surfacing the result as a toast (rule 18). */
 export function SendReminderButton({ invoiceId }: { invoiceId: string }) {

@@ -9,7 +9,7 @@ const CACHE_TTL_SECONDS = 60;
 
 export type FeatureFlag = {
   enabled: boolean;
-  /** 0-100. Ignored (treated as if 100) when enabled is false doesn't matter — disabled always loses. */
+  /** 0-100. Ignored (treated as if 100) when enabled is false doesn't matter : disabled always loses. */
   rolloutPercent: number;
 };
 
@@ -19,7 +19,7 @@ export type FeatureFlags = Record<string, FeatureFlag>;
  * All flags, keyed by flag key.
  * Postgres (the feature_flags table) is the source of truth; Redis is a
  * short-TTL read-through cache in front of it. A Redis flush or missing
- * Redis config never loses a flag — worst case is an extra Postgres read,
+ * Redis config never loses a flag : worst case is an extra Postgres read,
  * same no-op-safe pattern as kpi-cache.ts.
  */
 export async function getFlags(): Promise<FeatureFlags> {
@@ -40,7 +40,7 @@ export async function getFlags(): Promise<FeatureFlags> {
 
 /**
  * Writes Postgres first (the source of truth), then invalidates the cache by
- * deleting it rather than patching it in place — the next getFlags() call
+ * deleting it rather than patching it in place : the next getFlags() call
  * repopulates straight from Postgres, so no reader can ever see a
  * Redis-only value that was never actually persisted.
  */
@@ -61,7 +61,7 @@ export function isEnabledForUser(flagKey: string, flag: FeatureFlag, userId: str
   return hashToBucket(`${flagKey}:${userId}`) < flag.rolloutPercent;
 }
 
-/** FNV-1a-style hash folded into a 0-99 bucket — no crypto needed, just needs to be stable and roughly uniform. */
+/** FNV-1a-style hash folded into a 0-99 bucket : no crypto needed, just needs to be stable and roughly uniform. */
 function hashToBucket(input: string): number {
   let hash = 0;
   for (let i = 0; i < input.length; i++) {

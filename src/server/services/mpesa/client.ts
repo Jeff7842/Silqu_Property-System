@@ -27,7 +27,7 @@ async function getAccessToken(): Promise<string> {
   const data = await res.json();
   const token = data.access_token as string;
 
-  // Tokens last 3600s — cache a little short so we never hand out one about to expire.
+  // Tokens last 3600s : cache a little short so we never hand out one about to expire.
   if (redis) await redis.set(cacheKey, token, { ex: 3500 });
   return token;
 }
@@ -101,7 +101,7 @@ export async function queryStkStatus(checkoutRequestId: string) {
   const data = await res.json();
   // ResultCode "0" = completed successfully; "1032" = cancelled by user;
   // 1037/2001 etc = various failures; a query error before Daraja even
-  // resolves the request means "still pending" — return null and try later.
+  // resolves the request means "still pending" : return null and try later.
   if (typeof data.ResultCode === "undefined") return null;
   return { resultCode: String(data.ResultCode), resultDesc: String(data.ResultDesc ?? "") };
 }

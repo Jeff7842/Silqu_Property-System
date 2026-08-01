@@ -24,7 +24,7 @@ function parseDateParam(value?: string): Date | undefined {
 export default async function AuditLogsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const session = await auth();
   const user = requireRole(session, ["PLATFORM_ADMIN", "PLATFORM_SUPPORT"]);
-  // viewPlatformAuditLog: PLATFORM_ADMIN full, PLATFORM_SUPPORT read — both pass, there's no write action on this page.
+  // viewPlatformAuditLog: PLATFORM_ADMIN full, PLATFORM_SUPPORT read : both pass, there's no write action on this page.
   if (!hasAccess(user, "viewPlatformAuditLog")) redirect("/platform");
 
   const params = await searchParams;
@@ -43,7 +43,7 @@ export default async function AuditLogsPage({ searchParams }: { searchParams: Pr
       header: "When",
       render: (l) => new Date(l.createdAt).toLocaleString("en-KE", { timeZone: "Africa/Nairobi" }),
     },
-    { key: "org", header: "Organization", render: (l) => l.organization?.name ?? "—" },
+    { key: "org", header: "Organization", render: (l) => l.organization?.name ?? ":" },
     { key: "actor", header: "Actor", render: (l) => l.actorUser?.fullName ?? "System" },
     { key: "action", header: "Action", render: (l) => l.action },
     { key: "entity", header: "Entity", render: (l) => `${l.entityType}${l.entityId ? ` · ${l.entityId}` : ""}` },

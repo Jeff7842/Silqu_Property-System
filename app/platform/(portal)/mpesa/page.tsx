@@ -28,7 +28,7 @@ export default async function PlatformMpesaPage() {
             <Card key={t.id}>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-medium text-ink">{t.organization?.name ?? "—"} · {t.purpose}</p>
+                  <p className="font-medium text-ink">{t.organization?.name ?? ":"} · {t.purpose}</p>
                   <p className="text-xs text-ink-muted">{t.phone} · {t.checkoutRequestId}</p>
                 </div>
                 <div className="flex items-center gap-3">

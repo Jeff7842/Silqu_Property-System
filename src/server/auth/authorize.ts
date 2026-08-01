@@ -7,7 +7,7 @@ import { logAudit } from "@/server/services/audit";
 
 /**
  * Shared credential check for all three portals. Deliberately returns the
- * same generic failure for "no such user" and "wrong password" — telling
+ * same generic failure for "no such user" and "wrong password" : telling
  * the two apart is an account-enumeration tool.
  */
 export async function authorizeCredentials(
@@ -40,7 +40,7 @@ export async function authorizeCredentials(
 
   if (!user || user.status !== "ACTIVE") return fail();
   // Platform staff (PLATFORM_ADMIN/PLATFORM_SUPPORT) have orgId: null and are
-  // never subject to org suspension — only org-scoped roles are gated here.
+  // never subject to org suspension : only org-scoped roles are gated here.
   // Same generic fail() as wrong-password: don't leak "your org is suspended".
   if (user.orgId && user.organization?.status !== "ACTIVE") return fail();
   if (!PORTAL_CONFIG[portal].allowedRoles.includes(user.role)) return fail();

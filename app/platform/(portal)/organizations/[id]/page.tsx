@@ -24,7 +24,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const org = await getOrganizationById(id);
   if (!org) notFound();
 
-  // Read-only visibility into one org from the platform portal — gated by
+  // Read-only visibility into one org from the platform portal : gated by
   // startSupportSession, not by the broader viewOrganizations-style access
   // every platform user already has for the list page.
   if (!hasAccess(user, "startSupportSession")) {
@@ -56,7 +56,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={org.name} description={`Support session active — reason: "${activeSession.reason}"`} />
+      <PageHeader title={org.name} description={`Support session active : reason: "${activeSession.reason}"`} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
@@ -65,7 +65,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         </Card>
         <Card>
           <p className="text-xs text-ink-muted">Plan</p>
-          <p className="text-sm text-ink">{org.subscription?.plan ?? "—"}</p>
+          <p className="text-sm text-ink">{org.subscription?.plan ?? ":"}</p>
         </Card>
         <Card>
           <p className="text-xs text-ink-muted">County</p>

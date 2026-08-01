@@ -4,7 +4,7 @@ import { redis } from "@/server/services/redis/client";
 
 // Deliberately unauthenticated: the checkout ID is a high-entropy value
 // returned only to the browser that initiated this specific STK push, never
-// exposed anywhere else — possession of it is proof enough for a status-only
+// exposed anywhere else : possession of it is proof enough for a status-only
 // read (no phone, no amount, nothing else). Kept out of Redis's cache TTL
 // story on purpose: polling already happens every 3s, a 2s cache barely
 // helps a single pollor but smooths bursts if the same ID is ever hit twice.

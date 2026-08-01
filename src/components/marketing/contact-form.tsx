@@ -16,7 +16,7 @@ export function ContactForm() {
 
   useEffect(() => {
     if (state?.success) {
-      push("Message sent — we'll get back to you within 4 hours.", "success");
+      push("Message sent : we'll get back to you within 4 hours.", "success");
       formRef.current?.reset();
     }
   }, [state?.success, push]);

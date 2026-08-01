@@ -39,7 +39,7 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title={`${request.unit.property.name} — ${request.unit.label}`}
+        title={`${request.unit.property.name} : ${request.unit.label}`}
         description={request.category.replace("_", " ")}
         actions={<Badge tone={PRIORITY_TONE[request.priority]}>{request.priority}</Badge>}
       />
@@ -48,7 +48,7 @@ export default async function MaintenanceDetailPage({ params }: { params: Promis
         <div className="flex flex-col gap-6 lg:col-span-2">
           <Card header={<h3 className="font-semibold text-ink">Details</h3>}>
             <p className="text-sm text-ink">{request.description}</p>
-            <p className="mt-2 text-xs text-ink-muted">Raised by {request.tenant?.fullName ?? "—"} on {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(request.createdAt)}</p>
+            <p className="mt-2 text-xs text-ink-muted">Raised by {request.tenant?.fullName ?? ":"} on {new Intl.DateTimeFormat("en-KE", { dateStyle: "medium" }).format(request.createdAt)}</p>
           </Card>
 
           <Card header={<h3 className="font-semibold text-ink">Comments</h3>}>

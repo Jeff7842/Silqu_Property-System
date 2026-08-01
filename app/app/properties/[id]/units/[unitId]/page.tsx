@@ -31,7 +31,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={`${unit.property.name} — ${unit.label}`} description={unit.unitType} />
+      <PageHeader title={`${unit.property.name} : ${unit.label}`} description={unit.unitType} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-6 lg:col-span-2">
@@ -77,7 +77,7 @@ export default async function UnitDetailPage({ params }: { params: Promise<{ id:
                   <div key={r.id} className="flex items-center justify-between py-2 text-sm">
                     <div>
                       <p className="font-medium text-ink">{r.category.replace("_", " ")}</p>
-                      <p className="text-xs text-ink-muted">{r.tenant?.fullName ?? "—"}</p>
+                      <p className="text-xs text-ink-muted">{r.tenant?.fullName ?? ":"}</p>
                     </div>
                     <Badge tone="neutral">{r.status}</Badge>
                   </div>

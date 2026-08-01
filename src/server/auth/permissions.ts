@@ -18,7 +18,7 @@ export function actorFor(user: { role: Role; subRole: EmployeeSubRole | null }):
   }[user.role] as Actor;
 }
 
-/** "full" and "read"/"scoped" all mean "may attempt this" — the query layer applies the actual row-level scope. Only "none" is a hard no. */
+/** "full" and "read"/"scoped" all mean "may attempt this" : the query layer applies the actual row-level scope. Only "none" is a hard no. */
 export type Access = "full" | "read" | "scoped" | "none";
 
 export type Capability =

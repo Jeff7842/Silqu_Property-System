@@ -21,7 +21,7 @@ describe("isEnabledForUser (rollout-percent bucketing)", () => {
     }
   });
 
-  it("is deterministic — the same user+flag always gets the same answer", () => {
+  it("is deterministic : the same user+flag always gets the same answer", () => {
     const flag: FeatureFlag = { enabled: true, rolloutPercent: 50 };
     const first = isEnabledForUser("new-ui", flag, "user-42");
     for (let i = 0; i < 10; i++) {

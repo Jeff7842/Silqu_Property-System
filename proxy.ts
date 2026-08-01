@@ -5,7 +5,7 @@ import { auth as authPlatform } from "@/server/auth/platform";
 import { PORTAL_CONFIG, resolvePortal, type Portal } from "@/server/auth/portals";
 
 // Reuses the SAME auth() instances as the route handlers/actions (not
-// fresh NextAuth(baseAuthConfig(portal)) copies) — six separate NextAuth()
+// fresh NextAuth(baseAuthConfig(portal)) copies) : six separate NextAuth()
 // instances in one process was the actual cause of sessions not surviving
 // a redirect; see docs/SILQU_BUILD_PLAN_V2.md Phase 3 notes.
 const portalAuth: Record<Portal, typeof authBusiness> = {

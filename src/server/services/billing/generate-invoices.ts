@@ -39,7 +39,7 @@ export async function generateInvoicesForPeriod(orgId: string, year: number, mon
 
   const issueDate = new Date();
   // Tracked so we can notify tenants once the transaction has actually
-  // committed — notify() does its own DB write plus an external publishJob
+  // committed : notify() does its own DB write plus an external publishJob
   // call, neither of which is safe to run inside a live DB transaction.
   const createdInvoices: { invoiceId: string; tenantUserId: string | null }[] = [];
 
@@ -75,7 +75,7 @@ export async function generateInvoicesForPeriod(orgId: string, year: number, mon
 
   // Fire the "invoice issued" notification per lease, isolated from the run:
   // a tenant with no portal account yet (tenantUserId null) is skipped, and
-  // one notify() failure is logged and swallowed rather than thrown — every
+  // one notify() failure is logged and swallowed rather than thrown : every
   // invoice above is already committed, so a notification hiccup for one
   // tenant must never look like the whole generation run failed (rule 12).
   for (const { invoiceId, tenantUserId } of createdInvoices) {

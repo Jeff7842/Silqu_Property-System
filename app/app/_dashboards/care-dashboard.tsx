@@ -44,7 +44,7 @@ export async function CareDashboard({ orgId, fullName }: { orgId: string; fullNa
                   </span>
                 </div>
                 <p className="mb-2 text-xs text-ink-muted">
-                  {req.unit.property.name} — {req.unit.label}
+                  {req.unit.property.name} : {req.unit.label}
                   {req.tenant ? ` · ${req.tenant.fullName}` : ""}
                 </p>
                 <Badge tone={PRIORITY_TONE[req.priority]}>{req.priority}</Badge>

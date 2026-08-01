@@ -1,7 +1,7 @@
-# SILQU — Entity Relationship Diagram
+# SILQU : Entity Relationship Diagram
 
 Generated from `prisma/schema.prisma` (Phase 2). Regenerate this by hand
-whenever the schema changes materially — see `docs/SILQU_BUILD_PLAN_V2.md`
+whenever the schema changes materially : see `docs/SILQU_BUILD_PLAN_V2.md`
 section 5 for the full model list and the reasoning behind each constraint.
 
 ```mermaid
@@ -67,7 +67,7 @@ erDiagram
     }
     USER {
         string id PK
-        string orgId FK "nullable — null for platform roles"
+        string orgId FK "nullable : null for platform roles"
         string email UK
         string fullName
         Role role
@@ -81,7 +81,7 @@ erDiagram
         string id PK
         string userId FK
         string propertyId FK
-        string unitId FK "nullable — property-wide if null"
+        string unitId FK "nullable : property-wide if null"
     }
     PROPERTY {
         string id PK
@@ -115,7 +115,7 @@ erDiagram
         int rentCents
         int depositCents
         int billingDay
-        LeaseStatus status "one ACTIVE per unit — partial unique index"
+        LeaseStatus status "one ACTIVE per unit : partial unique index"
     }
     INVOICE {
         string id PK
@@ -153,7 +153,7 @@ erDiagram
     }
     MPESA_TRANSACTION {
         string id PK
-        string orgId FK "nullable — subscription txns may predate an org"
+        string orgId FK "nullable : subscription txns may predate an org"
         MpesaPurpose purpose
         string checkoutRequestId UK
         MpesaStatus status
@@ -219,7 +219,7 @@ erDiagram
 
 ## Notes that don't fit in the diagram
 
-- **Money** is `Int` cents everywhere (`*Cents` columns), never `Float`/`Decimal`/`BigInt` on a row — see build plan section 5.3.
-- **One ACTIVE lease per unit** is enforced by a partial unique index (`one_active_lease_per_unit`), not visible in Prisma's schema DSL — see migration `20260727092408_partial_indexes`.
+- **Money** is `Int` cents everywhere (`*Cents` columns), never `Float`/`Decimal`/`BigInt` on a row : see build plan section 5.3.
+- **One ACTIVE lease per unit** is enforced by a partial unique index (`one_active_lease_per_unit`), not visible in Prisma's schema DSL : see migration `20260727092408_partial_indexes`.
 - **Idempotency**: `Invoice` is unique on `(leaseId, periodYear, periodMonth)`; `MpesaTransaction` is unique on `checkoutRequestId`.
-- **Financial relations use `onDelete: Restrict`** (Lease→Unit/Tenant, Invoice→Lease, Payment→Tenant/Lease, PaymentAllocation→Payment/Invoice, InvoiceLine→Invoice) — archive via `status`, never delete.
+- **Financial relations use `onDelete: Restrict`** (Lease→Unit/Tenant, Invoice→Lease, Payment→Tenant/Lease, PaymentAllocation→Payment/Invoice, InvoiceLine→Invoice) : archive via `status`, never delete.

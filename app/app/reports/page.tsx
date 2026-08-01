@@ -57,7 +57,7 @@ export default async function ArrearsReportPage() {
           emptyDescription="Every tenant is up to date."
           columns={[
             { key: "tenant", header: "Tenant", render: (r) => <span>{r.invoice.lease.tenant.fullName}</span> },
-            { key: "unit", header: "Unit", render: (r) => <span className="text-ink-muted">{r.invoice.lease.unit.property.name} — {r.invoice.lease.unit.label}</span> },
+            { key: "unit", header: "Unit", render: (r) => <span className="text-ink-muted">{r.invoice.lease.unit.property.name} : {r.invoice.lease.unit.label}</span> },
             { key: "days", header: "Days overdue", render: (r) => <Badge tone={BUCKET_TONE[r.bucket]}>{r.daysOverdue} days</Badge> },
             { key: "balance", header: "Balance", align: "right", render: (r) => <Money cents={r.invoice.balanceCents} tone="negative" size="small" /> },
             { key: "reminder", header: "", align: "right", render: (r) => <SendReminderButton invoiceId={r.invoice.id} /> },

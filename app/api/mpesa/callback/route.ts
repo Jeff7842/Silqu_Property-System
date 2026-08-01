@@ -4,7 +4,7 @@ import { processStkCallbackBody } from "@/server/services/mpesa/process-callback
 import { acquireLock } from "@/server/services/redis/lock";
 import type { Prisma } from "@/generated/prisma/client";
 
-// Safaricom retries a callback that doesn't get a 200 back — and even a 200
+// Safaricom retries a callback that doesn't get a 200 back : and even a 200
 // can arrive more than once for the same transaction. Both are normal, not
 // errors: every path below must be safe to run twice.
 const ACK = () => NextResponse.json({ ResultCode: 0, ResultDesc: "Accepted" });
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     return ACK();
   }
 
-  // Log the raw callback before anything else, no matter what happens next —
+  // Log the raw callback before anything else, no matter what happens next :
   // in payments, the raw record is sacred evidence.
   await db.mpesaTransaction.update({ where: { id: txn.id }, data: { rawCallback: body as Prisma.InputJsonValue } });
 

@@ -40,7 +40,7 @@ export function LeaseForm({ tenantId, units }: { tenantId: string; units: Vacant
       >
         {units.map((u) => (
           <option key={u.id} value={u.id}>
-            {u.property.name} — {u.label}
+            {u.property.name} : {u.label}
           </option>
         ))}
       </Select>

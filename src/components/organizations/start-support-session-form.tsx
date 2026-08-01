@@ -14,7 +14,7 @@ export function StartSupportSessionForm({ orgId }: { orgId: string }) {
       <Textarea
         name="reason"
         label="Reason for viewing this organization"
-        placeholder="e.g. Investigating support ticket #482 — tenant reports a missing payment"
+        placeholder="e.g. Investigating support ticket #482 : tenant reports a missing payment"
         rows={3}
         required
       />

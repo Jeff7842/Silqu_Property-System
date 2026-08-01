@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { can, actorFor, type Actor, type Capability } from "@/server/auth/permissions";
 
-// Transcribed independently from docs/SILQU_BUILD_PLAN_V2.md section 6.2 —
+// Transcribed independently from docs/SILQU_BUILD_PLAN_V2.md section 6.2 :
 // deliberately not shared code with src/server/auth/permissions.ts, so this
 // actually catches transcription drift instead of testing a copy of itself.
 const ACTORS: Actor[] = [

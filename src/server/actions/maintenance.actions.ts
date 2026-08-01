@@ -15,7 +15,7 @@ import type { MaintenanceStatus } from "@/generated/prisma/client";
 
 export type ActionState = { error?: string; success?: boolean } | undefined;
 
-// ponytail: photo attachment on raise is deferred — the core lifecycle
+// ponytail: photo attachment on raise is deferred : the core lifecycle
 // (raise -> assign -> in-progress -> resolve -> close, with comments and
 // caretaker scoping) is what Phase 9's DoD actually tests; add a private R2
 // upload step here the same way tenant ID scans work in Phase 6, if needed.
@@ -100,7 +100,7 @@ export async function updateMaintenanceStatusAction(requestId: string, status: M
     return { error: `A ${request.status.toLowerCase()} request can't move to ${status.toLowerCase()}.` };
   }
 
-  // Only the raising tenant or a manager may CLOSE — "resolved" otherwise means nothing.
+  // Only the raising tenant or a manager may CLOSE : "resolved" otherwise means nothing.
   if (status === "CLOSED") {
     const isRaisingTenant = tenantUser && request.tenantId && (await db.tenant.findFirst({ where: { id: request.tenantId, userId: tenantUser.id } }));
     const isManager = businessUser?.role === "MANAGER";

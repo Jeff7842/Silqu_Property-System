@@ -1,6 +1,6 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
-/** Undefined until R2_* env vars are set — not provisioned yet. Callers must handle it. */
+/** Undefined until R2_* env vars are set : not provisioned yet. Callers must handle it. */
 export const r2 =
   process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY
     ? new S3Client({

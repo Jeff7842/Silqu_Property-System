@@ -13,7 +13,7 @@ export function getMpesaTransactionById(id: string) {
   return db.mpesaTransaction.findUnique({ where: { id } });
 }
 
-/** Platform portal only — not org-scoped by design. */
+/** Platform portal only : not org-scoped by design. */
 export function listAllMpesaTransactions(opts: { status?: MpesaStatus } = {}) {
   return db.mpesaTransaction.findMany({
     where: { status: opts.status },
@@ -23,7 +23,7 @@ export function listAllMpesaTransactions(opts: { status?: MpesaStatus } = {}) {
   });
 }
 
-/** Platform health page — failure rate across every org's M-Pesa traffic in the last 24h. */
+/** Platform health page : failure rate across every org's M-Pesa traffic in the last 24h. */
 export async function getMpesaFailureRate24h() {
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const counts = await db.mpesaTransaction.groupBy({

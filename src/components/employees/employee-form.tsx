@@ -33,13 +33,8 @@ export function EmployeeForm({ properties }: { properties: PropertyOption[] }) {
         <option value="OWNER_MANAGER">Owner manager</option>
       </Select>
       <PasswordInput label="Temporary password" name="password" placeholder="At least 8 characters" required />
-      <Select
-        name="propertyIds"
-        label="Assigned buildings"
-        multiple
-        className="min-h-32 py-2"
-        hint="Hold Ctrl to choose more than one building."
-      >
+      <Select name="propertyIds" label="Assigned building">
+        <option value="">No building assigned</option>
         {properties.map((property) => (
           <option key={property.id} value={property.id}>
             {property.name} - {property.town}

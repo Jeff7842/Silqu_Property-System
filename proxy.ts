@@ -30,6 +30,8 @@ function isPublic(pathname: string) {
   return (
     PUBLIC_PATHS.includes(pathname) ||
     pathname.startsWith("/api/auth/") ||
+    pathname === "/api/mpesa/callback" ||
+    pathname === "/api/mpesa/timeout" ||
     pathname.startsWith("/_next/")
   );
 }

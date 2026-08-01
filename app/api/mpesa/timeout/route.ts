@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/server/db/client";
 
+export const runtime = "nodejs";
+
 const ACK = () => NextResponse.json({ ResultCode: 0, ResultDesc: "Accepted" });
 
 // Safaricom's timeout URL: the request queue timed out before the customer

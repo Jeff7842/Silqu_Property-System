@@ -4,6 +4,8 @@ import { processStkCallbackBody } from "@/server/services/mpesa/process-callback
 import { acquireLock } from "@/server/services/redis/lock";
 import type { Prisma } from "@/generated/prisma/client";
 
+export const runtime = "nodejs";
+
 // Safaricom retries a callback that doesn't get a 200 back : and even a 200
 // can arrive more than once for the same transaction. Both are normal, not
 // errors: every path below must be safe to run twice.

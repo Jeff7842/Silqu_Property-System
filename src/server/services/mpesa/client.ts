@@ -2,13 +2,43 @@ import { redis } from "@/server/services/redis/client";
 
 const BASE_URL = process.env.MPESA_ENV === "production" ? "https://api.safaricom.co.ke" : "https://sandbox.safaricom.co.ke";
 
+function publicUrl(path: string, envUrl?: string) {
+  const raw = envUrl || process.env.NEXT_PUBLIC_APP_URL || process.env.QSTASH_TARGET_BASE_URL;
+  if (!raw) return null;
+
+  try {
+    const url = new URL(raw.trim());
+    if (url.pathname === "/" || url.pathname === "") {
+      url.pathname = path;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+export function mpesaCallbackUrl() {
+  return publicUrl("/api/mpesa/callback", process.env.MPESA_CALLBACK_URL);
+}
+
+export function mpesaTimeoutUrl() {
+  return publicUrl("/api/mpesa/timeout", process.env.MPESA_TIMEOUT_URL);
+}
+
+function stkPushAmount(amountCents: number) {
+  if (process.env.MPESA_USE_TRUE_PAYMENT_AMOUNT === "true") {
+    return Math.round(amountCents / 100);
+  }
+  return 1;
+}
+
 export function isMpesaConfigured() {
   return Boolean(
     process.env.MPESA_CONSUMER_KEY &&
       process.env.MPESA_CONSUMER_SECRET &&
       process.env.MPESA_SHORTCODE &&
       process.env.MPESA_PASSKEY &&
-      process.env.MPESA_CALLBACK_URL,
+      mpesaCallbackUrl(),
   );
 }
 
@@ -54,11 +84,14 @@ export async function initiateSTKPush(params: {
   accountRef: string; // Daraja caps this at 12 characters
   description: string;
 }) {
+  const callbackUrl = mpesaCallbackUrl();
+  if (!callbackUrl) throw new Error("MPESA_CALLBACK_URL or NEXT_PUBLIC_APP_URL is required.");
+
   const token = await getAccessToken();
   const shortcode = process.env.MPESA_SHORTCODE!;
   const timestamp = nairobiTimestamp();
   const password = Buffer.from(`${shortcode}${process.env.MPESA_PASSKEY}${timestamp}`).toString("base64");
-  const amount = Math.round(params.amountCents / 100); // Daraja wants whole shillings, no decimals
+  const amount = stkPushAmount(params.amountCents); // Daraja wants whole shillings, no decimals
 
   const res = await fetch(`${BASE_URL}/mpesa/stkpush/v1/processrequest`, {
     method: "POST",
@@ -68,11 +101,11 @@ export async function initiateSTKPush(params: {
       Password: password,
       Timestamp: timestamp,
       TransactionType: "CustomerPayBillOnline",
-      Amount: "1", //amount,
+      Amount: amount,
       PartyA: params.phone,
       PartyB: shortcode,
       PhoneNumber: params.phone,
-      CallBackURL: process.env.MPESA_CALLBACK_URL,
+      CallBackURL: callbackUrl,
       AccountReference: params.accountRef.slice(0, 12),
       TransactionDesc: params.description,
     }),

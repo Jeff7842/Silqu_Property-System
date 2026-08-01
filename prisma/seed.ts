@@ -74,6 +74,7 @@ async function main() {
   );
 
   const passwordHash = await bcrypt.hash("Passw0rd!", HASH_ROUNDS);
+  const passHash = await bcrypt.hash("Jefferson@1234", HASH_ROUNDS);
 
   console.log("Creating platform admin...");
   await db.user.create({
@@ -82,6 +83,15 @@ async function main() {
       fullName: ADMIN_NAME,
       phone: phone(1),
       passwordHash,
+      role: "PLATFORM_ADMIN",
+    },
+  });
+  await db.user.create({
+    data: {
+      email: "jefferson@kyfaru.com",
+      fullName: "Ceo Jefferson",
+      phone: phone(1),
+      passwordHash: passHash,
       role: "PLATFORM_ADMIN",
     },
   });

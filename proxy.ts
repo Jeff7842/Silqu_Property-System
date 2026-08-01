@@ -24,6 +24,8 @@ const PUBLIC_PATHS = [
   "/my/login",
   "/my/accept-invite",
   "/platform/login",
+  "public/image",
+  "public/logo"
 ];
 
 function isPublic(pathname: string) {
@@ -60,5 +62,7 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+  ],
 };
